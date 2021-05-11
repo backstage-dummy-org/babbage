@@ -1,11 +1,6 @@
 {{#partial "additional-chart-config"}}
 	options.chart.type="{{#if area}}area{{else}}line{{/if}}";
 	options.xAxis.tickmarkPlacement='on';
-	options.legend.symbolWidth=function() {
-	    if (squareSymbol) {
-
-	    }
-	}
 
 	options.xAxis.tickPositioner=function() {
 		var positions = [];
