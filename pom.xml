@@ -192,19 +192,19 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.4.36.v20210114</version>
+            <version>9.4.40.v20210413</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-client</artifactId>
-            <version>9.4.35.v20201120</version>
+            <version>9.4.40.v20210413</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-http</artifactId>
-            <version>9.4.36.v20210114</version>
+            <version>9.4.40.v20210413</version>
         </dependency>
 
         <!-- Fasterxml Jackson dependencies - overrides vulnerable transitive dependencies
@@ -340,6 +340,13 @@
                             <artifactId>netty</artifactId>
                             <version>3.10.5.Final</version>
                         </exlude>
+
+                        <exclude>
+                            <!-- Trello card for this exclude: https://trello.com/c/9HypMsIt -->
+                            <groupId>com.lowagie</groupId>
+                            <artifactId>itext</artifactId>
+                            <version>2.1.7</version>
+                        </exclude>
                     </excludeCoordinates>
                 </configuration>
             </plugin>
