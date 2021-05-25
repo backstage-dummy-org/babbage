@@ -4,7 +4,7 @@ import com.github.onsdigital.babbage.content.client.ContentClient;
 import com.github.onsdigital.babbage.content.client.ContentResponse;
 import com.github.onsdigital.babbage.template.TemplateService;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
+// import org.apache.commons.lang3.ArrayUtils;
 import org.dom4j.DocumentException;
 import org.jsoup.Jsoup;
 import org.jsoup.parser.Parser;
@@ -12,6 +12,7 @@ import org.w3c.dom.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import org.xhtmlrenderer.resource.XMLResource;
 import org.xml.sax.InputSource;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -120,26 +121,33 @@ public class PDFGenerator {
 
     private static void addDataTableToPdf(String fileName, String pdfTable, BufferedReader bufferedReader, Path pdfFile) throws IOException, InterruptedException {
         if (pdfTable != null) {
-            String[] gsCommand = {
-                    appConfig().babbage().getGhostscriptPath(),
-                    "-dBATCH", "-dNOPAUSE", "-q", "-sDEVICE=pdfwrite", "-dPDFSETTINGS=/prepress",
-                    "-sOutputFile=" + TEMP_DIRECTORY_PATH + "/" + fileName + "-merged.pdf",
-                    TEMP_DIRECTORY_PATH + "/" + fileName + ".pdf", pdfTable
-            };
+            // String[] gsCommand = {
+            //         appConfig().babbage().getGhostscriptPath(),
+            //         "-dBATCH", "-dNOPAUSE", "-q", "-sDEVICE=pdfwrite", "-dPDFSETTINGS=/prepress",
+            //         "-sOutputFile=" + TEMP_DIRECTORY_PATH + "/" + fileName + "-merged.pdf",
+            //         TEMP_DIRECTORY_PATH + "/" + fileName + ".pdf", pdfTable
+            // };
 
-            Process gsProcess = new ProcessBuilder(gsCommand).redirectErrorStream(true).start();
-            info().data("commands", ArrayUtils.toString(gsCommand)).log("adding data table to PDF");
-            int gsExitStatus = gsProcess.waitFor();
+            // Process gsProcess = new ProcessBuilder(gsCommand).redirectErrorStream(true).start();
+            // info().data("commands", ArrayUtils.toString(gsCommand)).log("adding data table to PDF");
+            // int gsExitStatus = gsProcess.waitFor();
 
-            BufferedReader gsBufferedReader = new BufferedReader(new InputStreamReader(gsProcess.getInputStream()));
-            String gsCurrentLine;
-            StringBuilder gsStringBuilder = new StringBuilder(gsExitStatus == 0 ? "SUCCESS:" : "ERROR:");
-            gsCurrentLine = bufferedReader.readLine();
-            while (gsCurrentLine != null) {
-                gsStringBuilder.append(gsCurrentLine);
-                gsCurrentLine = gsBufferedReader.readLine();
-            }
+            // BufferedReader gsBufferedReader = new BufferedReader(new InputStreamReader(gsProcess.getInputStream()));
+            // String gsCurrentLine;
+            // StringBuilder gsStringBuilder = new StringBuilder(gsExitStatus == 0 ? "SUCCESS:" : "ERROR:");
+            // gsCurrentLine = bufferedReader.readLine();
+            // while (gsCurrentLine != null) {
+            //     gsStringBuilder.append(gsCurrentLine);
+            //     gsCurrentLine = gsBufferedReader.readLine();
+            // }
 
+            PDFMergerUtility ut = new PDFMergerUtility();
+            ut.addSource(fileName + ".pdf");
+            ut.addSource(pdfTable);
+            ut.setDestinationFileName(fileName + "-merged.pdf");
+            ut.mergeDocuments(null);; // null means unrestricted memory usage. We should limit this
+
+            
             Path gsPdfFile = FileSystems.getDefault().getPath(TEMP_DIRECTORY_PATH).resolve(fileName + "-merged.pdf");
             if (!Files.exists(gsPdfFile)) {
                 throw new RuntimeException("Failed generating pdf, file not created");
