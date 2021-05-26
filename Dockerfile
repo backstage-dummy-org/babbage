@@ -1,5 +1,3 @@
-FROM onsdigital/java-node-phantom-ghostscript-component
-
 # Add the build artifacts
 WORKDIR /usr/src
 ADD ./target/dependency /usr/src/target/dependency

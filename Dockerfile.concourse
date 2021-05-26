@@ -1,5 +1,3 @@
-FROM onsdigital/java-node-phantom-ghostscript-component
-
 WORKDIR /usr/src
 
 ADD web target/web

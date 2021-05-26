@@ -18,7 +18,6 @@ public class Babbage implements AppConfig {
     private static final String IS_PUBLISHING_KEY = "IS_PUBLISHING";
     private static final String REDIRECT_SECRET_KEY = "REDIRECT_SECRET";
     private static final String HIGHCHARTS_EXPORT_SERVER_KEY = "HIGHCHARTS_EXPORT_SERVER";
-    private static final String GHOSTSCRIPT_PATH_KEY = "GHOSTSCRIPT_PATH";
     private static final String MATHJAX_EXPORT_SERVER_KEY = "MATHJAX_EXPORT_SERVER";
 
     private static Babbage INSTANCE;
@@ -58,7 +57,6 @@ public class Babbage implements AppConfig {
     private final String redirectSecret;
     private final int maxHighchartsServerConnections;
     private final String exportSeverUrl;
-    private final String ghostscriptPath;
     private final String mathjaxExportServer;
 
     private Babbage() {
@@ -79,8 +77,6 @@ public class Babbage implements AppConfig {
         maxHighchartsServerConnections = defaultIfBlank(getNumberValue("HIGHCHARTS_EXPORT_MAX_CONNECTION"), 50);
 
         exportSeverUrl = getValueOrDefault(HIGHCHARTS_EXPORT_SERVER_KEY, "http://localhost:9999/");
-
-        ghostscriptPath = getValueOrDefault(GHOSTSCRIPT_PATH_KEY, "/usr/local/bin/gs");
 
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
     }
@@ -141,10 +137,6 @@ public class Babbage implements AppConfig {
         return exportSeverUrl;
     }
 
-    public String getGhostscriptPath() {
-        return ghostscriptPath;
-    }
-
     public String getMathjaxExportServer() {
         return mathjaxExportServer;
     }
@@ -163,7 +155,6 @@ public class Babbage implements AppConfig {
         config.put("isPublishing", isPublishing);
         config.put("maxHighchartsServerConnections", maxHighchartsServerConnections);
         config.put("exportSeverUrl", exportSeverUrl);
-        config.put("ghostscriptPath", ghostscriptPath);
         config.put("mathjaxExportServer", mathjaxExportServer);
         return config;
     }
