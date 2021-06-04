@@ -64,6 +64,12 @@
         {{/unless}}
     {{/if_any}}
 
+    {{!-- Add word count for sections to dataLayer --}}
+    {{#if_any (eq type "bulletin") (eq type "article")}}
+        {{#if sections}}
+            dataLayer[0]["wordCount"] = {{totalWordCount sections}}
+        {{/if}}
+    {{/if_any}}
 
     {{!-- Update Google Tag Manager data layer with information about corrections and notices --}}
     {{#if alerts}}
