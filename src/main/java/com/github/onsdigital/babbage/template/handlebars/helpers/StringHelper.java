@@ -105,9 +105,7 @@ public enum StringHelper implements BabbageHandlebarsHelper<String> {
     },
 
     wordCount {
-        /**
-         * The HTML tag pattern.
-         */
+        // HTML tag regex pattern
         private final Pattern pattern = Pattern.compile("\\<[^>]*>");
 
         @Override

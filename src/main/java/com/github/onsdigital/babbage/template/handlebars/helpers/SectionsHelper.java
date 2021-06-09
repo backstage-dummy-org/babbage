@@ -17,16 +17,18 @@ public enum SectionsHelper implements BabbageHandlebarsHelper<Object> {
     totalWordCount {
         @Override
         public CharSequence apply(Object context, Options options) throws IOException {
+            if (options.isFalsy(context)) {
+                return null;
+            }
+
             CustomMarkdownHelper mdHelper = new CustomMarkdownHelper();
             Integer runningWordCount = 0;
-            if (context != null) {
-                for (Object section : (List<Object>) context) {
-                    Map<String, String> sectionText = (Map<String, String>) section;
-                    String mdHtml = mdHelper.apply(sectionText.get("markdown"), options).toString();
-                    String mdWordCount = StringHelper.wordCount.apply(mdHtml, options).toString();
-                    String titleWordCount = StringHelper.wordCount.apply(sectionText.get("title"), options).toString();
-                    runningWordCount = Integer.parseInt(titleWordCount) + Integer.parseInt(mdWordCount) + runningWordCount;
-                }
+            for (Object section : (List<Object>) context) {
+                Map<String, String> sectionText = (Map<String, String>) section;
+                String mdHtml = mdHelper.apply(sectionText.get("markdown"), options).toString();
+                String mdWordCount = StringHelper.wordCount.apply(mdHtml, options).toString();
+                String titleWordCount = StringHelper.wordCount.apply(sectionText.get("title"), options).toString();
+                runningWordCount = Integer.parseInt(titleWordCount) + Integer.parseInt(mdWordCount) + runningWordCount;
             }
             return runningWordCount.toString();
         }
