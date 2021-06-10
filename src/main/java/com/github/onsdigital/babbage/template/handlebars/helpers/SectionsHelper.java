@@ -17,7 +17,7 @@ public enum SectionsHelper implements BabbageHandlebarsHelper<Object> {
     totalWordCount {
         @Override
         public CharSequence apply(Object context, Options options) throws IOException {
-            if (options.isFalsy(context)) {
+            if (options.isFalsy(context) || ((List<Object>) context).isEmpty()) {
                 return null;
             }
 
