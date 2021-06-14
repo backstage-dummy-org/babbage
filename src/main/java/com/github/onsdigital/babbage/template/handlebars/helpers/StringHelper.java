@@ -58,7 +58,7 @@ public enum StringHelper implements BabbageHandlebarsHelper<String> {
             if (options.isFalsy(context) || options.params.length == 0) {
                 return null;
             }
-            return context.startsWith(options.param(0)) ? "true" : null;
+            return context.startsWith(options.<String>param(0)) ? "true" : null;
         }
 
         @Override
@@ -73,7 +73,7 @@ public enum StringHelper implements BabbageHandlebarsHelper<String> {
             if (options.isFalsy(context) || options.params.length == 0) {
                 return null;
             }
-            return context.endsWith(options.param(0)) ? "true" : null;
+            return context.endsWith(options.<String>param(0)) ? "true" : null;
         }
 
         @Override

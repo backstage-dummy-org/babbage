@@ -1,8 +1,5 @@
 package com.github.onsdigital.babbage.template.handlebars.helpers;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
-
 import com.github.jknack.handlebars.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +9,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsEqual.equalTo;
+
 @RunWith(MockitoJUnitRunner.class)
 public class SectionsHelperTest {
 
@@ -19,7 +19,7 @@ public class SectionsHelperTest {
 
     @Before
     public void setup() throws Exception {
-        Map<String, String> uriMock =  new LinkedHashMap<>();
+        Map<String, String> uriMock = new LinkedHashMap<>();
         uriMock.put("uri", "/economy/bulletin/sometitle");
 
         Handlebars handlebars = Mockito.mock(Handlebars.class);
@@ -30,11 +30,11 @@ public class SectionsHelperTest {
         Context.Builder contextBuilder = Context.newBuilder(parentContext.build(), "test");
 
         Options.Builder builder = new Options.Builder(
-                                    handlebars,
-                                    "SectionsHelper",
-                                    tagType,
-                                    contextBuilder.build(),
-                                    template);
+                handlebars,
+                "SectionsHelper",
+                tagType,
+                contextBuilder.build(),
+                template);
         options = builder.build();
     }
 
@@ -42,7 +42,7 @@ public class SectionsHelperTest {
     public void testTotalWordCount_WithMarkdownSection_ReturnsCorrectCount() throws Exception {
         List<Map<String, String>> sections = new ArrayList<>();
 
-        Map<String, String> section1 =  new HashMap<>();
+        Map<String, String> section1 = new HashMap<>();
         section1.put("markdown", "- some test text");
         section1.put("title", "title example");
         sections.add(section1);
@@ -55,7 +55,7 @@ public class SectionsHelperTest {
     public void testTotalWordCount_WithPlainTextSection_ReturnsCorrectCount() throws Exception {
         List<Map<String, String>> sections = new ArrayList<>();
 
-        Map<String, String> section1 =  new HashMap<>();
+        Map<String, String> section1 = new HashMap<>();
         section1.put("markdown", "some different test text");
         section1.put("title", "title example 2");
         sections.add(section1);
@@ -68,7 +68,7 @@ public class SectionsHelperTest {
     public void testTotalWordCount_WithoutTitle_ReturnsCorrectCount() throws Exception {
         List<Map<String, String>> sections = new ArrayList<>();
 
-        Map<String, String> section1 =  new HashMap<>();
+        Map<String, String> section1 = new HashMap<>();
         section1.put("markdown", "some more test text");
         section1.put("title", "");
         sections.add(section1);
@@ -81,7 +81,7 @@ public class SectionsHelperTest {
     public void testTotalWordCount_WithoutMarkdownText_ReturnsCorrectCount() throws Exception {
         List<Map<String, String>> sections = new ArrayList<>();
 
-        Map<String, String> section1 =  new HashMap<>();
+        Map<String, String> section1 = new HashMap<>();
         section1.put("markdown", "");
         section1.put("title", "some example title");
         sections.add(section1);
@@ -94,12 +94,12 @@ public class SectionsHelperTest {
     public void testTotalWordCount_WithMultipleSections_ReturnsCorrectCount() throws Exception {
         List<Map<String, String>> sections = new ArrayList<>();
 
-        Map<String, String> section1 =  new HashMap<>();
+        Map<String, String> section1 = new HashMap<>();
         section1.put("markdown", "- some test text");
         section1.put("title", "title example 1");
         sections.add(section1);
 
-        Map<String, String> section2 =  new HashMap<>();
+        Map<String, String> section2 = new HashMap<>();
         section2.put("markdown", "some more test text");
         section2.put("title", "title example 2");
         sections.add(section2);

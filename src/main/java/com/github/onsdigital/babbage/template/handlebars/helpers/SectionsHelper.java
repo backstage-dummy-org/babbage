@@ -28,14 +28,14 @@ public enum SectionsHelper implements BabbageHandlebarsHelper<Object> {
 
                 String md = sectionText.get("markdown");
                 String mdWordCount = "0";
-                if(md != null && !md.isEmpty()) {
+                if (md != null && !md.isEmpty()) {
                     String mdHtml = mdHelper.apply(md, options).toString();
                     mdWordCount = StringHelper.wordCount.apply(mdHtml, options).toString();
                 }
 
                 String titleWordCount = "0";
                 String title = sectionText.get("title");
-                if(title != null && !title.isEmpty()) {
+                if (title != null && !title.isEmpty()) {
                     titleWordCount = StringHelper.wordCount.apply(title, options).toString();
                 }
 
