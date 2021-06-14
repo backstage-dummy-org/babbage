@@ -25,9 +25,20 @@ public enum SectionsHelper implements BabbageHandlebarsHelper<Object> {
             Integer runningWordCount = 0;
             for (Object section : (List<Object>) context) {
                 Map<String, String> sectionText = (Map<String, String>) section;
-                String mdHtml = mdHelper.apply(sectionText.get("markdown"), options).toString();
-                String mdWordCount = StringHelper.wordCount.apply(mdHtml, options).toString();
-                String titleWordCount = StringHelper.wordCount.apply(sectionText.get("title"), options).toString();
+
+                String md = sectionText.get("markdown");
+                String mdWordCount = "0";
+                if(md != null && !md.isEmpty()) {
+                    String mdHtml = mdHelper.apply(md, options).toString();
+                    mdWordCount = StringHelper.wordCount.apply(mdHtml, options).toString();
+                }
+
+                String titleWordCount = "0";
+                String title = sectionText.get("title");
+                if(title != null && !title.isEmpty()) {
+                    titleWordCount = StringHelper.wordCount.apply(title, options).toString();
+                }
+
                 runningWordCount = Integer.parseInt(titleWordCount) + Integer.parseInt(mdWordCount) + runningWordCount;
             }
             return runningWordCount.toString();

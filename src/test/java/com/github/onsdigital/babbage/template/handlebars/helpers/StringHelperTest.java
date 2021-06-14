@@ -9,7 +9,6 @@ import com.github.jknack.handlebars.Options;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -51,7 +50,7 @@ public class StringHelperTest {
     @Test
     public void testWordCount_WithEmptyString_ReturnsNull() throws Exception {
         when(options.isFalsy(any())).thenReturn(true);
-        String result = StringHelper.wordCount.apply("", options).toString();
+        CharSequence result = StringHelper.wordCount.apply("", options);
         assertThat(result, equalTo(null));
     }
 }
