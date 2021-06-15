@@ -105,8 +105,7 @@ public enum StringHelper implements BabbageHandlebarsHelper<String> {
     },
 
     wordCount {
-        // HTML tag regex pattern
-        private final Pattern pattern = Pattern.compile("\\<[^>]*>");
+        private final Pattern htmlTagRegexPattern = Pattern.compile("\\<[^>]*>");
 
         @Override
         public CharSequence apply(String context, Options options) throws IOException {
@@ -115,7 +114,7 @@ public enum StringHelper implements BabbageHandlebarsHelper<String> {
             }
 
             // First strip the html from the text
-            Matcher matcher = pattern.matcher(context);
+            Matcher matcher = htmlTagRegexPattern.matcher(context);
             String text = matcher.replaceAll("").toLowerCase();
             Integer count = Arrays.stream(text.split(" ")).map(word -> word.trim()).filter(word -> word != null && !word.isEmpty()).toArray().length;
             return count.toString();
