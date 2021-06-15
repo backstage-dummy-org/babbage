@@ -22,19 +22,19 @@ public enum SectionsHelper implements BabbageHandlebarsHelper<Object> {
                 return null;
             }
 
-            Integer runningWordCount = 0;
+            int runningWordCount = 0;
             for (Object section : (List<Object>) context) {
                 Map<String, String> sectionText = (Map<String, String>) section;
 
                 String md = sectionText.get("markdown");
-                String mdWordCount = calculateWordCountFromMarkdown(md, options);
+                int mdWordCount = calculateWordCountFromMarkdown(md, options);
 
                 String title = sectionText.get("title");
-                String titleWordCount = calculateWordCountFromSection(title, options);
+                int titleWordCount = calculateWordCountFromSection(title, options);
 
-                runningWordCount = Integer.parseInt(titleWordCount) + Integer.parseInt(mdWordCount) + runningWordCount;
+                runningWordCount = titleWordCount + mdWordCount + runningWordCount;
             }
-            return runningWordCount.toString();
+            return Integer.toString(runningWordCount);
         }
 
         @Override
@@ -42,22 +42,24 @@ public enum SectionsHelper implements BabbageHandlebarsHelper<Object> {
             handlebars.registerHelper(this.name(), this);
         }
 
-        private String calculateWordCountFromMarkdown(String md, Options options) throws IOException {
+        private int calculateWordCountFromMarkdown(String md, Options options) throws IOException {
             if (md == null || md.isEmpty()) {
-                return "0";
+                return 0;
             }
 
             CustomMarkdownHelper mdHelper = new CustomMarkdownHelper();
             String mdHtml = mdHelper.apply(md, options).toString();
-            return StringHelper.wordCount.apply(mdHtml, options).toString();
+            String wordCount = StringHelper.wordCount.apply(mdHtml, options).toString();
+            return Integer.parseInt(wordCount);
         }
 
-        private String calculateWordCountFromSection(String title, Options options) throws IOException {
+        private int calculateWordCountFromSection(String title, Options options) throws IOException {
             if (title == null || title.isEmpty()) {
-                return "0";
+                return 0;
             }
 
-            return StringHelper.wordCount.apply(title, options).toString();
+            String wordCount = StringHelper.wordCount.apply(title, options).toString();
+            return Integer.parseInt(wordCount);
         }
 
         private boolean isEmpty(Object context, Options options) {
