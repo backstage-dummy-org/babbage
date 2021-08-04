@@ -634,7 +634,6 @@ var renderLineChart = function (timeseries) {
                 var fromYear;
                 var fromMonth;
                 var fromQuarter;
-                e.preventDefault();
                 // toggleSelectedLink(elem);
                 // toggleTimePeriodButton(elem);
                 toggleSelectedButton();
@@ -710,7 +709,6 @@ var renderLineChart = function (timeseries) {
 
 
             $('[data-chart-control-custom-trigger-for]', element).on('click', function (e) {
-                e.preventDefault();
                 toggleSelectedButton();
                 toggleCollapsible();
 
