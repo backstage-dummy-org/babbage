@@ -12,7 +12,7 @@
         <handlebars-java-version>4.0.3</handlebars-java-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.6</powermock.version>
-        <dp-logging.version>v1.7.0</dp-logging.version>
+        <dp-logging.version>v2.0.0-beta</dp-logging.version>
         <fasterxml.jackson.version>2.11.0</fasterxml.jackson.version>
     </properties>
 
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.github.onsdigital</groupId>
             <artifactId>restolino</artifactId>
-            <version>v0.2.0</version>
+            <version>v0.3.0</version>
         </dependency>
 
         <dependency>
