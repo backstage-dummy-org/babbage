@@ -1,18 +1,31 @@
 {{#resolve "/"}}
-	{{#if serviceMessage}}
-		<div class="banner">
-			<div class="wrapper banner--bottom-border">
-				<div class="banner__container col-wrap">
-					<div class="col col--md-2 col--lg-2">
-						<span class="banner__icon icon icon-info"></span>
-					</div>
-					<div class="col col--md-45 col--lg-55">
-						<div class="banner__body">
-							{{md serviceMessage}}
-						</div>
-					</div>
+  {{#if emergencyBanner}}
+    <div class="emergency-banner emergency-banner--{{replace emergencyBanner.type "_" "-"}}" role="banner" data-nosnippet="">
+    	<div class="wrapper">
+			<div class="col-wrap">
+				<div class="col col--md-two-thirds col--lg-two-thirds">
+					<h2 class="emergency-banner__heading">{{ emergencyBanner.title }}</h2>
+					<p class="emergency-banner__description">{{ emergencyBanner.description }}</p>
+					{{#if emergencyBanner.uri and emergencyBanner.linkText }}
+						<a href="{{ emergencyBanner.uri }}" class="emergency-banner__link">{{ emergencyBanner.linkText }}</a>
+					{{/if}}
 				</div>
 			</div>
-		</div>
-	{{/if}}
+    	</div>
+	</div>
+  {{/if}}
+  {{#if serviceMessage}}
+    <div class="banner">
+      <div class="wrapper banner--half-padding banner--bottom-border">
+        <div class="col-wrap">
+          <div class="col">
+            <span class="banner__icon icon icon-info"></span>
+            <div class="banner__body">
+              {{md serviceMessage}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/if}}
 {{/resolve}}
