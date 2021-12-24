@@ -12,8 +12,8 @@
         {{#if_any (eq type "bulletin") (eq type "article") (eq type "compendium_landing_page") (eq type "compendium_chapter")}}
             <link rel="canonical" href="{{uri}}" />
         {{/if_any}}
-        <link rel="stylesheet" type="text/css" href="{{#if is_dev}}http://{{location.hostname}}:9000/dist{{else}}//cdn.ons.gov.uk/sixteens/406b9ac{{/if}}/css/main.css">
-		{{#if pdf_style}}<link rel="stylesheet" type="text/css" href="{{#if is_dev}}http://localhost:9000/dist{{else}}//cdn.ons.gov.uk/sixteens/406b9ac{{/if}}/css/pdf.css">{{/if}}
+        <link rel="stylesheet" type="text/css" href="{{#if is_dev}}http://{{location.hostname}}:9000/dist{{else}}//cdn.ons.gov.uk/sixteens/77f1d9b{{/if}}/css/main.css">
+		{{#if pdf_style}}<link rel="stylesheet" type="text/css" href="{{#if is_dev}}http://localhost:9000/dist{{else}}//cdn.ons.gov.uk/sixteens/77f1d9b{{/if}}/css/pdf.css">{{/if}}
 
         {{> partials/gtm-data-layer }}
 
@@ -121,15 +121,15 @@
 			{{/if_eq}}
 		{{/if_eq}}
 
-        <script type="text/javascript" src="{{#if is_dev}}//{{location.hostname}}:9000/dist{{else}}//cdn.ons.gov.uk/sixteens/406b9ac{{/if}}/js/main.js"></script>
-        <script type="text/javascript" src="/js/app.js"></script>
+        <script src="{{#if is_dev}}//{{location.hostname}}:9000/dist{{else}}//cdn.ons.gov.uk/sixteens/77f1d9b{{/if}}/js/main.js"></script>
+        <script src="/js/app.js"></script>
 
         {{!-- Add extra highcharts source files if page contains any charts --}}
         {{#if charts.0}}
-            <script type="text/javascript" src="/js/third-party/highcharts-annotations-5.0.7.js"></script>
-            <script type="text/javascript" src="/js/third-party/highcharts-broken-axis-5.0.7.js"></script>
-            <script type="text/javascript" src="/js/third-party/highcharts-heatmap-5.0.7.js"></script>
-            <script type="text/javascript" src="/js/third-party/highcharts-exporting-5.0.7.js"></script>
+            <script src="/js/third-party/highcharts-annotations-5.0.7.js"></script>
+            <script src="/js/third-party/highcharts-broken-axis-5.0.7.js"></script>
+            <script src="/js/third-party/highcharts-heatmap-5.0.7.js"></script>
+            <script src="/js/third-party/highcharts-exporting-5.0.7.js"></script>
         {{/if}}
 
 	</body>

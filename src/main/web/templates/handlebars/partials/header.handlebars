@@ -3,6 +3,7 @@
     <a class="skiplink" href="#main" tabindex="0">
         Skip to main content
     </a>
+	{{> partials/banner}}	
 	{{!-- produced for download analytics function --}}
 	<div id="pagePath" class="hide">{{uri}}</div>
 	{{!-- LANGUAGE TOGGLE AND SECONDARY NAV - DESKTOP --}}
@@ -13,9 +14,7 @@
 						<!--[if lte IE 8]>
 							<img class="logo" src="https://cdn.ons.gov.uk/assets/images/ons-logo/v2/ons-logo.png" alt="{{labels.ons-logo-alt}}">
 						<![endif]-->
-						<!--[if gte IE 9]><!-->
-							<img class="logo" src="https://cdn.ons.gov.uk/assets/images/ons-logo/v2/ons-logo.svg" alt="{{labels.ons-logo-alt}}">
-						<![endif]-->
+						<img class="logo" src="https://cdn.ons.gov.uk/assets/images/ons-logo/v2/ons-logo.svg" alt="{{labels.ons-logo-alt}}">
 					</a>
 				</div>
                 <div class="col col--lg-two-thirds col--md-two-thirds hide--sm print--hide language--js__container">
@@ -52,13 +51,6 @@
 			</div>
 		</div>
 	{{!-- /wrapper --}}
-
-	{{!-- Banner needs to be above the 'menu' and 'search' buttons on search pages on mobile --}}
-	{{#if_any (eq listType "search") (eq listType "searchdata") (eq listType "searchpublication")}}
-		<div class="hide--md hide--lg">
-			{{> partials/banner}}
-		</div>
-	{{/if_any}}
 
 	{{!-- MAIN NAV --}}
 	<div class="primary-nav print--hide">
@@ -115,8 +107,7 @@
 						<a href="{{> partials/language-toggle language="cym"}}" class="language__link">Cymraeg (CY)</a>
 					{{/if_eq}}
 				</li>
-				</ul>
-			</div>
+			</ul>
 		</nav>
 	</div>
 	{{!-- SEARCH BAR --}}
@@ -133,7 +124,5 @@
 				</form>
 			</div>
 		</div>
-		{{> partials/banner}}
 	{{/block}}
-	
 </header>
