@@ -2,11 +2,11 @@ package com.github.onsdigital.babbage.template;
 
 import com.github.onsdigital.babbage.template.handlebars.HandlebarsRenderer;
 import com.github.onsdigital.babbage.util.ThreadContext;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
@@ -86,7 +86,7 @@ public class TemplateService {
      * @throws IOException
      */
     public String renderTemplate(String templateName, Object data) throws IOException {
-        return renderTemplate(templateName, data, ThreadContext.getAllData());
+        return renderTemplate(templateName, data, null);
     }
 
     /**
@@ -114,13 +114,18 @@ public class TemplateService {
     }
 
     /**
-     * Add current thread context to map array
+     * Returns a new map containing all elements in the map passed as parameter plus the current thread context
      *
      * @param data
      * @return
      */
-    private Map<String, Object>[] addThreadContext(Map<String, Object>... data) {
-        return ArrayUtils.add(data, ThreadContext.getAllData());
+    private Map<String, Object> addThreadContext(Map<String, Object> data) {
+        Map<String, Object> r = new HashMap<String, Object>();
+        if (data != null) {
+            r.putAll(data);
+        }
+        r.putAll(ThreadContext.getAllData());
+        return r;
     }
 
 }

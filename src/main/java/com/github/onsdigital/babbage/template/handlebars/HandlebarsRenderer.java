@@ -59,7 +59,7 @@ public class HandlebarsRenderer {
      * @return
      * @throws IOException
      */
-    public String render(String templateName, Object data, Map<String, Object>... additionalData) throws IOException {
+    public String render(String templateName, Object data, Map<String, Object> additionalData) throws IOException {
         Template template = getTemplate(templateName);
 
         Context.Builder builder = Context
@@ -67,13 +67,8 @@ public class HandlebarsRenderer {
                 .resolver(MapValueResolver.INSTANCE, FieldValueResolver.INSTANCE);
 
         if (additionalData != null) {
-            for (Map<String, Object> next : additionalData) {
-                if (next != null) {
-                    for (Map.Entry<String, Object> entry : next.entrySet()) {
-                        builder.combine(entry.getKey(), entry.getValue());
-                    }
-                }
-
+            for (Map.Entry<String, Object> entry : additionalData.entrySet()) {
+                builder.combine(entry.getKey(), entry.getValue());
             }
 
         }
