@@ -52,7 +52,8 @@ public class TemplateService {
      * @throws IOException
      */
     public String renderContent(Object data, Map<String, Object> additionalData) throws IOException {
-        return renderer.render(appConfig().handlebars().getMainContentTemplateName(), sanitize(data), addThreadContext(additionalData));
+        String templateName = appConfig().handlebars().getMainContentTemplateName();
+        return renderTemplate(templateName, data, additionalData);
     }
 
     /**
@@ -64,7 +65,8 @@ public class TemplateService {
      * @throws IOException
      */
     public String renderChartConfiguration(Object data, Map<String, Object> additionalData) throws IOException {
-        return renderer.render(appConfig().handlebars().getMainChartConfigTemplateName(), sanitize(data), addThreadContext(additionalData));
+        String templateName = appConfig().handlebars().getMainChartConfigTemplateName();
+        return renderTemplate(templateName, data, additionalData);
     }
 
     /**
