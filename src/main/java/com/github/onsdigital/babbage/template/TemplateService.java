@@ -103,7 +103,7 @@ public class TemplateService {
     }
 
     /*Converts object into map if json string or json input stream*/
-    public static Object sanitize(Object data) throws IOException {
+    private static Object sanitize(Object data) throws IOException {
         if (data instanceof String) {
             return toMap((String) data);
         } else if (data instanceof InputStream) {
