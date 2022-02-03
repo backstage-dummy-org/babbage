@@ -4,11 +4,10 @@ import com.github.onsdigital.babbage.template.TemplateService;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import java.io.*;
 
 public class QuoteTagReplacer extends TagReplacementStrategy {
 
@@ -36,7 +35,7 @@ public class QuoteTagReplacer extends TagReplacementStrategy {
     String replace(Matcher matcher) throws IOException {
         String content = matcher.group(1);
         String attr = matcher.group(2);
-        LinkedHashMap<String, Object> additionalData = new LinkedHashMap<>();
+        Map<String, Object> additionalData = new LinkedHashMap<>();
         additionalData.put("id", UUID.randomUUID().toString().substring(10));
         additionalData.put("content", content);
         additionalData.put("attr", attr);
