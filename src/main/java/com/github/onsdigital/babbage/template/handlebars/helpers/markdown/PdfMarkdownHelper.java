@@ -32,6 +32,7 @@ public class PdfMarkdownHelper extends CustomMarkdownHelper implements BabbageHa
         markdown = new ImageTagReplacer(path, "pdf/partials/image").replaceCustomTags(markdown);
         markdown = new InteractiveTagReplacer(path, "pdf/partials/interactive").replaceCustomTags(markdown);
         markdown = new PulloutBoxTagReplacer(path, "pdf/partials/pullout-box").replaceCustomTags(markdown);
+        markdown = new QuoteTagReplacer(path, "pdf/partials/quote").replaceCustomTags(markdown);
         return markdown;
     }
 }

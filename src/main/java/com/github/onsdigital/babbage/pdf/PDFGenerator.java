@@ -75,7 +75,7 @@ public class PDFGenerator {
         }
     }
 
-    public static void createPDF(String url, InputStream input, String outputFile)
+    private static void createPDF(String url, InputStream input, String outputFile)
             throws IOException, DocumentException, com.lowagie.text.DocumentException {
 
         OutputStream os = null;

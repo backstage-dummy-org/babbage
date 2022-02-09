@@ -2,11 +2,11 @@ package com.github.onsdigital.babbage.template;
 
 import com.github.onsdigital.babbage.template.handlebars.HandlebarsRenderer;
 import com.github.onsdigital.babbage.util.ThreadContext;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
@@ -31,28 +31,42 @@ public class TemplateService {
         return instance;
     }
 
+    
     /**
      * Renders data using main template, current ThreadContext data is added to context as additional data
      *
      * @param data           Main data to render template with
-     * @param additionalData optional additional data map, map keys will be set as the object name when combined with main data
      * @return
      * @throws IOException
      */
-    public String renderContent(Object data, Map<String, Object>... additionalData) throws IOException {
-        return renderer.render(appConfig().handlebars().getMainContentTemplateName(), sanitize(data), addThreadContext(additionalData));
+    public String renderContent(Object data) throws IOException {
+        return renderContent(data, null);
+    }
+    
+    /**
+     * Renders data using main template, current ThreadContext data is added to context as additional data
+     *
+     * @param data           Main data to render template with
+     * @param additionalData additional data map, map keys will be set as the object name when combined with main data
+     * @return
+     * @throws IOException
+     */
+    public String renderContent(Object data, Map<String, Object> additionalData) throws IOException {
+        String templateName = appConfig().handlebars().getMainContentTemplateName();
+        return renderTemplate(templateName, data, additionalData);
     }
 
     /**
      * Renders chart configuration using main chart configuration template, current ThreadContext data is added to context as additional data
      *
      * @param data           Main data to render template with
-     * @param additionalData optional additional data map, map keys will be set as the object name when combined with main data
+     * @param additionalData additional data map, map keys will be set as the object name when combined with main data
      * @return
      * @throws IOException
      */
-    public String renderChartConfiguration(Object data, Map<String, Object>... additionalData) throws IOException {
-        return renderer.render(appConfig().handlebars().getMainChartConfigTemplateName(), sanitize(data), addThreadContext(additionalData));
+    public String renderChartConfiguration(Object data, Map<String, Object> additionalData) throws IOException {
+        String templateName = appConfig().handlebars().getMainChartConfigTemplateName();
+        return renderTemplate(templateName, data, additionalData);
     }
 
     /**
@@ -63,7 +77,18 @@ public class TemplateService {
      * @throws IOException
      */
     public String renderTemplate(String templateName) throws IOException {
-        return renderer.render(templateName, Collections.emptyMap(), ThreadContext.getAllData());
+        return renderTemplate(templateName, Collections.emptyMap());
+    }
+
+    /**
+     * Renders template with given name using given data and current thread context
+     *
+     * @param templateName
+     * @return
+     * @throws IOException
+     */
+    public String renderTemplate(String templateName, Object data) throws IOException {
+        return renderTemplate(templateName, data, null);
     }
 
     /**
@@ -71,16 +96,16 @@ public class TemplateService {
      *
      * @param templateName
      * @param data
-     * @param additionalData optional additional data
+     * @param additionalData additional data
      * @return
      * @throws IOException
      */
-    public String renderTemplate(String templateName, Object data, Map<String, Object>... additionalData) throws IOException {
+    public String renderTemplate(String templateName, Object data, Map<String, Object> additionalData) throws IOException {
         return renderer.render(templateName, sanitize(data), addThreadContext(additionalData));
     }
 
     /*Converts object into map if json string or json input stream*/
-    public static Object sanitize(Object data) throws IOException {
+    private static Object sanitize(Object data) throws IOException {
         if (data instanceof String) {
             return toMap((String) data);
         } else if (data instanceof InputStream) {
@@ -91,13 +116,18 @@ public class TemplateService {
     }
 
     /**
-     * Add current thread context to map array
+     * Returns a new map containing all elements in the map passed as parameter plus the current thread context
      *
      * @param data
      * @return
      */
-    private Map<String, Object>[] addThreadContext(Map<String, Object>... data) {
-        return ArrayUtils.add(data, ThreadContext.getAllData());
+    private Map<String, Object> addThreadContext(Map<String, Object> data) {
+        Map<String, Object> r = new HashMap<String, Object>();
+        if (data != null) {
+            r.putAll(data);
+        }
+        r.putAll(ThreadContext.getAllData());
+        return r;
     }
 
 }

@@ -9,6 +9,8 @@ import com.github.onsdigital.babbage.response.BabbageContentBasedStringResponse;
 import com.github.onsdigital.babbage.response.BabbageStringResponse;
 import com.github.onsdigital.babbage.response.base.BabbageResponse;
 import com.github.onsdigital.babbage.template.TemplateService;
+import com.github.onsdigital.babbage.util.json.JsonUtil;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -128,7 +130,7 @@ public class ChartRenderer {
         if (assertUri(uri, request, response)) {
             ContentResponse contentResponse = contentClient.getContent(uri);
             String jsonRequest = contentResponse.getAsString();
-            Map<String, Object> json = (Map<String, Object>) templateService.sanitize(jsonRequest);
+            Map<String, Object> json = JsonUtil.toMap(jsonRequest);
             Integer width = getWidth(request);
             Map<String, Object> additionalData = new ChartConfigBuilder().width(width).getMap();
             InputStream imageInputStream = null;
