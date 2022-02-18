@@ -6,17 +6,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.core.Context;
-import java.io.IOException;
-
-/**
- * Created by mrout on 29/08/2017.
- */
 
 @Api
-public class Healthcheck {
+public class Health {
 
     @GET
-    public void get(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException {
+    public void get(@Context HttpServletRequest request, @Context HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 }
