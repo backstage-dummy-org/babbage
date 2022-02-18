@@ -1,5 +1,5 @@
 {{#resolve "/"}}
-  {{#if emergencyBanner}}
+  {{#if_all emergencyBanner emergencyBanner.title}}
     <div class="emergency-banner emergency-banner--{{replace emergencyBanner.type "_" "-"}}" role="banner" data-nosnippet="">
     	<div class="wrapper">
 			<div class="col-wrap">
@@ -13,7 +13,7 @@
 			</div>
     	</div>
 	</div>
-  {{/if}}
+  {{/if_all}}
   {{#if serviceMessage}}
     <div class="banner">
       <div class="wrapper banner--half-padding banner--bottom-border">
