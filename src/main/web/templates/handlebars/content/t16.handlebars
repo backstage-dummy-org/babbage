@@ -149,16 +149,17 @@
                 <div class="col-wrap">
                     <ul class="tiles__list col col--lg-40 margin-bottom--double">
                         {{#each relatedDatasets}}
-                            {{#resolve this.uri}}
-                                <li class="tiles__item--list-type-simple">
-                                    <h3 class="tiles__title-h3">
-                                        <a data-gtm-type="related-datasets" data-gtm-title="{{description.title}}" href="{{uri}}">{{description.title}}</a>
-                                    </h3>
-                                    <p class="tiles__content">
-                                        {{description.summary}}
-                                    </p>
-                                </li>
-                            {{/resolve}}
+                            {{resolve this.uri filter="description" assign="relDataset"}}
+                            <li class="tiles__item--list-type-simple">
+                                <h3 class="tiles__title-h3">
+                                    <a data-gtm-type="related-datasets" data-gtm-title="{{#if relDataset}} {{relDataset.description.title}} {{else}} {{description.title}} {{/if}}" href="{{uri}}">{{#if relDataset}} {{relDataset.description.title}} {{else}} {{description.title}} {{/if}}</a>
+                                </h3>
+                                {{#if relDataset}}
+	                                <p class="tiles__content">
+	                                    {{relDataset.description.summary}}
+	                                </p>
+                                {{/if}}
+                            </li>
                         {{/each}}
                     </ul>
                 </div>
