@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,7 +109,7 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
                 validateUri(uri);
                 String uriString = (String) uri;
 
-                HashMap<String, SearchResult> results = SearchUtils.searchTimeseriesForUri(uriString);
+                Map<String, SearchResult> results = SearchUtils.searchTimeseriesForUri(uriString);
                 LinkedHashMap<String, Object> data = SearchRendering.buildResults("list", results);
 
                 assign(options, data);

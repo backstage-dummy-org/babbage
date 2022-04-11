@@ -84,13 +84,13 @@ public class ReleaseCalendar extends BaseRequestHandler implements ListRequestHa
 		};
 	}
 
-	private void filterUpcoming(BoolQueryBuilder query) {
+	public static void filterUpcoming(BoolQueryBuilder query) {
 		QueryBuilder notPublishedNotCancelled = and(not(published()), not(cancelled()));
 		QueryBuilder cancelledButNotDue = and(cancelled(), not(due()));
 		query.filter(or(notPublishedNotCancelled, cancelledButNotDue));
 	}
 
-	private void filterPublished(BoolQueryBuilder query) {
+	public static void filterPublished(BoolQueryBuilder query) {
 		QueryBuilder publishedNotCancelled = and(published(), not(cancelled()));
 		QueryBuilder cancelledAndDue = and(cancelled(), due());
 		query.filter(or(publishedNotCancelled, cancelledAndDue));
@@ -103,28 +103,28 @@ public class ReleaseCalendar extends BaseRequestHandler implements ListRequestHa
 	}
 
 
-	private QueryBuilder published() {
+	private static QueryBuilder published() {
 		return termQuery(Field.published.fieldName(), true);
 	}
 
-	private QueryBuilder cancelled() {
+	private static QueryBuilder cancelled() {
 		return termQuery(Field.cancelled.fieldName(), true);
 	}
 
-	private QueryBuilder due() {
+	private static QueryBuilder due() {
 		return rangeQuery(Field.releaseDate.fieldName()).to(new Date());
 	}
 
-	private QueryBuilder not(QueryBuilder query) {
+	private static QueryBuilder not(QueryBuilder query) {
 		return boolQuery().mustNot(query);
 	}
 
 	//Or query for given two queries. Database would help a lot , wouldn't it ?
-	private QueryBuilder or(QueryBuilder q1, QueryBuilder q2) {
+	private static QueryBuilder or(QueryBuilder q1, QueryBuilder q2) {
 		return boolQuery().should(q1).should(q2);
 	}
 
-	private QueryBuilder and(QueryBuilder q1, QueryBuilder q2) {
+	private static QueryBuilder and(QueryBuilder q1, QueryBuilder q2) {
 		return boolQuery().must(q1).must(q2);
 	}
 

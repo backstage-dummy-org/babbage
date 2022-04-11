@@ -25,7 +25,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +61,8 @@ public class SearchUtils {
      * Performs search for requested search term against filtered content types and counts contents types.
      * Content results are serialised into json with key "result" and document counts are serialised as "counts".
      */
-    public static LinkedHashMap<String, SearchResult> search(String searchTerm, SearchQueries queries, boolean searchDepartments) throws IOException {
-        LinkedHashMap<String, SearchResult> results = null;
+    public static Map<String, SearchResult> search(String searchTerm, SearchQueries queries, boolean searchDepartments) throws IOException {
+        Map<String, SearchResult> results = null;
         if (searchTerm != null) {
             results = searchAll(queries);
             if (searchDepartments) {
@@ -94,7 +93,7 @@ public class SearchUtils {
     }
 
     // Execute the given search queries with internal service.
-    public static LinkedHashMap<String, SearchResult> searchAll(SearchQueries searchQueries) {
+    public static Map<String, SearchResult> searchAll(SearchQueries searchQueries) {
         List<ONSQuery> queries = searchQueries.buildQueries();
         return doSearch(queries);
     }
@@ -179,9 +178,9 @@ public class SearchUtils {
                 .highlight(true);
     }
 
-    static LinkedHashMap<String, SearchResult> doSearch(List<ONSQuery> searchQueries) {
+    static Map<String, SearchResult> doSearch(List<ONSQuery> searchQueries) {
         List<ONSSearchResponse> responseList = SearchHelper.searchMultiple(searchQueries);
-        LinkedHashMap<String, SearchResult> results = new LinkedHashMap<>();
+        Map<String, SearchResult> results = new LinkedHashMap<>();
         for (int i = 0; i < responseList.size(); i++) {
             ONSSearchResponse response = responseList.get(i);
             results.put(searchQueries.get(i).name(), response.getResult());
@@ -204,7 +203,7 @@ public class SearchUtils {
         return (String) timeSeries.get(Field.uri.fieldName());
     }
 
-    private static void searchDeparments(String searchTerm, LinkedHashMap<String, SearchResult> results) {
+    private static void searchDeparments(String searchTerm, Map<String, SearchResult> results) {
         QueryBuilder departmentsQuery = departmentQuery(searchTerm);
         SearchRequestBuilder departmentsSearch = ElasticSearchClient.getElasticsearchClient().prepareSearch(DEPARTMENTS_INDEX);
         departmentsSearch.setQuery(departmentsQuery);
@@ -226,7 +225,7 @@ public class SearchUtils {
     }
 
 
-    public static HashMap<String, SearchResult> searchTimeseriesForUri(String uriString) {
+    public static Map<String, SearchResult> searchTimeseriesForUri(String uriString) {
         QueryBuilder builder = QueryBuilders.matchAllQuery();
         SortBy sortByReleaseDate = SortBy.release_date;
 
