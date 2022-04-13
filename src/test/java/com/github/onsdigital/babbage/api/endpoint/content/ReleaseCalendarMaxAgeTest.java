@@ -63,7 +63,7 @@ public class ReleaseCalendarMaxAgeTest {
         int expectedMaxAge = 100;
         
         Instant nextReleaseDate = Instant.now().plusSeconds(expectedMaxAge);
-        doReturn(Date.from(nextReleaseDate)).when(endpoint).getNextReleaseDate();
+        doReturn(nextReleaseDate).when(endpoint).getNextReleaseDate();
 
         int maxAge = (int) endpoint.get(request, response);
         // Check max age is as expected with 1 second tolerance
@@ -86,7 +86,7 @@ public class ReleaseCalendarMaxAgeTest {
         when(request.getParameter("key")).thenReturn(KEY_HASH);
 
         Instant nextReleaseDate = Instant.now().minusSeconds(10);
-        doReturn(Date.from(nextReleaseDate)).when(endpoint).getNextReleaseDate();
+        doReturn(nextReleaseDate).when(endpoint).getNextReleaseDate();
 
         int expectedMaxAge = appConfig().babbage().getDefaultContentCacheTime();
         assertEquals(expectedMaxAge, endpoint.get(request, response));

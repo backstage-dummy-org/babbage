@@ -2,9 +2,9 @@ package com.github.onsdigital.babbage.api.endpoint.content;
 
 import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.Date;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,18 +27,17 @@ import com.github.onsdigital.babbage.search.model.field.Field;
  */
 @Api
 public class ReleaseCalendarMaxAge extends MaxAge {
-    private static final DateFormat DATE_FORMAT = appConfig().contentAPI().defaultContentDateFormat();
     private static final String QUERY_NAME = "nextRelease";
 
     @Override
     protected int getMaxAge(HttpServletRequest request) throws Exception {
         int maxAge = appConfig().babbage().getDefaultContentCacheTime();
         
-        Date nextReleaseDate = getNextReleaseDate();
-        Date now = new Date();
+        Instant nextReleaseDate = getNextReleaseDate();
+        Instant now = Instant.now();
 
-        if (nextReleaseDate != null && nextReleaseDate.after(now)) {
-            Long secondsUntilNextRelease = (nextReleaseDate.getTime() - now.getTime()) / 1000;
+        if (nextReleaseDate != null && nextReleaseDate.isAfter(now)) {
+            Long secondsUntilNextRelease = now.until(nextReleaseDate, ChronoUnit.SECONDS);
             if (secondsUntilNextRelease < maxAge) {
                 maxAge = secondsUntilNextRelease.intValue();
             }
@@ -51,8 +50,8 @@ public class ReleaseCalendarMaxAge extends MaxAge {
         return "ReleaseCalendarMaxAge";
     }
 
-    protected Date getNextReleaseDate() throws ParseException {
-        Date nextRelease = null;
+    protected Instant getNextReleaseDate() throws ParseException {
+        Instant nextRelease = null;
 
         SearchFilter filter = ReleaseCalendar::filterUpcoming;
         ONSQuery query = ONSQueryBuilders.onsQuery(QueryBuilders.matchAllQuery(), filter)
@@ -66,7 +65,7 @@ public class ReleaseCalendarMaxAge extends MaxAge {
         if (result.get(QUERY_NAME).getResults().size() > 0) {
             // There will be just 1 result
             Map<String, String> description = ((Map<String, String>) result.get(QUERY_NAME).getResults().get(0).get("description"));
-            nextRelease = DATE_FORMAT.parse(description.get("releaseDate"));
+            nextRelease = Instant.parse(description.get("releaseDate"));
         }
         return nextRelease;
         
