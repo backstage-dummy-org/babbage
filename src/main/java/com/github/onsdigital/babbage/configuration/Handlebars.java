@@ -16,7 +16,6 @@ public class Handlebars implements AppConfig {
     private static final String TEMPLATES_SUFFIX_KEY = "TEMPLATES_SUFFIX";
     private static final String RELOAD_TEMPLATES_KEY = "RELOAD_TEMPLATES";
     private static final String ENABLE_COVID19_FEATURE = "ENABLE_COVID19_FEATURE";
-    private static final String ENABLE_CENSUS_BANNER = "ENABLE_CENSUS_BANNER";
 
     private final String defaultHandlebarsDatePattern;
     private final String mainContentTemplateName;
@@ -25,7 +24,6 @@ public class Handlebars implements AppConfig {
     private final String templatesSuffix;
     private final boolean reloadTemplateChanges;
     private final boolean enableCovid19Feature;
-    private final boolean enableCensusBanner;
 
     static Handlebars getInstance() {
         if (INSTANCE == null) {
@@ -47,7 +45,6 @@ public class Handlebars implements AppConfig {
         templatesSuffix = getValueOrDefault(TEMPLATES_SUFFIX_KEY, ".handlebars");
         reloadTemplateChanges = getStringAsBool(RELOAD_TEMPLATES_KEY, "N");
         enableCovid19Feature = Boolean.parseBoolean(getValue(ENABLE_COVID19_FEATURE));
-        enableCensusBanner = Boolean.parseBoolean(getValue(ENABLE_CENSUS_BANNER));
     }
 
     public String getHandlebarsDatePattern() {
@@ -78,10 +75,6 @@ public class Handlebars implements AppConfig {
         return enableCovid19Feature;
     }
 
-    public boolean isEnableCensusBanner() {
-        return enableCensusBanner;
-    }
-
     @Override
     public Map<String, Object> getConfig() {
         Map<String, Object> config = new HashMap<>();
@@ -92,7 +85,6 @@ public class Handlebars implements AppConfig {
         config.put("templatesSuffix", templatesSuffix);
         config.put("reloadTemplateChanges", reloadTemplateChanges);
         config.put("enableCovid19Feature", enableCovid19Feature);
-        config.put("enableCensusBanner", enableCensusBanner);
         return config;
     }
 }
