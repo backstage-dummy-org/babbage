@@ -21,7 +21,7 @@ import com.github.onsdigital.logging.v2.event.SimpleEvent;
  */
 @Api
 public class MaxAge {
-    private static final String MAXAGE_KEY_HASH = "e9xUWB/CF33u6jd/f2yOgWIs+ig8P8OIP3VC7c6U1NZHZgpzp6nsXQVLnpIluJv0";
+    private static final String MAXAGE_KEY_HASH = "mPHbKjCol7ObQ87qKVQgHz6kR3nsYJ3WJHgP7+JYyi5rSJbmbDAcQU8EQilFQ6QQ";
 
     @GET
     public Object get(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException {
