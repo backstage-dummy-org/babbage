@@ -1,6 +1,7 @@
 package com.github.onsdigital.babbage.api.endpoint.content;
 
 import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
+import static org.elasticsearch.index.query.QueryBuilders.rangeQuery;
 
 import java.text.ParseException;
 import java.time.Instant;
@@ -32,9 +33,9 @@ public class ReleaseCalendarMaxAge extends MaxAge {
     @Override
     protected int getMaxAge(HttpServletRequest request) throws Exception {
         int maxAge = appConfig().babbage().getDefaultContentCacheTime();
-        
-        Instant nextReleaseDate = getNextReleaseDate();
+
         Instant now = Instant.now();
+        Instant nextReleaseDate = getNextReleaseDate(now);
 
         if (nextReleaseDate != null && nextReleaseDate.isAfter(now)) {
             Long secondsUntilNextRelease = now.until(nextReleaseDate, ChronoUnit.SECONDS);
@@ -50,10 +51,15 @@ public class ReleaseCalendarMaxAge extends MaxAge {
         return "ReleaseCalendarMaxAge";
     }
 
-    protected Instant getNextReleaseDate() throws ParseException {
+    protected Instant getNextReleaseDate(Instant fromDate) throws ParseException {
         Instant nextRelease = null;
 
-        SearchFilter filter = ReleaseCalendar::filterUpcoming;
+        SearchFilter filter = q -> {
+            q.filter(rangeQuery(Field.releaseDate.fieldName())
+                    .from(fromDate));
+            ReleaseCalendar.filterUpcoming(q);
+        };
+        
         ONSQuery query = ONSQueryBuilders.onsQuery(QueryBuilders.matchAllQuery(), filter)
                 .name(QUERY_NAME)
                 .types(ContentType.release)
