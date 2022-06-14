@@ -11,6 +11,9 @@
     {{#block "block-metadata"}}
 		<div class="meta-wrap">
             <div class="wrapper">
+                {{#if_eq description.survey "census"}}
+                    <img class="margin-bottom--2" src="/img/logo-census-2021-purple-landscape.png" alt="Census"/>
+                {{/if_eq}}
                 <div class="col-wrap">
                     {{#block "block-ns-contact"}}
                         {{> content/partials/metadata/contact class="col--md-16 col--lg-20"}}
