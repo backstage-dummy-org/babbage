@@ -133,7 +133,13 @@ public class PooledHttpClient extends BabbageHttpClient {
 
     private URIBuilder newUriBuilder(String path) {
         URIBuilder uriBuilder = new URIBuilder(host);
-        uriBuilder.setPath((uriBuilder.getPath() + "/" + path).replaceAll("//+", "/"));
+        String prefix = uriBuilder.getPath();
+        String fullPath = path;
+        if (prefix != null) {
+            fullPath = prefix + "/" + path;
+        }
+        uriBuilder.setPath(fullPath.replaceAll("//+", "/"));
+
         return uriBuilder;
     }
 
