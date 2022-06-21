@@ -68,6 +68,7 @@ public class ReleaseCalendarMaxAgeTest {
         int maxAge = (int) endpoint.get(request, response);
         // Check max age is as expected with 1 second tolerance
         assertTrue(expectedMaxAge-maxAge < 2);
+        assertTrue(expectedMaxAge-maxAge >= 0);
     }
 
     @Test
