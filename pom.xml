@@ -12,8 +12,10 @@
         <handlebars-java-version>4.0.3</handlebars-java-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <powermock.version>1.5.6</powermock.version>
-        <dp-logging.version>v2.0.0-beta</dp-logging.version>
-        <fasterxml.jackson.version>2.11.0</fasterxml.jackson.version>
+        <dp-logging.version>v2.0.0-beta.2</dp-logging.version>
+        <fasterxml.jackson.version>2.13.3</fasterxml.jackson.version>
+        <jetty.version>9.4.46.v20220331</jetty.version>
+        <flying-saucer.version>9.1.22</flying-saucer.version>
     </properties>
 
     <dependencies>
@@ -23,7 +25,7 @@
         <dependency>
             <groupId>com.github.onsdigital</groupId>
             <artifactId>restolino</artifactId>
-            <version>v0.3.0</version>
+            <version>v0.4.3</version>
         </dependency>
 
         <dependency>
@@ -91,7 +93,14 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.68</version>
+            <version>1.70</version>
+        </dependency>
+
+        <!-- Transitive dependency of cryptolite, override version explicitly (from 1.10) due to security vulnerabilities -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
         </dependency>
 
         <!-- Commons -->
@@ -133,13 +142,13 @@
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-core</artifactId>
-            <version>9.1.20</version>
+            <version>${flying-saucer.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.xhtmlrenderer</groupId>
             <artifactId>flying-saucer-pdf</artifactId>
-            <version>9.1.20</version>
+            <version>${flying-saucer.version}</version>
         </dependency>
 
         <dependency>
@@ -152,7 +161,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -165,13 +174,13 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5</version>
+            <version>4.5.13</version>
         </dependency>
 
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
-            <version>0.9.9</version>
+            <version>0.9.12</version>
         </dependency>
 
         <!-- Logging -->
@@ -192,23 +201,23 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.4.40.v20210413</version>
+            <version>${jetty.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-client</artifactId>
-            <version>9.4.40.v20210413</version>
+            <version>${jetty.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-http</artifactId>
-            <version>9.4.40.v20210413</version>
+            <version>${jetty.version}</version>
         </dependency>
 
         <!-- Fasterxml Jackson dependencies - overrides vulnerable transitive dependencies
-        and declared explicitly to resolve conflicts in handlebars, elasticsearch and dp-logging -->
+        and declared explicitly to resolve conflicts in handlebars and elasticsearch -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -242,7 +251,7 @@
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>2.0.22</version>
+            <version>2.0.26</version>
         </dependency>
 
     </dependencies>
@@ -338,9 +347,16 @@
                             <artifactId>elasticsearch</artifactId>
                             <version>2.1.1</version>
                         </exlude>
+                        <exclude>
+                            <!-- This is a transitive dependency of org.elasticsearch:elasticsearch:2.1.1 -->
+                            <groupId>org.apache.lucene</groupId>
+                            <artifactId>lucene-queryparser</artifactId>
+                            <version>5.3.1</version>
+                        </exclude>
 
                         <exlude>
                             <!-- Trello card for this exclude: https://trello.com/c/MCpbYlIT/1721-babbage-netty-multiple-vulnerabilities-s1 -->
+                            <!-- This is a transitive dependency of org.elasticsearch:elasticsearch:2.1.1 -->
                             <groupId>io.netty</groupId>
                             <artifactId>netty</artifactId>
                             <version>3.10.5.Final</version>
@@ -351,6 +367,33 @@
                             <groupId>com.lowagie</groupId>
                             <artifactId>itext</artifactId>
                             <version>2.1.7</version>
+                        </exclude>
+
+                        <exclude>
+                            <!-- Trello card for this exclude: https://trello.com/c/ATXjzIlG/1005-upgrade-handlebars -->
+                            <groupId>com.github.jknack</groupId>
+                            <artifactId>handlebars</artifactId>
+                            <version>4.0.3</version>
+                        </exclude>
+                        <exclude>
+                            <!-- This is a transitive dependency of com.github.jknack:handlebars:4.0.3 -->
+                            <groupId>org.mozilla</groupId>
+                            <artifactId>rhino</artifactId>
+                            <version>1.7R4</version>
+                        </exclude>
+
+                        <exclude>
+                            <!-- Trello card for this exclude: https://trello.com/c/1XDM7LBH/1006-upgrade-rome-rome-dependency -->
+                            <groupId>rome</groupId>
+                            <artifactId>rome</artifactId>
+                            <version>1.0</version>
+                        </exclude>
+
+                         <exclude>
+                            <!-- Trello card for this exclude: https://trello.com/c/fyFpvpZw/1007-upgrade-dom4j-dom4j-dependency -->
+                            <groupId>dom4j</groupId>
+                            <artifactId>dom4j</artifactId>
+                            <version>1.6.1</version>
                         </exclude>
                     </excludeCoordinates>
                 </configuration>
