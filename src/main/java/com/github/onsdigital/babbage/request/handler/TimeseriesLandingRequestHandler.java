@@ -11,7 +11,6 @@ import com.github.onsdigital.babbage.search.model.SearchResult;
 import com.github.onsdigital.babbage.util.URIUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -62,7 +61,7 @@ public class TimeseriesLandingRequestHandler extends BaseRequestHandler {
 
     public static String getLatestTimeseriesUri(String uri) {
         // search the timeseries that live under this CDID
-        HashMap<String, SearchResult> data = SearchUtils.searchTimeseriesForUri(uri);
+        Map<String, SearchResult> data = SearchUtils.searchTimeseriesForUri(uri);
 
         List<Map<String, Object>> results = data.get("result").getResults();
         if (results.size() == 0) {

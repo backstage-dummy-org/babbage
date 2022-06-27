@@ -12,7 +12,6 @@ import com.github.onsdigital.babbage.search.input.SortBy;
 import com.github.onsdigital.babbage.search.model.ContentType;
 import com.github.onsdigital.babbage.search.model.SearchResult;
 import com.github.onsdigital.babbage.search.model.field.Field;
-import com.github.onsdigital.babbage.util.ThreadContext;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import org.apache.commons.lang3.StringUtils;
@@ -20,15 +19,13 @@ import org.elasticsearch.index.query.QueryBuilders;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.github.onsdigital.babbage.search.builders.ONSQueryBuilders.toList;
 import static com.github.onsdigital.babbage.search.model.field.Field.releaseDate;
-import static com.github.onsdigital.babbage.util.RequestUtil.LOCATION_KEY;
-import static com.github.onsdigital.babbage.util.RequestUtil.Location;
 import static org.apache.commons.lang3.StringUtils.endsWith;
 import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
 import static org.elasticsearch.index.query.QueryBuilders.prefixQuery;
@@ -179,7 +176,7 @@ public class RssService {
     }
 
     private Optional<SearchResult> search(SearchQueries searchQueries) {
-        LinkedHashMap<String, SearchResult> results = SearchUtils.searchAll(searchQueries);
+        Map<String, SearchResult> results = SearchUtils.searchAll(searchQueries);
         return Optional.ofNullable(results.get(RESULTS_KEY));
     }
 

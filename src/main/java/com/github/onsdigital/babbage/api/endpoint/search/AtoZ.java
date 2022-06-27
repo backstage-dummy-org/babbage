@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.github.onsdigital.babbage.api.util.SearchUtils.buildBaseListQuery;
@@ -58,7 +57,7 @@ public class AtoZ {
 
     }
 
-    private LinkedHashMap<String, SearchResult> list(HttpServletRequest request, String firstLetter) throws IOException {
+    private Map<String, SearchResult> list(HttpServletRequest request, String firstLetter) throws IOException {
         return SearchUtils.searchAll(queries(request, firstLetter));
     }
 
