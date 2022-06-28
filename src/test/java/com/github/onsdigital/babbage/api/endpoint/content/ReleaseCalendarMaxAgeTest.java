@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
@@ -63,18 +63,19 @@ public class ReleaseCalendarMaxAgeTest {
         int expectedMaxAge = 100;
         
         Instant nextReleaseDate = Instant.now().plusSeconds(expectedMaxAge);
-        doReturn(nextReleaseDate).when(endpoint).getNextReleaseDate();
+        doReturn(nextReleaseDate).when(endpoint).getNextReleaseDate(Mockito.any());
 
         int maxAge = (int) endpoint.get(request, response);
         // Check max age is as expected with 1 second tolerance
         assertTrue(expectedMaxAge-maxAge < 2);
+        assertTrue(expectedMaxAge-maxAge >= 0);
     }
 
     @Test
     public void testGetEndpointWithoutNextRelease() throws Exception {
         when(request.getParameter("key")).thenReturn(KEY_HASH);
 
-        doReturn(null).when(endpoint).getNextReleaseDate();
+        doReturn(null).when(endpoint).getNextReleaseDate(Mockito.any());
 
         int expectedMaxAge = appConfig().babbage().getDefaultContentCacheTime();
         assertEquals(expectedMaxAge, endpoint.get(request, response));
@@ -86,7 +87,7 @@ public class ReleaseCalendarMaxAgeTest {
         when(request.getParameter("key")).thenReturn(KEY_HASH);
 
         Instant nextReleaseDate = Instant.now().minusSeconds(10);
-        doReturn(nextReleaseDate).when(endpoint).getNextReleaseDate();
+        doReturn(nextReleaseDate).when(endpoint).getNextReleaseDate(Mockito.any());
 
         int expectedMaxAge = appConfig().babbage().getDefaultContentCacheTime();
         assertEquals(expectedMaxAge, endpoint.get(request, response));
