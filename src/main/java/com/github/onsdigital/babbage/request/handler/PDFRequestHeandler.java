@@ -17,7 +17,7 @@ import com.github.onsdigital.babbage.util.json.JsonUtil;
 public abstract class PDFRequestHeandler extends BaseRequestHandler {
 
     protected String getTitle(String uri) throws IOException, ContentReadException {
-        ContentResponse contentResponse = ContentClient.getInstance().getContent(uri, filter(ContentFilter.DESCRIPTION));
+        ContentResponse contentResponse = getContent(uri, filter(ContentFilter.DESCRIPTION));
         Map<String, Object> stringObjectMap = JsonUtil.toMap(contentResponse.getDataStream());
 
         Map<String, Object> descriptionMap = (Map<String, Object>) stringObjectMap.get("description");
@@ -32,5 +32,9 @@ public abstract class PDFRequestHeandler extends BaseRequestHandler {
         title += ".pdf";
 
         return title;
+    }
+
+    protected ContentResponse getContent(String uri, Map<String, String[]> queryParameters) throws ContentReadException {
+        return ContentClient.getInstance().getContent(uri, queryParameters);
     }
 }

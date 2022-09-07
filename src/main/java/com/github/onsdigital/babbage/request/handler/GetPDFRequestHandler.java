@@ -5,8 +5,8 @@ import com.github.onsdigital.babbage.content.client.ContentReadException;
 import com.github.onsdigital.babbage.content.client.ContentResponse;
 import com.github.onsdigital.babbage.error.LegacyPDFException;
 import com.github.onsdigital.babbage.error.ResourceNotFoundException;
+import com.github.onsdigital.babbage.response.BabbageBinaryResponse;
 import com.github.onsdigital.babbage.response.BabbageContentBasedBinaryResponse;
-import com.github.onsdigital.babbage.response.base.BabbageResponse;
 import com.github.onsdigital.babbage.util.RequestUtil;
 import com.github.onsdigital.babbage.util.ThreadContext;
 
@@ -25,7 +25,7 @@ public class GetPDFRequestHandler extends PDFRequestHeandler {
     private static final String REQUEST_TYPE = "pdf";
 
     @Override
-    public BabbageResponse get(String requestedUri, HttpServletRequest request) throws Exception {
+    public BabbageBinaryResponse get(String requestedUri, HttpServletRequest request) throws Exception {
         try {
             return getPreGeneratedPDF(requestedUri, (String) ThreadContext.getData(RequestUtil.LANG_KEY));
         } catch (ContentReadException | ResourceNotFoundException e) {
@@ -39,11 +39,11 @@ public class GetPDFRequestHandler extends PDFRequestHeandler {
         return REQUEST_TYPE;
     }
 
-    private BabbageResponse getPreGeneratedPDF(String requestedUri, String language) throws ContentReadException, IOException {
+    private BabbageBinaryResponse getPreGeneratedPDF(String requestedUri, String language) throws ContentReadException, IOException {
         ContentResponse contentResponse = null;
         if ("cy".equals(language)) {
             try {
-                contentResponse = ContentClient.getInstance().getResource(requestedUri + "/page_cy.pdf");
+                contentResponse = getResource(requestedUri + "/page_cy.pdf");
             } catch(ResourceNotFoundException e) {
                 warn().exception(e).data("uri", requestedUri).log("pre-rendered Welsh PDF not found, using English version");
                 // There is no Welsh PDF, we'll serve the English version
@@ -53,12 +53,16 @@ public class GetPDFRequestHandler extends PDFRequestHeandler {
 
         if (contentResponse == null) {
             // Use the English version
-            contentResponse = ContentClient.getInstance().getResource(requestedUri + "/page.pdf");
+            contentResponse = getResource(requestedUri + "/page.pdf");
         }
         BabbageContentBasedBinaryResponse response = new BabbageContentBasedBinaryResponse(contentResponse, contentResponse.getDataStream(), contentResponse.getMimeType());
-        String contentDispositionHeader = "attachment; ";
-        contentDispositionHeader += contentResponse.getName() == null ? "" : "filename=\"" + getTitle(requestedUri) + "\"";
+        String contentDispositionHeader = "attachment";
+        contentDispositionHeader += contentResponse.getName() == null ? "" : "; filename=\"" + getTitle(requestedUri) + "\"";
         response.addHeader("Content-Disposition", contentDispositionHeader);
         return response;
+    }
+
+    protected ContentResponse getResource(String uri) throws ContentReadException {
+        return ContentClient.getInstance().getResource(uri);
     }
 }

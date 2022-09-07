@@ -52,7 +52,7 @@ public class GeneratePDFRequestHandler extends PDFRequestHeandler {
     }
 
     private String getPDFTables(String uri) throws IOException, ContentReadException {
-        ContentResponse contentResponse = ContentClient.getInstance().getContent(uri);
+        ContentResponse contentResponse = getContent(uri, null);
         Map<String, Object> stringObjectMap = JsonUtil.toMap(contentResponse.getDataStream());
 
         List<Map<String, Object>> o = (List<Map<String, Object>>) stringObjectMap.get("pdfTable");

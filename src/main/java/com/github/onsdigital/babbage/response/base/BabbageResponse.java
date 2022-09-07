@@ -23,7 +23,7 @@ public abstract class BabbageResponse {
     private String charEncoding = StandardCharsets.UTF_8.name();//Default encoding
     private int status = HttpServletResponse.SC_OK;//Default status
     private Long maxAge;
-    private Map<String, String> header;
+    private Map<String, String> headers;
     protected List<String> errors;
 
     public BabbageResponse(String mimeType) {
@@ -54,8 +54,8 @@ public abstract class BabbageResponse {
         response.setStatus(getStatus());
         response.setCharacterEncoding(getCharEncoding());
         response.setContentType(getMimeType());
-        if (getHeader() != null) {
-            Set<Map.Entry<String, String>> entries = getHeader().entrySet();
+        if (getHeaders() != null) {
+            Set<Map.Entry<String, String>> entries = getHeaders().entrySet();
             for (Map.Entry<String, String> next : entries) {
                 response.setHeader(next.getKey(), next.getValue());
             }
@@ -80,14 +80,18 @@ public abstract class BabbageResponse {
     }
 
     public void addHeader(String key, String value) {
-        if (header == null) {
-            header = new HashMap<>();
+        if (headers == null) {
+            headers = new HashMap<>();
         }
-        header.put(key, value);
+        headers.put(key, value);
     }
 
-    protected Map<String, String> getHeader() {
-        return header;
+    private Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public String getHeader(String key) {
+        return headers.get(key);
     }
 
     public BabbageResponse setCharEncoding(String charEncoding) {

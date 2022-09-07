@@ -32,7 +32,7 @@ public class BabbageBinaryResponse extends BabbageResponse {
         IOUtils.write(data, response.getOutputStream());
     }
 
-    protected byte[] getData() {
+    public byte[] getData() {
         return data;
     }
 }

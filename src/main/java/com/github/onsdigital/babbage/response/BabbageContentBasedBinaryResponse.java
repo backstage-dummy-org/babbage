@@ -17,6 +17,7 @@ public class BabbageContentBasedBinaryResponse extends BabbageBinaryResponse {
         this.contentResponse = contentResponse;
     }
 
+    @Override
     protected void setCacheHeaders(HttpServletRequest request, HttpServletResponse response) {
         CacheControlHelper.setCacheHeaders(request, response, CacheControlHelper.hashData(getData()), contentResponse.getMaxAge());
     }
