@@ -4,10 +4,8 @@ import com.github.onsdigital.babbage.content.client.ContentClient;
 import com.github.onsdigital.babbage.content.client.ContentReadException;
 import com.github.onsdigital.babbage.content.client.ContentResponse;
 import com.github.onsdigital.babbage.pdf.PDFGenerator;
-import com.github.onsdigital.babbage.request.handler.base.BaseRequestHandler;
 import com.github.onsdigital.babbage.response.BabbageBinaryResponse;
 import com.github.onsdigital.babbage.response.base.BabbageResponse;
-import com.github.onsdigital.babbage.util.RequestUtil;
 import com.github.onsdigital.babbage.util.json.JsonUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,16 +21,16 @@ import java.util.Map;
 
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
-
 /**
  * Request handler for the generation of pdf files based on page content
  */
-public class GeneratePDFRequestHandler extends BaseRequestHandler {
+public class GeneratePDFRequestHandler extends PDFRequestHeandler {
 
     private static final String REQUEST_TYPE = "pdf-new";
-    public static final String CONTENT_TYPE = "application/pdf";
+    private static final String CONTENT_TYPE = "application/pdf";
 
-    public BabbageResponse get(String requestedUri, HttpServletRequest requests) throws Exception {
+    @Override
+    public BabbageResponse get(String requestedUri, HttpServletRequest request) throws Exception {
 
         String uriPath = StringUtils.removeStart(requestedUri, "/");
         info().data("uri", uriPath).log("generating PDF for uri");
@@ -40,7 +38,7 @@ public class GeneratePDFRequestHandler extends BaseRequestHandler {
         if (pdfTable != null) {
             info().data("uri", uriPath).log("generating PDF table for uri");
         }
-        Path pdfFile = PDFGenerator.generatePdf(requestedUri, GetPDFRequestHandler.getTitle(requestedUri), RequestUtil.getAllCookies(requests), pdfTable);
+        Path pdfFile = PDFGenerator.generatePdf(requestedUri, getTitle(requestedUri), pdfTable);
         InputStream fin = Files.newInputStream(pdfFile);
         BabbageBinaryResponse response = new BabbageBinaryResponse(fin, CONTENT_TYPE);
         response.addHeader("Content-Length", Long.toString(FileUtils.sizeOf(pdfFile.toFile())));
@@ -53,7 +51,7 @@ public class GeneratePDFRequestHandler extends BaseRequestHandler {
         return REQUEST_TYPE;
     }
 
-    public String getPDFTables(String uri) throws IOException, ContentReadException {
+    private String getPDFTables(String uri) throws IOException, ContentReadException {
         ContentResponse contentResponse = ContentClient.getInstance().getContent(uri);
         Map<String, Object> stringObjectMap = JsonUtil.toMap(contentResponse.getDataStream());
 

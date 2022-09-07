@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -94,8 +93,7 @@ public class RequestUtil {
             languageSegment += ".";
         }
 
-        Collection<Locale> supportedLanguages = LocaleConfig.getSupportedLanguages();
-        for (Locale supportedLanguage : supportedLanguages) {
+        for (Locale supportedLanguage : LocaleConfig.getSupportedLanguages()) {
             if (StringUtils.startsWithIgnoreCase(languageSegment, supportedLanguage.getLanguage() + ".")) {
                 return supportedLanguage;
             }

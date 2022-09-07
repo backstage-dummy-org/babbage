@@ -13,13 +13,10 @@ import org.xhtmlrenderer.resource.XMLResource;
 import org.xml.sax.InputSource;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -27,9 +24,7 @@ import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.error;
-import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
 /**
  * Created by bren on 08/07/15.
@@ -39,7 +34,7 @@ public class PDFGenerator {
     private static final String TEMP_DIRECTORY_PATH = FileUtils.getTempDirectoryPath();
     private static final String URL = "http://localhost:8080";
 
-    public static Path generatePdf(String uri, String fileName, Map<String, String> cookies, String pdfTable) {
+    public static Path generatePdf(String uri, String fileName, String pdfTable) {
 
         try {
             ContentResponse contentResponse = ContentClient.getInstance().getContent(uri);

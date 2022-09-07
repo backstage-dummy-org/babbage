@@ -3,6 +3,7 @@ package com.github.onsdigital.babbage.content.client;
 import com.github.onsdigital.babbage.error.ResourceNotFoundException;
 import com.github.onsdigital.babbage.publishing.PublishingManager;
 import com.github.onsdigital.babbage.publishing.model.PublishInfo;
+import com.github.onsdigital.babbage.util.RequestUtil;
 import com.github.onsdigital.babbage.util.ThreadContext;
 import com.github.onsdigital.babbage.util.http.ClientConfiguration;
 import com.github.onsdigital.babbage.util.http.PooledHttpClient;
@@ -275,7 +276,7 @@ public class ContentClient {
     private List<NameValuePair> getParameters(Map<String, String[]> parametes) {
         List<NameValuePair> nameValuePairs = new ArrayList<>();
 
-        nameValuePairs.add(new BasicNameValuePair("lang", (String) ThreadContext.getData("lang")));
+        nameValuePairs.add(new BasicNameValuePair("lang", (String) ThreadContext.getData(RequestUtil.LANG_KEY)));
         nameValuePairs.addAll(toNameValuePair(parametes));
         return nameValuePairs;
     }
