@@ -38,7 +38,7 @@ public class LocaleConfig {
         try {
             return LoadProperties("LabelsBundle.properties");
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load search properties file", e);
+            throw new RuntimeException("Failed to load LabelsBundle properties file", e);
         }
     }
 
