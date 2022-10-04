@@ -18,7 +18,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -49,11 +48,6 @@ public class GetPDFRequestHandlerTest {
 
     @Spy
     private GetPDFRequestHandler handler;
-
-    @Before
-    public void setup() {
-//        handler = new GetPDFRequestHandler();
-    }
 
     @After
     public void cleanup() {
