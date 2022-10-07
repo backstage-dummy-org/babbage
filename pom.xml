@@ -395,6 +395,13 @@
                             <artifactId>dom4j</artifactId>
                             <version>1.6.1</version>
                         </exclude>
+
+                        <exlude>
+                            <!-- https://trello.com/c/XHTwRzu6 -->
+                            <groupId>com.fasterxml.jackson.core</groupId>
+                            <artifactId>jackson-databind</artifactId>
+                            <version>2.13.4</version>
+                        </exlude>
                     </excludeCoordinates>
                 </configuration>
             </plugin>
