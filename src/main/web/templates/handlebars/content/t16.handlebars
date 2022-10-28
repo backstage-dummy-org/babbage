@@ -164,6 +164,29 @@
                 </div>
             {{/if}}
 
+            {{!-- RELATED API DATA --}}
+            {{#if relatedAPIDatasets}}
+                <div class="col-wrap">
+                    <h2 class="col">{{labels.apiDatasets}}</h2>
+                </div>
+                <div class="col-wrap">
+                    <ul class="tiles__list col col--lg-40 margin-bottom--double">
+                        {{#each relatedAPIDatasets}}
+                            {{#resolve this.uri}}
+                                <li class="tiles__item--list-type-simple">
+                                    <h3 class="tiles__title-h3">
+                                        <a data-gtm-type="related-api-datasets" data-gtm-title="{{description.title}}" href="{{uri}}">{{description.title}}</a>
+                                    </h3>
+                                    <p class="tiles__content">
+                                        {{description.summary}}
+                                    </p>
+                                </li>
+                            {{/resolve}}
+                        {{/each}}
+                    </ul>
+                </div>
+            {{/if}}
+
             {{!-- RELATED METHODOLOGY --}}
             {{#if_any relatedMethodology relatedMethodologyArticle}}
                 <div class="col-wrap">
