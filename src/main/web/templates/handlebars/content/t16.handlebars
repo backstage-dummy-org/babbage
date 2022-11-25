@@ -142,7 +142,7 @@
             {{/if}}
 
             {{!-- RELATED DATA --}}
-            {{#if relatedDatasets}}
+            {{#if_any relatedDatasets relatedAPIDatasets}}
                 <div class="col-wrap">
                     <h2 class="col">{{labels.data}}</h2>
                 </div>
