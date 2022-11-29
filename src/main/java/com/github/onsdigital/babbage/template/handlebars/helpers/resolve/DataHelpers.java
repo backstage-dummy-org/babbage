@@ -4,9 +4,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Options;
 import com.github.onsdigital.babbage.api.util.SearchRendering;
 import com.github.onsdigital.babbage.api.util.SearchUtils;
-import com.github.onsdigital.babbage.content.client.ContentClient;
-import com.github.onsdigital.babbage.content.client.ContentFilter;
-import com.github.onsdigital.babbage.content.client.ContentResponse;
+import com.github.onsdigital.babbage.content.client.*;
 import com.github.onsdigital.babbage.request.handler.TimeseriesLandingRequestHandler;
 import com.github.onsdigital.babbage.search.model.SearchResult;
 import com.github.onsdigital.babbage.template.handlebars.helpers.base.BabbageHandlebarsHelper;
@@ -168,10 +166,10 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
     resolveTaxonomy {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
-            ContentResponse stream = null;
+            ContentCacheResponse stream = null;
             try {
                 Integer depth = options.<Integer>hash("depth");
-                stream = ContentClient.getInstance().getTaxonomy(depth(depth));
+                stream = ContentClientCache.getInstance().getTaxonomy(depth(depth));
                 InputStream data = stream.getDataStream();
                 List<Map<String, Object>> context = toList(data);
                 assign(options, context);

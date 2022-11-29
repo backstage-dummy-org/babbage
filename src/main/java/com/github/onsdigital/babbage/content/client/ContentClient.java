@@ -197,8 +197,8 @@ public class ContentClient {
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("format", format));
         if (uriList != null) {
-            for (int i = 0; i < uriList.length; i++) {
-                parameters.add(new BasicNameValuePair("uri", uriList[i]));
+            for (String s : uriList) {
+                parameters.add(new BasicNameValuePair("uri", s));
             }
         }
         return sendPost(getPath(EXPORT_ENDPOINT), parameters);
