@@ -13,12 +13,13 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 public class Babbage implements AppConfig {
 
     // env var keys
-    private static final String ENABLE_CACHE_KEY = "ENABLE_CACHE";
     private static final String DEV_ENVIRONMENT_KEY = "DEV_ENVIRONMENT";
-    private static final String IS_PUBLISHING_KEY = "IS_PUBLISHING";
-    private static final String REDIRECT_SECRET_KEY = "REDIRECT_SECRET";
+    private static final String ENABLE_CACHE_KEY = "ENABLE_CACHE";
+    private static final String ENABLE_NAVIGATION = "ENABLE_NAVIGATION";
     private static final String HIGHCHARTS_EXPORT_SERVER_KEY = "HIGHCHARTS_EXPORT_SERVER";
+    private static final String IS_PUBLISHING_KEY = "IS_PUBLISHING";
     private static final String MATHJAX_EXPORT_SERVER_KEY = "MATHJAX_EXPORT_SERVER";
+    private static final String REDIRECT_SECRET_KEY = "REDIRECT_SECRET";
 
     private static Babbage INSTANCE;
 
@@ -52,6 +53,7 @@ public class Babbage implements AppConfig {
     private final int resultsPerPage;
     private final int maxResultsPerPage;
     private final boolean cacheEnabled;
+    private final boolean isNavigationEnabled;
     private final boolean isDevEnv;
     private final boolean isPublishing;
     private final String redirectSecret;
@@ -60,25 +62,20 @@ public class Babbage implements AppConfig {
     private final String mathjaxExportServer;
 
     private Babbage() {
-        maxVisiblePaginatorLink = 5;
-        resultsPerPage = 10;
-        maxResultsPerPage = 250;
-        defaultCacheTime = 15 * 60;
-        publishCacheTimeout = 60 * 60;
-        searchResponseCacheTime = 5;
         cacheEnabled = getStringAsBool(ENABLE_CACHE_KEY, "N");
-
-        isDevEnv = getStringAsBool(DEV_ENVIRONMENT_KEY, "N");
-
-        isPublishing = getStringAsBool(IS_PUBLISHING_KEY, "N");
-
-        redirectSecret = getValueOrDefault(REDIRECT_SECRET_KEY, "secret");
-
-        maxHighchartsServerConnections = defaultIfBlank(getNumberValue("HIGHCHARTS_EXPORT_MAX_CONNECTION"), 50);
-
+        defaultCacheTime = 15 * 60;
         exportSeverUrl = getValueOrDefault(HIGHCHARTS_EXPORT_SERVER_KEY, "http://localhost:9999/");
-
+        isDevEnv = getStringAsBool(DEV_ENVIRONMENT_KEY, "N");
+        isPublishing = getStringAsBool(IS_PUBLISHING_KEY, "N");
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
+        maxHighchartsServerConnections = defaultIfBlank(getNumberValue("HIGHCHARTS_EXPORT_MAX_CONNECTION"), 50);
+        maxResultsPerPage = 250;
+        maxVisiblePaginatorLink = 5;
+        isNavigationEnabled = getStringAsBool(ENABLE_NAVIGATION, "N");
+        publishCacheTimeout = 60 * 60;
+        redirectSecret = getValueOrDefault(REDIRECT_SECRET_KEY, "secret");
+        resultsPerPage = 10;
+        searchResponseCacheTime = 5;
     }
 
     public int getDefaultContentCacheTime() {
@@ -91,6 +88,10 @@ public class Babbage implements AppConfig {
 
     public boolean isCacheEnabled() {
         return cacheEnabled;
+    }
+    public boolean isNavigationEnabled() {
+        System.out.println("ENABLE_NAVIGATION " + isNavigationEnabled);
+        return isNavigationEnabled;
     }
 
     public int getMaxVisiblePaginatorLink() {
@@ -144,18 +145,19 @@ public class Babbage implements AppConfig {
     @Override
     public Map<String, Object> getConfig() {
         Map<String, Object> config = new HashMap<>();
-        config.put("maxVisiblePaginatorLink", maxVisiblePaginatorLink);
-        config.put("resultsPerPage", resultsPerPage);
-        config.put("maxResultsPerPage", maxResultsPerPage);
-        config.put("defaultCacheTime", defaultCacheTime);
-        config.put("publishCacheTimeout", publishCacheTimeout);
-        config.put("searchResponseCacheTime", searchResponseCacheTime);
         config.put("cacheEnabled", cacheEnabled);
+        config.put("defaultCacheTime", defaultCacheTime);
+        config.put("exportSeverUrl", exportSeverUrl);
         config.put("isDevEnv", isDevEnv);
         config.put("isPublishing", isPublishing);
-        config.put("maxHighchartsServerConnections", maxHighchartsServerConnections);
-        config.put("exportSeverUrl", exportSeverUrl);
+        config.put("isNavigationEnabled", isNavigationEnabled);
         config.put("mathjaxExportServer", mathjaxExportServer);
+        config.put("maxHighchartsServerConnections", maxHighchartsServerConnections);
+        config.put("maxResultsPerPage", maxResultsPerPage);
+        config.put("maxVisiblePaginatorLink", maxVisiblePaginatorLink);
+        config.put("publishCacheTimeout", publishCacheTimeout);
+        config.put("resultsPerPage", resultsPerPage);
+        config.put("searchResponseCacheTime", searchResponseCacheTime);
         return config;
     }
 }

@@ -1,26 +1,16 @@
 package com.github.onsdigital.babbage.util.http;
 
-import com.github.onsdigital.babbage.content.client.ContentCacheResponse;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.cache.CacheConfig;
-import org.apache.http.impl.client.cache.CachingHttpClients;
 import org.apache.http.message.BasicNameValuePair;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
@@ -60,7 +50,6 @@ public class CacheHttpClientTest {
         HttpEntity entity = returnedResp1.getEntity();
 
 
-        System.out.println(entity);
 
     }
 }

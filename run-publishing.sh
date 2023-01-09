@@ -23,6 +23,7 @@ export RELOAD_TEMPLATES="Y"
 export TEMPLATES_DIR=src/main/web/templates/handlebars
 export ENABLE_COVID19_FEATURE=false
 
+
 # Development: reloadable
 java $JAVA_OPTS \
  -Drestolino.realm=$REALM \

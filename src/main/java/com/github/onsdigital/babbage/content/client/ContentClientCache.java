@@ -8,7 +8,6 @@ import com.github.onsdigital.babbage.util.RequestUtil;
 import com.github.onsdigital.babbage.util.ThreadContext;
 import com.github.onsdigital.babbage.util.http.CacheHttpClient;
 import com.github.onsdigital.babbage.util.http.ClientConfiguration;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -19,11 +18,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
@@ -31,14 +26,13 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.error;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
 /**
- * Created by bren on 23/07/15.
+ * Created by Ann on 11/22.
  * <p/>
  * Content service reads content from external server over http.
  * <p/>
  * Using Apache http client with connection pooling.
  */
-//TODO: Get http client use cache headers returned from content service
-public class ContentClientCache  {
+public class ContentClientCache {
 
     private static final String TOKEN_HEADER = "X-Florence-Token";
 
@@ -47,6 +41,8 @@ public class ContentClientCache  {
 
     private static final String DATA_ENDPOINT = "/data";
     private static final String TAXONOMY_ENDPOINT = "/taxonomy";
+    private static final String NAVIGATION_ENDPOINT = "/navigation";
+
 
     public static ContentClientCache getInstance() {
         if (instance == null) {
@@ -54,9 +50,9 @@ public class ContentClientCache  {
                 if (instance == null) {
                     info().log("initialising ContentClientCache instance");
                     instance = new ContentClientCache();
-
-                    info().log("initialising PooledHttpClient for ContentClientCache instance");
+                    info().log("initialising CacheHttpClient for ContentClientCache instance");
                     client = new CacheHttpClient(appConfig().contentAPI().serverURL(), createConfiguration());
+//                    client = new CacheHttpClient(appConfig().contentAPI().topicsURL(), createConfiguration());
                 }
             }
         }
@@ -70,19 +66,15 @@ public class ContentClientCache  {
         return configuration;
     }
 
-    public ContentCacheResponse getContent(String uri, Map<String, String[]> queryParameters) throws ContentReadException {
-        return resolveMaxAge(uri, sendGet(getPath(DATA_ENDPOINT), addUri(uri, getParameters(queryParameters))));
+    public ContentResponse getTaxonomy(Map<String, String[]> queryParameters) throws ContentReadException {
+            return sendGet(getPath(TAXONOMY_ENDPOINT), getParameters(queryParameters));
     }
 
-    public ContentCacheResponse getTaxonomy(Map<String, String[]> queryParameters) throws ContentReadException {
-        return sendGet(getPath(TAXONOMY_ENDPOINT), getParameters(queryParameters));
+    public ContentResponse getTaxonomy() throws ContentReadException {
+            return sendGet(getPath(TAXONOMY_ENDPOINT), null);
     }
 
-    public ContentCacheResponse getTaxonomy() throws ContentReadException {
-        return sendGet(getPath(TAXONOMY_ENDPOINT), null);
-    }
-
-    private ContentCacheResponse resolveMaxAge(String uri, ContentCacheResponse response) {
+    private ContentResponse resolveMaxAge(String uri, ContentResponse response) {
         if (!appConfig().babbage().isCacheEnabled()) {
             return response;
         }
@@ -115,10 +107,17 @@ public class ContentClientCache  {
         return response;
     }
 
-    private ContentCacheResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
+    /**
+     * @param path
+     * @param getParameters
+     * @return
+     * @throws ContentReadException
+     */
+    private ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
         CloseableHttpResponse response = null;
         try {
-            return new ContentCacheResponse(client.sendGet(path, getHeaders(), getParameters));
+
+            return new ContentResponse(client.sendGet(path, getHeaders(), getParameters));
         } catch (HttpResponseException e) {
             //noinspection deprecation
             IOUtils.closeQuietly(response);
@@ -143,16 +142,6 @@ public class ContentClientCache  {
         nameValuePairs.add(new BasicNameValuePair("lang", (String) ThreadContext.getData(RequestUtil.LANG_KEY)));
         nameValuePairs.addAll(toNameValuePair(parameters));
         return nameValuePairs;
-    }
-
-    private List<NameValuePair> addUri(String uri, List<NameValuePair> parameters) {
-        if (parameters == null) {
-            return null;
-        }
-        uri = StringUtils.isEmpty(uri) ? "/" : uri;
-        //uris are requested as get parameter from content service
-        parameters.add(new BasicNameValuePair("uri", uri));
-        return parameters;
     }
 
     private List<NameValuePair> toNameValuePair(Map<String, String[]> parametes) {
@@ -200,8 +189,16 @@ public class ContentClientCache  {
     }
 
     private String getPath(String endpoint) {
+
+        System.out.println("ContentCacheResponse getPath  " + endpoint );
+        System.out.println("isNavigationEnabled " + appConfig().babbage().isNavigationEnabled());
+
         String collectionId = getCollectionId();
         if (collectionId == null) {
+            if ( appConfig().babbage().isNavigationEnabled() ) {
+                System.out.println("getPath " + appConfig().babbage().isNavigationEnabled());
+                endpoint = "http://localhost:25300/navigation";
+            }
             return endpoint;
         } else {
             return endpoint + "/" + collectionId;

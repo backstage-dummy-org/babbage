@@ -46,7 +46,7 @@ public class ContentClient {
     private static ContentClient instance;
 
     private static final String DATA_ENDPOINT = "/data";
-    private static final String TAXONOMY_ENDPOINT = "/taxonomy";
+//    private static final String TAXONOMY_ENDPOINT = "/taxonomy";
     private static final String PARENTS_ENDPOINT = "/parents";
     private static final String RESOURCE_ENDPOINT = "/resource";
     private static final String FILE_SIZE_ENDPOINT = "/filesize";
@@ -67,7 +67,6 @@ public class ContentClient {
                 if (instance == null) {
                     info().log("initialising ContentClient instance");
                     instance = new ContentClient();
-
                     info().log("initialising PooledHttpClient for ContentClient instance");
                     client = new PooledHttpClient(appConfig().contentAPI().serverURL(), createConfiguration());
                 }
@@ -133,14 +132,6 @@ public class ContentClient {
 
     public ContentResponse getFileSize(String uri) throws ContentReadException {
         return resolveMaxAge(uri, sendGet(getPath(FILE_SIZE_ENDPOINT), addUri(uri, new ArrayList<>())));
-    }
-
-    public ContentResponse getTaxonomy(Map<String, String[]> queryParameters) throws ContentReadException {
-        return sendGet(getPath(TAXONOMY_ENDPOINT), getParameters(queryParameters));
-    }
-
-    public ContentResponse getTaxonomy() throws ContentReadException {
-        return sendGet(getPath(TAXONOMY_ENDPOINT), null);
     }
 
     public ContentResponse getParents(String uri) throws ContentReadException {
