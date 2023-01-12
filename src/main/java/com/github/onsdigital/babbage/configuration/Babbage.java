@@ -90,7 +90,6 @@ public class Babbage implements AppConfig {
         return cacheEnabled;
     }
     public boolean isNavigationEnabled() {
-        System.out.println("ENABLE_NAVIGATION " + isNavigationEnabled);
         return isNavigationEnabled;
     }
 

@@ -189,16 +189,12 @@ public class ContentClientCache {
     }
 
     private String getPath(String endpoint) {
-
-        System.out.println("ContentCacheResponse getPath  " + endpoint );
-        System.out.println("isNavigationEnabled " + appConfig().babbage().isNavigationEnabled());
-
         String collectionId = getCollectionId();
         if (collectionId == null) {
-            if ( appConfig().babbage().isNavigationEnabled() ) {
-                System.out.println("getPath " + appConfig().babbage().isNavigationEnabled());
-                endpoint = "http://localhost:25300/navigation";
-            }
+//             TODO
+//            if ( appConfig().babbage().isNavigationEnabled() ) {
+//                endpoint = "http://localhost:25300/navigation";
+//            }
             return endpoint;
         } else {
             return endpoint + "/" + collectionId;

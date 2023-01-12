@@ -166,7 +166,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
     resolveTaxonomy {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
-            System.out.println("ContentCacheResponse resolveTaxonomy");
             ContentResponse stream = null;
             try {
                 Integer depth = options.<Integer>hash("depth");
