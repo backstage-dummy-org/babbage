@@ -9,12 +9,7 @@
                             <a href="{{uri}}"
                                data-gtm-title="{{description.title}}{{#if description.edition}}: {{description.edition}}{{/if}}"
                                data-gtm-type="related-publication">
-                                {{description.title}}
-                                {{#if description.edition}}
-                                    {{#if_ne description.edition 'yes'}}
-                                        : {{description.edition}}
-                                    {{/if_ne}}
-                                {{/if}}
+                                {{description.title}}{{#if description.edition}}{{#if_ne description.edition 'yes'}}: {{description.edition}}{{/if_ne}}{{/if}}
                             </a>
                         </li>
 
