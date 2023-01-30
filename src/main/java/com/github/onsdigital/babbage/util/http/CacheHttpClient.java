@@ -51,12 +51,10 @@ public class CacheHttpClient extends PooledHttpClient {
                 .build();
     }
 
-
     public CloseableHttpResponse sendGet(String path, Map<String, String> headers, List<NameValuePair> queryParameters) throws IOException {
         URI uri = buildGetUri(path, queryParameters);
         HttpGet request = new HttpGet(uri);
         addHeaders(headers, request);
-
         CloseableHttpResponse response = executeRequest(request);
         return validateResponse(response);
     }

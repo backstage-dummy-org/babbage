@@ -52,7 +52,6 @@ public class ContentClientCache {
                     instance = new ContentClientCache();
                     info().log("initialising CacheHttpClient for ContentClientCache instance");
                     client = new CacheHttpClient(appConfig().contentAPI().serverURL(), createConfiguration());
-//                    client = new CacheHttpClient(appConfig().contentAPI().topicsURL(), createConfiguration());
                 }
             }
         }
@@ -67,6 +66,7 @@ public class ContentClientCache {
     }
 
     public ContentResponse getTaxonomy(Map<String, String[]> queryParameters) throws ContentReadException {
+            System.out.println("ContentClientCache.getTaxonomy" + queryParameters);
             return sendGet(getPath(TAXONOMY_ENDPOINT), getParameters(queryParameters));
     }
 
@@ -116,12 +116,13 @@ public class ContentClientCache {
     private ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
         CloseableHttpResponse response = null;
         try {
-
+            System.out.println("Path " + path);
+            System.out.println("Headers " + getHeaders());
+            System.out.println("Parameters " + getParameters);
             return new ContentResponse(client.sendGet(path, getHeaders(), getParameters));
         } catch (HttpResponseException e) {
             //noinspection deprecation
             IOUtils.closeQuietly(response);
-
             if (e.getStatusCode() == HttpStatus.SC_NOT_FOUND) {
                 info().data("uri", path).log("ContentClientCache requested uri not found");
                 throw new ResourceNotFoundException(e.getMessage());
@@ -138,15 +139,14 @@ public class ContentClientCache {
 
     private List<NameValuePair> getParameters(Map<String, String[]> parameters) {
         List<NameValuePair> nameValuePairs = new ArrayList<>();
-
         nameValuePairs.add(new BasicNameValuePair("lang", (String) ThreadContext.getData(RequestUtil.LANG_KEY)));
         nameValuePairs.addAll(toNameValuePair(parameters));
         return nameValuePairs;
     }
 
-    private List<NameValuePair> toNameValuePair(Map<String, String[]> parametes) {
+    private List<NameValuePair> toNameValuePair(Map<String, String[]> parameters) {
         List<NameValuePair> nameValuePairs = new ArrayList<>();
-        if (parametes != null) for (Entry<String, String[]> entry : parametes.entrySet()) {
+        if (parameters != null) for (Entry<String, String[]> entry : parameters.entrySet()) {
             String[] values = entry.getValue();
             if (ArrayUtils.isEmpty(values)) {
                 nameValuePairs.add(new BasicNameValuePair(entry.getKey(), null));
@@ -191,6 +191,7 @@ public class ContentClientCache {
     private String getPath(String endpoint) {
         String collectionId = getCollectionId();
         if (collectionId == null) {
+
 //             TODO
 //            if ( appConfig().babbage().isNavigationEnabled() ) {
 //                endpoint = "http://localhost:25300/navigation";
