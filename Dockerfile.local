@@ -1,0 +1,16 @@
+FROM openjdk:8-jre
+
+# Add the built artifacts
+WORKDIR /usr/src
+ADD ./target/dependency /usr/src/target/dependency
+ADD ./target/classes /usr/src/target/classes
+ADD ./target/web /usr/src/target/web
+
+# Update the entry point script
+ENTRYPOINT java $JAVA_OPTS \
+    -Drestolino.realm=$REALM \
+    -Drestolino.files=$RESTOLINO_STATIC \
+    -Drestolino.classes=$RESTOLINO_CLASSES \
+    -Drestolino.packageprefix=$PACKAGE_PREFIX \
+    -cp "target/dependency/*:target/classes/" \
+    com.github.davidcarboni.restolino.Main

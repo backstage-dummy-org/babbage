@@ -43,7 +43,6 @@ public class ContentClientCache {
     private static final String TAXONOMY_ENDPOINT = "/taxonomy";
     private static final String NAVIGATION_ENDPOINT = "/navigation";
 
-
     public static ContentClientCache getInstance() {
         if (instance == null) {
             synchronized (ContentClientCache.class) {
@@ -57,6 +56,21 @@ public class ContentClientCache {
         }
         return instance;
     }
+
+    public ContentResponse getContent(String uri, Map<String, String[]> queryParameters) throws ContentReadException {
+        return resolveMaxAge(uri, sendGet(getPath(DATA_ENDPOINT), addUri(uri, getParameters(queryParameters))));
+    }
+
+    private List<NameValuePair> addUri(String uri, List<NameValuePair> parameters) {
+        if (parameters == null) {
+            return null;
+        }
+        uri = StringUtils.isEmpty(uri) ? "/" : uri;
+        //uris are requested as get parameter from content service
+        parameters.add(new BasicNameValuePair("uri", uri));
+        return parameters;
+    }
+
 
     private static ClientConfiguration createConfiguration() {
         ClientConfiguration configuration = new ClientConfiguration();
