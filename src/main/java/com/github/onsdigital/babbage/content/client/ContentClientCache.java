@@ -38,7 +38,6 @@ public class ContentClientCache {
 
     private static CacheHttpClient client;
     private static ContentClientCache instance;
-
     private static final String DATA_ENDPOINT = "/data";
     private static final String TAXONOMY_ENDPOINT = "/taxonomy";
     private static final String NAVIGATION_ENDPOINT = "/navigation";
@@ -57,6 +56,12 @@ public class ContentClientCache {
         return instance;
     }
 
+    /**
+     * @param uri
+     * @param queryParameters
+     * @return
+     * @throws ContentReadException
+     */
     public ContentResponse getContent(String uri, Map<String, String[]> queryParameters) throws ContentReadException {
         return resolveMaxAge(uri, sendGet(getPath(DATA_ENDPOINT), addUri(uri, getParameters(queryParameters))));
     }
@@ -80,13 +85,22 @@ public class ContentClientCache {
     }
 
     public ContentResponse getTaxonomy(Map<String, String[]> queryParameters) throws ContentReadException {
-            System.out.println("ContentClientCache.getTaxonomy" + queryParameters);
             return sendGet(getPath(TAXONOMY_ENDPOINT), getParameters(queryParameters));
     }
-
     public ContentResponse getTaxonomy() throws ContentReadException {
-            return sendGet(getPath(TAXONOMY_ENDPOINT), null);
+        return sendGet(getPath(TAXONOMY_ENDPOINT), null);
     }
+
+    public ContentResponse getNavigation(Map<String, String[]> queryParameters) throws ContentReadException {
+        return sendGet(getPath(NAVIGATION_ENDPOINT), getParameters(queryParameters));
+    }
+
+    public ContentResponse getNavigation() throws ContentReadException {
+        return sendGet(getPath(NAVIGATION_ENDPOINT), null);
+    }
+
+
+
 
     private ContentResponse resolveMaxAge(String uri, ContentResponse response) {
         if (!appConfig().babbage().isCacheEnabled()) {
@@ -130,9 +144,13 @@ public class ContentClientCache {
     private ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
         CloseableHttpResponse response = null;
         try {
-            System.out.println("Path " + path);
-            System.out.println("Headers " + getHeaders());
-            System.out.println("Parameters " + getParameters);
+//            System.out.println("----- Path ----- " + path);
+//            System.out.println("----- Headers ----- " + getHeaders());
+//            System.out.println("----- Parameters ----- " + getParameters);
+//            System.out.println("----- CollectionID ----- " + getCollectionId());
+//            System.out.println("----- isNavegationEnabled ----- " + appConfig().babbage().isNavigationEnabled());
+
+//            return new ContentResponse(client.sendGet(path, getHeaders(), getParameters, getCollectionId()));
             return new ContentResponse(client.sendGet(path, getHeaders(), getParameters));
         } catch (HttpResponseException e) {
             //noinspection deprecation
@@ -205,11 +223,9 @@ public class ContentClientCache {
     private String getPath(String endpoint) {
         String collectionId = getCollectionId();
         if (collectionId == null) {
-
-//             TODO
-//            if ( appConfig().babbage().isNavigationEnabled() ) {
-//                endpoint = "http://localhost:25300/navigation";
-//            }
+            if ( appConfig().babbage().isNavigationEnabled() ) {
+                endpoint = NAVIGATION_ENDPOINT;
+            }
             return endpoint;
         } else {
             return endpoint + "/" + collectionId;

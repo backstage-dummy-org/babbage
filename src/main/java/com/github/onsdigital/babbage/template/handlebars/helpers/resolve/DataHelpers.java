@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.babbage.content.client.ContentClient.depth;
 import static com.github.onsdigital.babbage.content.client.ContentClient.filter;
 import static com.github.onsdigital.babbage.util.json.JsonUtil.toList;
@@ -52,7 +53,7 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
                 }
                 contentResponse = ContentClient.getInstance().getContent(uriString, filter(filter));
                 InputStream data = contentResponse.getDataStream();
-                Map<String, Object> context = toMap(data);
+                List<Map<String, Object>> context = toList(data);
                 assign(options, context);
                 return options.fn(context);
             } catch (Exception e) {
@@ -167,9 +168,16 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
             ContentResponse stream = null;
+//            System.out.println("NavigationEnabled " + appConfig().babbage().isNavigationEnabled());
+            System.out.println("resolveTaxonomy URI " + uri);
+            System.out.println("resolveTaxonomy options " + options.<Integer>hash("depth"));
+
             try {
                 Integer depth = options.<Integer>hash("depth");
                 stream = ContentClientCache.getInstance().getTaxonomy(depth(depth));
+//                if ( appConfig().babbage().isNavigationEnabled() ) {
+//                    stream = ContentClientCache.getInstance().getNavigation(depth(depth));
+//                }
                 InputStream data = stream.getDataStream();
                 List<Map<String, Object>> context = toList(data);
                 assign(options, context);
@@ -200,7 +208,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
             try {
                 validateUri(uri);
                 String uriString = (String) uri;
-
                 contentResponse = ContentClient.getInstance().getResource(uriString);
                 String data = contentResponse.getAsString();
                 Map<String, Object> context = new LinkedHashMap<>();
@@ -310,5 +317,4 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
     private static void logResolveError(Object uri, Exception e) {
         error().exception(e).data("uri", uri).log("DataHelpers resolve data for uri");
     }
-
 }

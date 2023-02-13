@@ -20,12 +20,14 @@ public class ContentAPI implements AppConfig {
     private final String topicsAPIHost;
     private final int maxConnections;
     private static ContentAPI INSTANCE;
-    private static final String CONTENT_API_HOST_KEY = "CONTENT_SERVICE_URL";
-    private static final String TOPICS_API_HOST_KEY = "TOPICS_SERVICE_URL";
     private static final String DEFAULT_CONTENT_API_HOST = "http://localhost:8082";
+    private static final String CONTENT_API_HOST_KEY = "CONTENT_SERVICE_URL";
     private static final String DEFAULT_TOPICS_API_HOST = "http://localhost:25300";
-    private static final String DEFAULT_CONTENT_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static final String TOPICS_API_HOST_KEY = "TOPICS_SERVICE_URL";
     private static final String MAX_CONNECTIONS_KEY = "CONTENT_SERVICE_MAX_CONNECTION";
+    private static final String DEFAULT_CONTENT_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+
 
     static ContentAPI getInstance() {
         if (INSTANCE == null) {

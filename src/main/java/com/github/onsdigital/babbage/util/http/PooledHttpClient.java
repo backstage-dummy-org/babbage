@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.error;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
@@ -38,7 +39,6 @@ public class PooledHttpClient extends BabbageHttpClient {
     public PooledHttpClient(String host, ClientConfiguration configuration) {
         super(host, configuration);
     }
-
 
     /**
      * @param path            path, should not contain any query string, only path info
@@ -58,7 +58,6 @@ public class PooledHttpClient extends BabbageHttpClient {
         CloseableHttpResponse response = executeRequest(request);
         return validateResponse(response);
     }
-
 
     public CloseableHttpResponse sendDelete(String path, Map<String, String> headers, List<NameValuePair> queryParameters) throws IOException {
         URI uri = buildGetUri(path, queryParameters);
@@ -187,4 +186,12 @@ public class PooledHttpClient extends BabbageHttpClient {
         }
         return null;
     }
+
+//    private static ClientConfiguration createHttpConfiguration() {
+//        ClientConfiguration configuration = new ClientConfiguration();
+//        configuration.setMaxTotalConnection(appConfig().mapRenderer().maxConnections());
+//        configuration.setDisableRedirectHandling(true);
+//        return configuration;
+//    }
+
 }

@@ -3,6 +3,7 @@ package com.github.onsdigital.babbage.configuration;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.babbage.configuration.EnvVarUtils.defaultIfBlank;
 import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getNumberValue;
 import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getStringAsBool;
@@ -66,12 +67,12 @@ public class Babbage implements AppConfig {
         defaultCacheTime = 15 * 60;
         exportSeverUrl = getValueOrDefault(HIGHCHARTS_EXPORT_SERVER_KEY, "http://localhost:9999/");
         isDevEnv = getStringAsBool(DEV_ENVIRONMENT_KEY, "N");
+        isNavigationEnabled = getStringAsBool(ENABLE_NAVIGATION, "N");
         isPublishing = getStringAsBool(IS_PUBLISHING_KEY, "N");
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
         maxHighchartsServerConnections = defaultIfBlank(getNumberValue("HIGHCHARTS_EXPORT_MAX_CONNECTION"), 50);
         maxResultsPerPage = 250;
         maxVisiblePaginatorLink = 5;
-        isNavigationEnabled = getStringAsBool(ENABLE_NAVIGATION, "N");
         publishCacheTimeout = 60 * 60;
         redirectSecret = getValueOrDefault(REDIRECT_SECRET_KEY, "secret");
         resultsPerPage = 10;

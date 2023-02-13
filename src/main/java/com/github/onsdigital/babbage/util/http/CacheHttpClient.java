@@ -1,6 +1,5 @@
 package com.github.onsdigital.babbage.util.http;
 
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
@@ -26,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.error;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
@@ -36,6 +36,7 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
  */
 public class CacheHttpClient extends PooledHttpClient {
     protected final CloseableHttpClient httpClient;
+//    protected final String TOPICS_SERVICE_URL = "http://localhost:25300";
 
     public CacheHttpClient(String host, ClientConfiguration configuration) {
         super(host, configuration);
@@ -56,6 +57,13 @@ public class CacheHttpClient extends PooledHttpClient {
         HttpGet request = new HttpGet(uri);
         addHeaders(headers, request);
         CloseableHttpResponse response = executeRequest(request);
+//
+//        CloseableHttpResponse response = null;
+//        try {
+//            response = executeRequest(request);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
         return validateResponse(response);
     }
 
@@ -64,7 +72,19 @@ public class CacheHttpClient extends PooledHttpClient {
 
         info().beginHTTP(request).log("CacheHttpClient executing request");
 
+//        System.out.println("----- " );
+//        System.out.println("----- request ----- " + request);
+//        System.out.println("----- " );
+//
+//        System.out.println("----- " );
+//        System.out.println("----- context ----- " + context);
+//        System.out.println("----- " );
+
         CloseableHttpResponse response = httpClient.execute(request,context);
+//
+//        System.out.println("----- " );
+//        System.out.println("----- response ----- " + response);
+//        System.out.println("----- " );
 
         try {
             CacheResponseStatus responseStatus = context.getCacheResponseStatus();
@@ -95,17 +115,22 @@ public class CacheHttpClient extends PooledHttpClient {
         return response;
     }
 
-    private URI buildPath(String path) {
-        URIBuilder uriBuilder = newUriBuilder(path);
-        try {
-            return uriBuilder.build();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Invalid uri! " + host + path);
-        }
-    }
+    private URIBuilder newUriBuilder(String path) throws URISyntaxException {
+//        System.out.println("----- " );
+//        System.out.println("----- path ----- " + path);
+//        System.out.println("----- " );
+//        System.out.println("----- Config ----- " + appConfig().babbage().isNavigationEnabled()  );
+//        URI cacheHost = host;
+//        if (appConfig().babbage().isNavigationEnabled() && collectionID == null){
+//            cacheHost = URI.create(TOPICS_SERVICE_URL);
+//        }
+//
+//        System.out.println("----- " );
+//        System.out.println("----- cacheHost ----- " + host);
+//        System.out.println("----- " );
 
-    private URIBuilder newUriBuilder(String path) {
         URIBuilder uriBuilder = new URIBuilder(host);
+
         String fullPath = "/" + path;
         String prefix = uriBuilder.getPath();
         if (prefix != null) {
@@ -127,7 +152,6 @@ public class CacheHttpClient extends PooledHttpClient {
             throw new RuntimeException("Invalid uri! " + host + path);
         }
     }
-
 
     private void addHeaders(Map<String, String> headers, HttpRequestBase request) {
         if (headers != null) {
@@ -161,15 +185,11 @@ public class CacheHttpClient extends PooledHttpClient {
 
     private String getErrorMessage(HttpEntity entity) {
         try {
-            String s = EntityUtils.toString(entity);
-            return s;
+            return EntityUtils.toString(entity);
         } catch (Exception e) {
             error().exception(e).log("Failed reading content service:");
         }
         return null;
     }
-
-
-
 
 }
