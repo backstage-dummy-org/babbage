@@ -1,5 +1,6 @@
 package com.github.onsdigital.babbage.util.http;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
@@ -20,6 +21,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -36,11 +39,12 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
  */
 public class CacheHttpClient extends PooledHttpClient {
     protected final CloseableHttpClient httpClient;
-//    protected final String TOPICS_SERVICE_URL = "http://localhost:25300";
+
+    private static final String TAXONOMY_ENDPOINT = "/taxonomy";
+    private static final String NAVIGATION_ENDPOINT = "/navigation";
 
     public CacheHttpClient(String host, ClientConfiguration configuration) {
         super(host, configuration);
-
         CachingHttpClientBuilder cacheClientBuilder = CachingHttpClients.custom();
         CacheConfig cacheConfig = CacheConfig.custom()
                 .setMaxCacheEntries(3000)
@@ -56,36 +60,19 @@ public class CacheHttpClient extends PooledHttpClient {
         URI uri = buildGetUri(path, queryParameters);
         HttpGet request = new HttpGet(uri);
         addHeaders(headers, request);
-        CloseableHttpResponse response = executeRequest(request);
-//
-//        CloseableHttpResponse response = null;
-//        try {
-//            response = executeRequest(request);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        CloseableHttpResponse response = null;
+        try {
+            response = executeRequest(request);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return validateResponse(response);
     }
 
     private CloseableHttpResponse executeRequest(HttpRequestBase request) throws IOException {
         HttpCacheContext context = HttpCacheContext.create();
-
         info().beginHTTP(request).log("CacheHttpClient executing request");
-
-//        System.out.println("----- " );
-//        System.out.println("----- request ----- " + request);
-//        System.out.println("----- " );
-//
-//        System.out.println("----- " );
-//        System.out.println("----- context ----- " + context);
-//        System.out.println("----- " );
-
         CloseableHttpResponse response = httpClient.execute(request,context);
-//
-//        System.out.println("----- " );
-//        System.out.println("----- response ----- " + response);
-//        System.out.println("----- " );
-
         try {
             CacheResponseStatus responseStatus = context.getCacheResponseStatus();
 
@@ -116,28 +103,18 @@ public class CacheHttpClient extends PooledHttpClient {
     }
 
     private URIBuilder newUriBuilder(String path) throws URISyntaxException {
-//        System.out.println("----- " );
-//        System.out.println("----- path ----- " + path);
-//        System.out.println("----- " );
-//        System.out.println("----- Config ----- " + appConfig().babbage().isNavigationEnabled()  );
-//        URI cacheHost = host;
-//        if (appConfig().babbage().isNavigationEnabled() && collectionID == null){
-//            cacheHost = URI.create(TOPICS_SERVICE_URL);
-//        }
-//
-//        System.out.println("----- " );
-//        System.out.println("----- cacheHost ----- " + host);
-//        System.out.println("----- " );
-
-        URIBuilder uriBuilder = new URIBuilder(host);
-
+        URI cacheHost = host;
+        if (appConfig().babbage().isNavigationEnabled() && Paths.get(path).getNameCount() == 1){
+            path = NAVIGATION_ENDPOINT;
+            cacheHost = URI.create(appConfig().contentAPI().topicsURL());
+        }
+        URIBuilder uriBuilder = new URIBuilder(cacheHost);
         String fullPath = "/" + path;
         String prefix = uriBuilder.getPath();
         if (prefix != null) {
             fullPath = prefix + fullPath;
         }
         uriBuilder.setPath(fullPath.replaceAll("//+", "/"));
-
         return uriBuilder;
     }
 
@@ -160,7 +137,6 @@ public class CacheHttpClient extends PooledHttpClient {
                 Map.Entry<String, String> next = headerIterator.next();
                 request.addHeader(next.getKey(), next.getValue());
             }
-
         }
     }
 

@@ -1,6 +1,7 @@
 package com.github.onsdigital.babbage.content.client;
 
 
+import com.github.onsdigital.babbage.configuration.ApplicationConfiguration;
 import com.github.onsdigital.babbage.util.http.ClientConfiguration;
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -12,12 +13,16 @@ import java.util.HashMap;
 import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
 
 public class ContentClientCacheTest extends TestCase {
-
-
     @Mock
     private ContentClientCache contentClientCache_mock;
+    @Mock
+    private ApplicationConfiguration config_mock;
+
+
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -31,14 +36,23 @@ public class ContentClientCacheTest extends TestCase {
         assertThat(actual, is(notNullValue()));
     }
 
-    public void testGetContent() throws ContentReadException {
-        String uri = "1235";
+    public void testGetTaxonomy() throws ContentReadException {
+
         HashMap<String, String[]> queryParameters = new HashMap<>();
         String[] mockList = {"E1", "E2", "E3", "E4"};
         queryParameters.put("England",mockList);
         queryParameters.put("Wales",mockList);
-        ContentResponse configuration = contentClientCache_mock.getContent(uri,queryParameters);
+        ContentResponse configuration = contentClientCache_mock.getTaxonomy(queryParameters);
         assertThat(configuration, is(nullValue()));
     }
-
+//    public void testGetTaxonomy_withNavigation() throws ContentReadException {
+//        when(config_mock.babbage().isNavigationEnable())
+//                .thenReturn(true);
+//        HashMap<String, String[]> queryParameters = new HashMap<>();
+//        String[] mockList = {"E1", "E2", "E3", "E4"};
+//        queryParameters.put("England",mockList);
+//        queryParameters.put("Wales",mockList);
+//        ContentResponse configuration = contentClientCache_mock.getTaxonomy(queryParameters);
+//        assertThat(configuration, is(nullValue()));
+//    }
 }

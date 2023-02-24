@@ -16,7 +16,7 @@ public class Babbage implements AppConfig {
     // env var keys
     private static final String DEV_ENVIRONMENT_KEY = "DEV_ENVIRONMENT";
     private static final String ENABLE_CACHE_KEY = "ENABLE_CACHE";
-    private static final String ENABLE_NAVIGATION = "ENABLE_NAVIGATION";
+    private static final String ENABLE_NAVIGATION_KEY = "ENABLE_NAVIGATION";
     private static final String HIGHCHARTS_EXPORT_SERVER_KEY = "HIGHCHARTS_EXPORT_SERVER";
     private static final String IS_PUBLISHING_KEY = "IS_PUBLISHING";
     private static final String MATHJAX_EXPORT_SERVER_KEY = "MATHJAX_EXPORT_SERVER";
@@ -54,8 +54,8 @@ public class Babbage implements AppConfig {
     private final int resultsPerPage;
     private final int maxResultsPerPage;
     private final boolean cacheEnabled;
-    private final boolean isNavigationEnabled;
     private final boolean isDevEnv;
+    private final boolean isNavigationEnabled;
     private final boolean isPublishing;
     private final String redirectSecret;
     private final int maxHighchartsServerConnections;
@@ -67,7 +67,7 @@ public class Babbage implements AppConfig {
         defaultCacheTime = 15 * 60;
         exportSeverUrl = getValueOrDefault(HIGHCHARTS_EXPORT_SERVER_KEY, "http://localhost:9999/");
         isDevEnv = getStringAsBool(DEV_ENVIRONMENT_KEY, "N");
-        isNavigationEnabled = getStringAsBool(ENABLE_NAVIGATION, "N");
+        isNavigationEnabled = getStringAsBool(ENABLE_NAVIGATION_KEY, "N");
         isPublishing = getStringAsBool(IS_PUBLISHING_KEY, "N");
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
         maxHighchartsServerConnections = defaultIfBlank(getNumberValue("HIGHCHARTS_EXPORT_MAX_CONNECTION"), 50);
@@ -90,10 +90,7 @@ public class Babbage implements AppConfig {
     public boolean isCacheEnabled() {
         return cacheEnabled;
     }
-    public boolean isNavigationEnabled() {
-        return isNavigationEnabled;
-    }
-
+    public boolean isNavigationEnabled() {return isNavigationEnabled;}
     public int getMaxVisiblePaginatorLink() {
         return maxVisiblePaginatorLink;
     }
@@ -149,8 +146,8 @@ public class Babbage implements AppConfig {
         config.put("defaultCacheTime", defaultCacheTime);
         config.put("exportSeverUrl", exportSeverUrl);
         config.put("isDevEnv", isDevEnv);
+        config.put("isNavigationEnable", isNavigationEnabled);
         config.put("isPublishing", isPublishing);
-        config.put("isNavigationEnabled", isNavigationEnabled);
         config.put("mathjaxExportServer", mathjaxExportServer);
         config.put("maxHighchartsServerConnections", maxHighchartsServerConnections);
         config.put("maxResultsPerPage", maxResultsPerPage);

@@ -43,6 +43,7 @@ public class ContentClientCache {
     private static final String NAVIGATION_ENDPOINT = "/navigation";
 
     public static ContentClientCache getInstance() {
+
         if (instance == null) {
             synchronized (ContentClientCache.class) {
                 if (instance == null) {
@@ -56,26 +57,6 @@ public class ContentClientCache {
         return instance;
     }
 
-    /**
-     * @param uri
-     * @param queryParameters
-     * @return
-     * @throws ContentReadException
-     */
-    public ContentResponse getContent(String uri, Map<String, String[]> queryParameters) throws ContentReadException {
-        return resolveMaxAge(uri, sendGet(getPath(DATA_ENDPOINT), addUri(uri, getParameters(queryParameters))));
-    }
-
-    private List<NameValuePair> addUri(String uri, List<NameValuePair> parameters) {
-        if (parameters == null) {
-            return null;
-        }
-        uri = StringUtils.isEmpty(uri) ? "/" : uri;
-        //uris are requested as get parameter from content service
-        parameters.add(new BasicNameValuePair("uri", uri));
-        return parameters;
-    }
-
 
     private static ClientConfiguration createConfiguration() {
         ClientConfiguration configuration = new ClientConfiguration();
@@ -85,55 +66,9 @@ public class ContentClientCache {
     }
 
     public ContentResponse getTaxonomy(Map<String, String[]> queryParameters) throws ContentReadException {
-            return sendGet(getPath(TAXONOMY_ENDPOINT), getParameters(queryParameters));
-    }
-    public ContentResponse getTaxonomy() throws ContentReadException {
-        return sendGet(getPath(TAXONOMY_ENDPOINT), null);
+        return sendGet(TAXONOMY_ENDPOINT,getParameters(queryParameters));
     }
 
-    public ContentResponse getNavigation(Map<String, String[]> queryParameters) throws ContentReadException {
-        return sendGet(getPath(NAVIGATION_ENDPOINT), getParameters(queryParameters));
-    }
-
-    public ContentResponse getNavigation() throws ContentReadException {
-        return sendGet(getPath(NAVIGATION_ENDPOINT), null);
-    }
-
-
-
-
-    private ContentResponse resolveMaxAge(String uri, ContentResponse response) {
-        if (!appConfig().babbage().isCacheEnabled()) {
-            return response;
-        }
-
-        try {
-            PublishInfo nextPublish = PublishingManager.getInstance().getNextPublishInfo(uri);
-            Date nextPublishDate = nextPublish == null ? null : nextPublish.getPublishDate();
-            int maxAge = appConfig().babbage().getDefaultContentCacheTime();
-            Integer timeToExpire = null;
-            if (nextPublishDate != null) {
-                Long time = (nextPublishDate.getTime() - new Date().getTime()) / 1000;
-                timeToExpire = time.intValue();
-            }
-
-            if (timeToExpire == null) {
-                response.setMaxAge(maxAge);
-            } else if (timeToExpire > 0) {
-                response.setMaxAge(timeToExpire < maxAge ? timeToExpire : maxAge);
-            } else if (timeToExpire < 0 && Math.abs(timeToExpire) > appConfig().babbage().getPublishCacheTimeout()) {
-                //if publish is due but there is still a publish date record after an hour drop it
-                info().data("uri", uri).log("dropping publish date record due to publish wait timeout for uri");
-                PublishingManager.getInstance().dropPublishDate(nextPublish);
-                return resolveMaxAge(uri, response);//resolve for next publish date if any
-            }
-        } catch (Exception e) {
-            error().exception(e)
-                    .data("uri", uri)
-                    .log("managing publish date failed for uri, skipping setting cache times");
-        }
-        return response;
-    }
 
     /**
      * @param path
@@ -144,13 +79,6 @@ public class ContentClientCache {
     private ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
         CloseableHttpResponse response = null;
         try {
-//            System.out.println("----- Path ----- " + path);
-//            System.out.println("----- Headers ----- " + getHeaders());
-//            System.out.println("----- Parameters ----- " + getParameters);
-//            System.out.println("----- CollectionID ----- " + getCollectionId());
-//            System.out.println("----- isNavegationEnabled ----- " + appConfig().babbage().isNavigationEnabled());
-
-//            return new ContentResponse(client.sendGet(path, getHeaders(), getParameters, getCollectionId()));
             return new ContentResponse(client.sendGet(path, getHeaders(), getParameters));
         } catch (HttpResponseException e) {
             //noinspection deprecation
@@ -191,11 +119,6 @@ public class ContentClientCache {
         return nameValuePairs;
     }
 
-    private ContentReadException wrapException(HttpResponseException e) {
-        error().exception(e).log("ContentClientCache request returned error");
-        return new ContentReadException(e.getStatusCode(), "Failed reading from content service", e);
-    }
-
     private ContentReadException wrapException(IOException e) {
         error().exception(e).log("ContentClientCache request returned error");
         return new ContentReadException(HttpStatus.SC_INTERNAL_SERVER_ERROR, "Failed reading from content service", e);
@@ -221,6 +144,7 @@ public class ContentClientCache {
     }
 
     private String getPath(String endpoint) {
+
         String collectionId = getCollectionId();
         if (collectionId == null) {
             if ( appConfig().babbage().isNavigationEnabled() ) {
