@@ -1,6 +1,6 @@
 package com.github.onsdigital.babbage.content.client;
 
-//import org.apache.commons.codec.digest.DigestUtils;
+import org. apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.nio.charset.Charset;
-//import java.util.Date;
+import java.util.Date;
 
 /**
  * Created by bren on 07/08/15.
@@ -42,7 +42,6 @@ public class ContentResponse implements Serializable {
             Header etag = response.getFirstHeader("Etag");
             hash = etag == null ? null : etag.getValue();
         }finally {
-//            IOUtils.closeQuietly(response);
             IOUtils.close(response);
         }
     }
