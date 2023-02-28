@@ -73,9 +73,17 @@ public class CacheHttpClient extends PooledHttpClient {
         HttpCacheContext context = HttpCacheContext.create();
         info().beginHTTP(request).log("CacheHttpClient executing request");
         CloseableHttpResponse response = httpClient.execute(request,context);
+        if (appConfig().babbage().isDevEnvironment()) {
+            validateCache(request, context, response);
+            info().endHTTP(request, response).log("CacheHttpClient execute request completed");
+        }
+        info().endHTTP(request, response).log("CacheHttpClient execute request completed");
+        return response;
+    }
+
+    private static void validateCache(HttpRequestBase request, HttpCacheContext context, CloseableHttpResponse response) {
         try {
             CacheResponseStatus responseStatus = context.getCacheResponseStatus();
-
             switch (responseStatus) {
                 case CACHE_HIT:
                     info().endHTTP(request, response).log(responseStatus + " A response was generated from the cache with no requests sent upstream" );
@@ -97,9 +105,6 @@ public class CacheHttpClient extends PooledHttpClient {
         } finally {
             info().endHTTP(request, response).log(Arrays.toString(response.getHeaders("Cache-Control")) + " the header cache-control" );
         }
-
-        info().endHTTP(request, response).log("CacheHttpClient execute request completed");
-        return response;
     }
 
     private URIBuilder newUriBuilder(String path) throws URISyntaxException {

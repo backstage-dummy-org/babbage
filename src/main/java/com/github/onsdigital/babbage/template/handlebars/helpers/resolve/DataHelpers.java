@@ -1,26 +1,32 @@
 package com.github.onsdigital.babbage.template.handlebars.helpers.resolve;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Options;
 import com.github.onsdigital.babbage.api.util.SearchRendering;
 import com.github.onsdigital.babbage.api.util.SearchUtils;
-import com.github.onsdigital.babbage.content.client.*;
+import com.github.onsdigital.babbage.content.client.ContentClient;
+import com.github.onsdigital.babbage.content.client.ContentClientCache;
+import com.github.onsdigital.babbage.content.client.ContentFilter;
+import com.github.onsdigital.babbage.content.client.ContentResponse;
 import com.github.onsdigital.babbage.request.handler.TimeseriesLandingRequestHandler;
 import com.github.onsdigital.babbage.search.model.SearchResult;
 import com.github.onsdigital.babbage.template.handlebars.helpers.base.BabbageHandlebarsHelper;
+import com.github.onsdigital.babbage.util.TaxonomyRenderer;
 import com.github.onsdigital.babbage.util.URIUtil;
-import com.google.gson.*;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.babbage.content.client.ContentClient.depth;
 import static com.github.onsdigital.babbage.content.client.ContentClient.filter;
-import static com.github.onsdigital.babbage.util.json.JsonUtil.*;
+import static com.github.onsdigital.babbage.util.json.JsonUtil.toList;
+import static com.github.onsdigital.babbage.util.json.JsonUtil.toMap;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.error;
 
 /**
@@ -169,17 +175,48 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
             ContentResponse stream = null;
-
-            try {
-                Integer depth = options.<Integer>hash("depth");
-                stream = ContentClientCache.getInstance().getTaxonomy(depth(depth));
-                InputStream data = stream.getDataStream();
-                List<Map<String, Object>> context = null;
+            Integer depth = options.<Integer>hash("depth");
+            if (!appConfig().babbage().isNavigationEnabled()) {
                 try {
-                    context = toList(data);
-                } catch (IOException e) {
-                    context =  navigationToTaxonomy(stream.getAsString());
+                    stream = ContentClientCache.getInstance().getTaxonomy(depth(depth));
+                    InputStream data = stream.getDataStream();
+                    List<Map<String, Object>> context = toList(data);
+                    assign(options, context);
+                    return options.fn(context);
+                } catch (Exception e) {
+                    logResolveError(uri, e);
+                    return options.inverse();
                 }
+            } else {
+                try {
+                    stream = ContentClientCache.getInstance().getNavigation(depth(depth));
+                    InputStream data = stream.getDataStream();
+                    List<Map<String, Object>> context = TaxonomyRenderer.navigationToTaxonomy(data);
+                    assign(options, context);
+                    return options.fn(context);
+                } catch (Exception e) {
+                    logResolveError(uri, e);
+                    return options.inverse();
+                }
+            }
+        }
+
+        @Override
+        public void register(Handlebars handlebars) {
+            handlebars.registerHelper(this.name(), this);
+        }
+
+    },
+
+    resolveNavigation {
+        @Override
+        public CharSequence apply(Object uri, Options options) throws IOException {
+            ContentResponse stream = null;
+            Integer depth = options.<Integer>hash("depth");
+            try {
+                stream = ContentClientCache.getInstance().getNavigation(depth(depth));
+                InputStream data = stream.getDataStream();
+                List<Map<String, Object>> context = TaxonomyRenderer.navigationToTaxonomy(data);
                 assign(options, context);
                 return options.fn(context);
             } catch (Exception e) {
@@ -295,50 +332,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
 
     };
 
-    private static List<Map<String, Object>> navigationToTaxonomy(String jsondata) {
-        JsonParser parser = new JsonParser();
-        JsonObject jsonObject = parser.parse(jsondata).getAsJsonObject();
-        JsonArray items = jsonObject.getAsJsonArray("items");
-        ObjectMapper mapper = new ObjectMapper();
-        List<Map<String, Object>> context = new ArrayList<>();
-
-        for (JsonElement item : items) {
-            JsonObject item_jsonObject = item.getAsJsonObject();
-            Map<String, Object> map = new HashMap<String, Object>();
-            JsonObject description = new JsonObject();
-//            if( item_jsonObject.get("title") == "Census" ){
-//                continue;
-//            }
-            map.put("uri",item_jsonObject.get("uri"));
-            description.add("title", item_jsonObject.get("title"));
-            map.put("description",description);
-            map.put("type","taxonomy_landing_page");
-
-            List<Map<String, Object>> subtopics_context = new ArrayList<>();
-            JsonArray subtopics = item_jsonObject.getAsJsonArray("subtopics");
-
-            if (subtopics != null) {
-
-                for (JsonElement subtopic : subtopics) {
-                    JsonObject subtopicJsonObject = subtopic.getAsJsonObject();
-                    Map<String, Object> subtopicMap = new HashMap<String, Object>();
-                    Map<String, Object> subtopicDescription = new HashMap<String, Object>();
-
-                    subtopicMap.put("uri",subtopicJsonObject.get("uri"));
-                    subtopicDescription.put("title",subtopicJsonObject.get("title"));
-                    subtopicMap.put("description",subtopicDescription);
-                    subtopicMap.put("type","taxonomy_landing_page");
-                    subtopics_context.add(subtopicMap);
-                }
-                map.put("children",subtopics_context);
-            }
-            context.add(map);
-        }
-        return context;
-
-    }
-
-
     //gets first parameter as uri, throws exception if not valid
     private static void validateUri(Object uri) throws IOException {
         if (uri == null) {
@@ -362,6 +355,4 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
     private static void logResolveError(Object uri, Exception e) {
         error().exception(e).data("uri", uri).log("DataHelpers resolve data for uri");
     }
-
-
 }

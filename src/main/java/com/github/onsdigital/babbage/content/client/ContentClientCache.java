@@ -38,6 +38,7 @@ public class ContentClientCache {
 
     private static CacheHttpClient client;
     private static ContentClientCache instance;
+    private static String path;
     private static final String DATA_ENDPOINT = "/data";
     private static final String TAXONOMY_ENDPOINT = "/taxonomy";
     private static final String NAVIGATION_ENDPOINT = "/navigation";
@@ -54,6 +55,7 @@ public class ContentClientCache {
                 }
             }
         }
+        String path1 = path;
         return instance;
     }
 
@@ -66,7 +68,10 @@ public class ContentClientCache {
     }
 
     public ContentResponse getTaxonomy(Map<String, String[]> queryParameters) throws ContentReadException {
-        return sendGet(TAXONOMY_ENDPOINT,getParameters(queryParameters));
+        return  sendGet(TAXONOMY_ENDPOINT,getParameters(queryParameters));
+    }
+    public ContentResponse getNavigation(Map<String, String[]> queryParameters) throws ContentReadException {
+        return  sendGet(NAVIGATION_ENDPOINT,getParameters(queryParameters));
     }
 
 
@@ -125,13 +130,6 @@ public class ContentClientCache {
     }
 
     //Reads collection cookie saved in thread context
-    private String getCollectionId() {
-        Map<String, String> cookies = (Map<String, String>) ThreadContext.getData("cookies");
-        if (cookies != null) {
-            return cookies.get("collection");
-        }
-        return null;
-    }
 
     private Map<String, String> getHeaders() {
         Map<String, String> cookies = (Map<String, String>) ThreadContext.getData("cookies");
@@ -141,19 +139,6 @@ public class ContentClientCache {
             return headers;
         }
         return null;
-    }
-
-    private String getPath(String endpoint) {
-
-        String collectionId = getCollectionId();
-        if (collectionId == null) {
-            if ( appConfig().babbage().isNavigationEnabled() ) {
-                endpoint = NAVIGATION_ENDPOINT;
-            }
-            return endpoint;
-        } else {
-            return endpoint + "/" + collectionId;
-        }
     }
 }
 
