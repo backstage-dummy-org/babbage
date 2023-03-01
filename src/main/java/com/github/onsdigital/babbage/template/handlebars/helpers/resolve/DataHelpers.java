@@ -52,14 +52,13 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
                 }
 
                 ContentFilter filter = null;
-                String filterVal = options.hash("filter");
+                String filterVal = options.<String>hash("filter");
                 if (filterVal != null) {
                     filter = ContentFilter.valueOf(filterVal.toUpperCase());
                 }
                 contentResponse = ContentClient.getInstance().getContent(uriString, filter(filter));
-
                 InputStream data = contentResponse.getDataStream();
-                List<Map<String, Object>> context = toList(data);
+                Map<String, Object> context = toMap(data);
                 assign(options, context);
                 return options.fn(context);
             } catch (Exception e) {
