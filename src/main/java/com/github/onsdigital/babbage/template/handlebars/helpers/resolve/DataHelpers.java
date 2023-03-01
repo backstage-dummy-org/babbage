@@ -143,7 +143,7 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
                 String s = URIUtil.removeLastSegment(uriString) + "/latest";
 
                 ContentFilter filter = null;
-                String filterVal = options.hash("filter");
+                String filterVal = options.<String>hash("filter");
                 if (filterVal != null) {
                     filter = ContentFilter.valueOf(filterVal.toUpperCase());
                 }
