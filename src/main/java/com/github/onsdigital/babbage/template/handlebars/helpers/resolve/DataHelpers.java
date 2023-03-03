@@ -190,7 +190,8 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
                 try {
                     stream = ContentClientCache.getInstance().getNavigation(depth(depth));
                     InputStream data = stream.getDataStream();
-                    List<Map<String, Object>> context = TaxonomyRenderer.navigationToTaxonomy(data);
+                    Map<String, Object> mapData = toMap(data);
+                    List<Map<String, Object>> context = TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
                     assign(options, context);
                     return options.fn(context);
                 } catch (Exception e) {
@@ -204,7 +205,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         public void register(Handlebars handlebars) {
             handlebars.registerHelper(this.name(), this);
         }
-
     },
 
     resolveNavigation {
@@ -215,7 +215,8 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
             try {
                 stream = ContentClientCache.getInstance().getNavigation(depth(depth));
                 InputStream data = stream.getDataStream();
-                List<Map<String, Object>> context = TaxonomyRenderer.navigationToTaxonomy(data);
+                Map<String, Object> mapData = toMap(data);
+                List<Map<String, Object>> context = TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
                 assign(options, context);
                 return options.fn(context);
             } catch (Exception e) {
