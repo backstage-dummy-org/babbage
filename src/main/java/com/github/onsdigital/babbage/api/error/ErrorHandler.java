@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.error;
+import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
 /**
  * Created by bren on 28/05/15.
@@ -56,7 +57,9 @@ public class ErrorHandler implements ServerError {
         try {
             response.setStatus(statusCode);
             //Prevent error pages being cached by cdn s
-            response.addHeader("cache-control", "public, max-age=0");
+            String cacheHeaderVal = "public, max-age=0";
+            info().log("setting cache-control header to: " + cacheHeaderVal);
+            response.addHeader("cache-control", cacheHeaderVal);
             Map<String, Object> context = new LinkedHashMap<>();
             context.put("type", "error");
             context.put("code", statusCode);
