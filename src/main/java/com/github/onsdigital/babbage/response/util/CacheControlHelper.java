@@ -1,5 +1,6 @@
 package com.github.onsdigital.babbage.response.util;
 
+import io.prometheus.client.Counter;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,6 +12,9 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 /**
  */
 public class CacheControlHelper {
+
+    static final Counter cache_resets = Counter.build()
+            .name("total_cache_resets").help("Total requests that re-set the value of the cache-control header.").register();
 
     /**
      * Resolves and sets response status based on request cache control headers and data to be sent to the user
