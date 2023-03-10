@@ -1,6 +1,7 @@
 package com.github.onsdigital.babbage.response.util;
 
 import io.prometheus.client.Counter;
+import io.prometheus.client.Gauge;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,9 +14,9 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
  */
 public class CacheControlHelper {
 
-    static final Counter cache_resets = Counter.build()
-            .name("total_cache_resets").help("Total requests that re-set the value of the cache-control header.").register();
-
+    // The cache_expiry_time will be given by the max-age value being used for the cache-control header
+    static final Gauge cache_expiry_time = Gauge.build()
+            .name("cache_expiry_value").help("The time until the cache expires and will be refreshed by another call to the server.").labelNames("is_greater_than_default", "is_outside_of_one_hour").register();
     /**
      * Resolves and sets response status based on request cache control headers and data to be sent to the user
      *
@@ -24,15 +25,21 @@ public class CacheControlHelper {
      */
     public static void setCacheHeaders(HttpServletRequest request, HttpServletResponse response, String hash, long maxAge) {
         resolveHash(request, response, hash);
-        setMaxAage(response, maxAge);
+        setMaxAge(response, maxAge);
     }
 
     public static void setCacheHeaders(HttpServletResponse response, long maxAge) {
-        setMaxAage(response, maxAge);
+        setMaxAge(response, maxAge);
     }
 
-    private static void setMaxAage(HttpServletResponse response, long maxAge) {
-        response.addHeader("cache-control", "public, max-age=" + maxAge);
+    private static void setMaxAge(HttpServletResponse response, long maxAge) {
+        Long expiryTime = Long.valueOf(maxAge);
+        // set labels to false by default
+        cache_expiry_time.labels("false", "false").set(expiryTime.doubleValue());
+
+        String cacheHeaderVal = "public, max-age=" + maxAge;
+        info().log("setting cache-control header to: " + cacheHeaderVal);
+        response.addHeader("cache-control", cacheHeaderVal);
     }
 
     public static String hashData(String data) {
