@@ -1,6 +1,7 @@
 package com.github.onsdigital.babbage.util.http;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
@@ -21,6 +22,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -47,8 +49,8 @@ public class CacheHttpClient extends PooledHttpClient {
         super(host, configuration);
         CachingHttpClientBuilder cacheClientBuilder = CachingHttpClients.custom();
         CacheConfig cacheConfig = CacheConfig.custom()
-                .setMaxCacheEntries(3000)
-                .setMaxObjectSize(50000) // 10MB
+                .setMaxCacheEntries(appConfig().babbage().getMaxCacheEntries())
+                .setMaxObjectSize(appConfig().babbage().getMaxCacheObjectSize())
                 .build();
 
         this.httpClient = cacheClientBuilder
@@ -66,6 +68,12 @@ public class CacheHttpClient extends PooledHttpClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        Header[] allHeaders = response.getAllHeaders();
+        for (Header header : allHeaders) {
+            System.out.println("\n---- responseHeader ----- " +  header.getName() + ", Value: " + header.getValue()  + " -----\n");
+        }
+
         return validateResponse(response);
     }
 
@@ -75,7 +83,6 @@ public class CacheHttpClient extends PooledHttpClient {
         CloseableHttpResponse response = httpClient.execute(request,context);
         if (appConfig().babbage().isDevEnvironment()) {
             validateCache(request, context, response);
-            info().endHTTP(request, response).log("CacheHttpClient execute request completed");
         }
         info().endHTTP(request, response).log("CacheHttpClient execute request completed");
         return response;

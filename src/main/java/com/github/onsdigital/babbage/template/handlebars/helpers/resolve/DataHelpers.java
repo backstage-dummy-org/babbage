@@ -1,6 +1,5 @@
 package com.github.onsdigital.babbage.template.handlebars.helpers.resolve;
 
-
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Options;
 import com.github.onsdigital.babbage.api.util.SearchRendering;
@@ -22,7 +21,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.babbage.content.client.ContentClient.depth;
 import static com.github.onsdigital.babbage.content.client.ContentClient.filter;
 import static com.github.onsdigital.babbage.util.json.JsonUtil.toList;
@@ -175,7 +173,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         public CharSequence apply(Object uri, Options options) throws IOException {
             ContentResponse stream = null;
             Integer depth = options.<Integer>hash("depth");
-            if (!appConfig().babbage().isNavigationEnabled()) {
                 try {
                     stream = ContentClientCache.getInstance().getTaxonomy(depth(depth));
                     InputStream data = stream.getDataStream();
@@ -186,19 +183,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
                     logResolveError(uri, e);
                     return options.inverse();
                 }
-            } else {
-                try {
-                    stream = ContentClientCache.getInstance().getNavigation(depth(depth));
-                    InputStream data = stream.getDataStream();
-                    Map<String, Object> mapData = toMap(data);
-                    List<Map<String, Object>> context = TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
-                    assign(options, context);
-                    return options.fn(context);
-                } catch (Exception e) {
-                    logResolveError(uri, e);
-                    return options.inverse();
-                }
-            }
         }
 
         @Override
@@ -207,6 +191,12 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         }
     },
 
+    /**
+     * usage:  {{#resolveNavigation [depth=depthvalue] [assign=variableName]}
+     * to be called when
+     * <p>
+     * If assign is not empty data is assigned to given variable name
+     */
     resolveNavigation {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {

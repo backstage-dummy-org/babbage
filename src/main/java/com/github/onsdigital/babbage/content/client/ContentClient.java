@@ -46,7 +46,6 @@ public class ContentClient {
     private static ContentClient instance;
 
     private static final String DATA_ENDPOINT = "/data";
-//    private static final String TAXONOMY_ENDPOINT = "/taxonomy";
     private static final String PARENTS_ENDPOINT = "/parents";
     private static final String RESOURCE_ENDPOINT = "/resource";
     private static final String FILE_SIZE_ENDPOINT = "/filesize";

@@ -55,12 +55,10 @@ public class ContentClientCache {
                 }
             }
         }
-        String path1 = path;
         return instance;
     }
 
-
-    private static ClientConfiguration createConfiguration() {
+    protected static ClientConfiguration createConfiguration() {
         ClientConfiguration configuration = new ClientConfiguration();
         configuration.setMaxTotalConnection(appConfig().contentAPI().maxConnections());
         configuration.setDisableRedirectHandling(true);
@@ -68,12 +66,11 @@ public class ContentClientCache {
     }
 
     public ContentResponse getTaxonomy(Map<String, String[]> queryParameters) throws ContentReadException {
-        return  sendGet(TAXONOMY_ENDPOINT,getParameters(queryParameters));
+        return sendGet(TAXONOMY_ENDPOINT,getParameters(queryParameters));
     }
     public ContentResponse getNavigation(Map<String, String[]> queryParameters) throws ContentReadException {
-        return  sendGet(NAVIGATION_ENDPOINT,getParameters(queryParameters));
+        return sendGet(NAVIGATION_ENDPOINT,getParameters(queryParameters));
     }
-
 
     /**
      * @param path
@@ -81,7 +78,7 @@ public class ContentClientCache {
      * @return
      * @throws ContentReadException
      */
-    private ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
+    ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
         CloseableHttpResponse response = null;
         try {
             return new ContentResponse(client.sendGet(path, getHeaders(), getParameters));
@@ -102,7 +99,7 @@ public class ContentClientCache {
         }
     }
 
-    private List<NameValuePair> getParameters(Map<String, String[]> parameters) {
+    List<NameValuePair> getParameters(Map<String, String[]> parameters) {
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("lang", (String) ThreadContext.getData(RequestUtil.LANG_KEY)));
         nameValuePairs.addAll(toNameValuePair(parameters));
@@ -133,12 +130,11 @@ public class ContentClientCache {
 
     private Map<String, String> getHeaders() {
         Map<String, String> cookies = (Map<String, String>) ThreadContext.getData("cookies");
+        HashMap<String, String> headers = new HashMap<>();
         if (cookies != null) {
-            HashMap<String, String> headers = new HashMap<>();
             headers.put(TOKEN_HEADER, cookies.get("access_token"));
-            return headers;
         }
-        return null;
+        return headers;
     }
 }
 
