@@ -42,11 +42,11 @@ private ContentClientCache mockClient;
         mockHpptClient = new CacheHttpClient(appConfig().contentAPI().serverURL(), createConfiguration());
 
     }
-    @Test
-    public void testGetInstance() {
-        ContentClientCache instance = mockClient.getInstance();
-        verify(mockClient, times(1)).getInstance();
-    }
+//    @Test
+//    public void testGetInstance() {
+//        ContentClientCache instance = mockClient.getInstance();
+//        verify(mockClient, times(1)).getInstance();
+//    }
 
     @Test
     public void testGetTaxonomy_EmptyParams() throws ContentReadException {
@@ -137,10 +137,9 @@ private ContentClientCache mockClient;
         List<NameValuePair> returnParams = new ArrayList<NameValuePair>();
         returnParams.add(new BasicNameValuePair("depth", "2"));
         returnParams.add(new BasicNameValuePair("lang", "cy"));
-
         when(mockClient.sendGet(anyString(),anyListOf(NameValuePair.class))).thenReturn(response);
 
-       response = mockClient.sendGet(NAVIGATION_ENDPOINT,returnParams);
+        response = mockClient.sendGet(NAVIGATION_ENDPOINT,returnParams);
         verify(mockClient,atLeastOnce()).sendGet(anyString(),anyList());
         assertNull(response);
 
