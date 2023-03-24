@@ -43,6 +43,13 @@ public class Init implements Startup {
             System.exit(1);
         }
 
+        try {
+            Metrics.init();
+        } catch (Exception ex) {
+            System.err.println(ex);
+            System.exit(1);
+        }
+
         info().log("starting application babbage initialisation");
 
         ApplicationConfiguration.init();

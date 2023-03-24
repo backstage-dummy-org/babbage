@@ -1,5 +1,6 @@
 package com.github.onsdigital.babbage.response.util;
 
+import com.github.onsdigital.babbage.Metrics;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.exporter.HTTPServer;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -16,19 +17,19 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
  */
 public class CacheControlHelper {
 
-    public static HTTPServer server;
-
-    static {
-        try {
-            server = new HTTPServer.Builder().withPort(1234).build();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // The cache_expiry_time will be given by the max-age value being used for the cache-control header
-    static final Gauge cache_expiry_time = Gauge.build()
-            .name("cache_expiry_value").help("The time until the cache expires and will be refreshed by another call to the server.").labelNames("is_greater_than_default", "is_outside_of_one_hour").register();
+//    public static HTTPServer server;
+//
+//    static {
+//        try {
+//            server = new HTTPServer.Builder().withPort(1234).build();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    // The cache_expiry_time will be given by the max-age value being used for the cache-control header
+//    static final Gauge cache_expiry_time = Gauge.build()
+//            .name("cache_expiry_value").help("The time until the cache expires and will be refreshed by another call to the server.").labelNames("is_greater_than_default", "is_outside_of_one_hour").register();
     /**
      * Resolves and sets response status based on request cache control headers and data to be sent to the user
      *
@@ -47,7 +48,8 @@ public class CacheControlHelper {
     private static void setMaxAge(HttpServletResponse response, long maxAge) {
         Long expiryTime = Long.valueOf(maxAge);
         // set labels to false by default
-        cache_expiry_time.labels("false", "false").set(expiryTime.doubleValue());
+//        cache_expiry_time.labels("false", "false").set(expiryTime.doubleValue());
+        Metrics.get().setCacheExpiryTime(expiryTime.doubleValue());
 
         String cacheHeaderVal = "public, max-age=" + maxAge;
         info().log("setting cache-control header to: " + cacheHeaderVal);

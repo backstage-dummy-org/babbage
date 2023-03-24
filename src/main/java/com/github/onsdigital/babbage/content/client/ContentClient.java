@@ -1,5 +1,6 @@
 package com.github.onsdigital.babbage.content.client;
 
+import com.github.onsdigital.babbage.Metrics;
 import com.github.onsdigital.babbage.error.ResourceNotFoundException;
 import com.github.onsdigital.babbage.publishing.PublishingManager;
 import com.github.onsdigital.babbage.publishing.model.PublishInfo;
@@ -157,6 +158,8 @@ public class ContentClient {
             return response;
         }
 
+        Metrics metrics = Metrics.get();
+
         try {
             PublishInfo nextPublish = PublishingManager.getInstance().getNextPublishInfo(uri);
             Date nextPublishDate = nextPublish == null ? null : nextPublish.getPublishDate();
@@ -165,16 +168,26 @@ public class ContentClient {
             if (nextPublishDate != null) {
                 Long time = (nextPublishDate.getTime() - new Date().getTime()) / 1000;
                 timeToExpire = time.intValue();
+                //increment count of requests where publish date is present
+                metrics.incPublishDatePresent();
             }
 
             if (timeToExpire == null) {
+                // requested uri has no publish date so cache is set to 0
                 response.setMaxAge(maxAge);
+                metrics.incPublishDateNotPresent();
             } else if (timeToExpire > 0) {
+                // requested uri cache expiry is set as either:-
+                // 1. the time remaining until the publishing time or
+                // 2. the maximum cache expiry time permitted
                 response.setMaxAge(timeToExpire < maxAge ? timeToExpire : maxAge);
+                metrics.incPublishDateInFuture();
             } else if (timeToExpire < 0 && Math.abs(timeToExpire) > appConfig().babbage().getPublishCacheTimeout()) {
                 //if publish is due but there is still a publish date record after an hour drop it
                 info().data("uri", uri).log("dropping publish date record due to publish wait timeout for uri");
                 PublishingManager.getInstance().dropPublishDate(nextPublish);
+                // requested uri was due to be published more than an hour ago so ignore that publishing time and retry setting the cache expiry for the next publishing time given
+                metrics.incPublishDateTooFarInPast();
                 return resolveMaxAge(uri, response);//resolve for next publish date if any
             }
         } catch (Exception e) {
