@@ -29,12 +29,9 @@ public class CacheControlHelper {
     }
 
     private static void setMaxAge(HttpServletResponse response, long maxAge) {
+        response.addHeader("cache-control", "public, max-age=" + maxAge);
         Long expiryTime = Long.valueOf(maxAge);
         Metrics.get().setCacheExpiryTime(expiryTime.doubleValue());
-
-        String cacheHeaderVal = "public, max-age=" + maxAge;
-        info().log("setting cache-control header to: " + cacheHeaderVal);
-        response.addHeader("cache-control", cacheHeaderVal);
     }
 
     public static String hashData(String data) {

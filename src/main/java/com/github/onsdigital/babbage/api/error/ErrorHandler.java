@@ -2,6 +2,7 @@ package com.github.onsdigital.babbage.api.error;
 
 import com.github.davidcarboni.restolino.api.RequestHandler;
 import com.github.davidcarboni.restolino.framework.ServerError;
+import com.github.onsdigital.babbage.Metrics;
 import com.github.onsdigital.babbage.content.client.ContentReadException;
 import com.github.onsdigital.babbage.error.LegacyPDFException;
 import com.github.onsdigital.babbage.error.ResourceNotFoundException;
@@ -57,9 +58,9 @@ public class ErrorHandler implements ServerError {
         try {
             response.setStatus(statusCode);
             //Prevent error pages being cached by cdn s
-            String cacheHeaderVal = "public, max-age=0";
-            info().log("setting cache-control header to: " + cacheHeaderVal);
-            response.addHeader("cache-control", cacheHeaderVal);
+            response.addHeader("cache-control", "public, max-age=0");
+            //Set gauge with new cache expiry time
+            Metrics.get().setCacheExpiryTime(0.0);
             Map<String, Object> context = new LinkedHashMap<>();
             context.put("type", "error");
             context.put("code", statusCode);

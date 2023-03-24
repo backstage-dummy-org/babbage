@@ -173,20 +173,21 @@ public class ContentClient {
             }
 
             if (timeToExpire == null) {
-                // requested uri has no publish date so cache is set to 0
                 response.setMaxAge(maxAge);
+                //increment count of requests where publish date is not present
                 metrics.incPublishDateNotPresent();
             } else if (timeToExpire > 0) {
                 // requested uri cache expiry is set as either:-
                 // 1. the time remaining until the publishing time or
                 // 2. the maximum cache expiry time permitted
                 response.setMaxAge(timeToExpire < maxAge ? timeToExpire : maxAge);
+                //increment count of requests where publish date is in the future
                 metrics.incPublishDateInFuture();
             } else if (timeToExpire < 0 && Math.abs(timeToExpire) > appConfig().babbage().getPublishCacheTimeout()) {
                 //if publish is due but there is still a publish date record after an hour drop it
                 info().data("uri", uri).log("dropping publish date record due to publish wait timeout for uri");
                 PublishingManager.getInstance().dropPublishDate(nextPublish);
-                // requested uri was due to be published more than an hour ago so ignore that publishing time and retry setting the cache expiry for the next publishing time given
+                //increment count of requests where publish date is more than an hour ago
                 metrics.incPublishDateTooFarInPast();
                 return resolveMaxAge(uri, response);//resolve for next publish date if any
             }
