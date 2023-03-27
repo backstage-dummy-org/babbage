@@ -1,6 +1,5 @@
 package com.github.onsdigital.babbage.content.client;
 
-import org. apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
