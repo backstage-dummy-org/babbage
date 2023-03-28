@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.babbage.content.client.ContentClient.depth;
 import static com.github.onsdigital.babbage.content.client.ContentClient.filter;
 import static com.github.onsdigital.babbage.util.json.JsonUtil.toList;
@@ -173,42 +174,20 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         public CharSequence apply(Object uri, Options options) throws IOException {
             ContentResponse stream = null;
             Integer depth = options.<Integer>hash("depth");
-                try {
-                    stream = ContentClientCache.getInstance().getTaxonomy(depth(depth));
-                    InputStream data = stream.getDataStream();
-                    List<Map<String, Object>> context = toList(data);
-                    assign(options, context);
-                    return options.fn(context);
-                } catch (Exception e) {
-                    logResolveError(uri, e);
-                    return options.inverse();
-                }
-        }
-
-        @Override
-        public void register(Handlebars handlebars) {
-            handlebars.registerHelper(this.name(), this);
-        }
-    },
-
-    /**
-     * usage:  {{#resolveNavigation [depth=depthvalue] [assign=variableName]}
-     * to be called when
-     * <p>
-     * If assign is not empty data is assigned to given variable name
-     */
-    resolveNavigation {
-        @Override
-        public CharSequence apply(Object uri, Options options) throws IOException {
-            ContentResponse stream = null;
-            Integer depth = options.<Integer>hash("depth");
             try {
                 stream = ContentClientCache.getInstance().getNavigation(depth(depth));
                 InputStream data = stream.getDataStream();
-                Map<String, Object> mapData = toMap(data);
-                List<Map<String, Object>> context = TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
-                assign(options, context);
-                return options.fn(context);
+                if (appConfig().babbage().isNavigationEnabled() && !appConfig().babbage().isPublishing()) {
+                    Map<String, Object> mapData = toMap(data);
+                    List<Map<String, Object>>  navigationContext = TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
+                    assign(options, navigationContext);
+                    return options.fn(navigationContext);
+                }
+                else{
+                    List<Map<String, Object>> taxonomyContext = toList(data);
+                    assign(options, taxonomyContext);
+                    return options.fn(taxonomyContext);
+                }
             } catch (Exception e) {
                 logResolveError(uri, e);
                 return options.inverse();
@@ -219,7 +198,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         public void register(Handlebars handlebars) {
             handlebars.registerHelper(this.name(), this);
         }
-
     },
 
     /**
@@ -232,7 +210,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
             ContentResponse contentResponse = null;
-
             try {
                 validateUri(uri);
                 String uriString = (String) uri;

@@ -68,12 +68,6 @@ public class CacheHttpClient extends PooledHttpClient {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        Header[] allHeaders = response.getAllHeaders();
-        for (Header header : allHeaders) {
-            System.out.println("\n---- responseHeader ----- " +  header.getName() + ", Value: " + header.getValue()  + " -----\n");
-        }
-
         return validateResponse(response);
     }
 
