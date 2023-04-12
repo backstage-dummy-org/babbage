@@ -19,6 +19,7 @@ public class Babbage implements AppConfig {
     private static final String REDIRECT_SECRET_KEY = "REDIRECT_SECRET";
     private static final String HIGHCHARTS_EXPORT_SERVER_KEY = "HIGHCHARTS_EXPORT_SERVER";
     private static final String MATHJAX_EXPORT_SERVER_KEY = "MATHJAX_EXPORT_SERVER";
+    private static final String ENABLE_METRICS_KEY = "ENABLE_METRICS";
 
     private static Babbage INSTANCE;
 
@@ -59,6 +60,7 @@ public class Babbage implements AppConfig {
     private final String exportSeverUrl;
     private final String mathjaxExportServer;
     private final int metricsPort;
+    private final boolean metricsEnabled;
 
     private Babbage() {
         maxVisiblePaginatorLink = 5;
@@ -82,6 +84,8 @@ public class Babbage implements AppConfig {
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
 
         metricsPort = 1234;
+
+        metricsEnabled = getStringAsBool(ENABLE_METRICS_KEY, "Y");
     }
 
     public int getDefaultContentCacheTime() {
@@ -148,6 +152,10 @@ public class Babbage implements AppConfig {
         return metricsPort;
     }
 
+    public boolean areMetricsEnabled() {
+        return metricsEnabled;
+    }
+
     @Override
     public Map<String, Object> getConfig() {
         Map<String, Object> config = new HashMap<>();
@@ -164,6 +172,7 @@ public class Babbage implements AppConfig {
         config.put("exportSeverUrl", exportSeverUrl);
         config.put("mathjaxExportServer", mathjaxExportServer);
         config.put("metricsPort", metricsPort);
+        config.put("metricsEnabled", metricsEnabled);
         return config;
     }
 }
