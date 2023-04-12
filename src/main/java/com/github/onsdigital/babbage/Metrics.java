@@ -16,7 +16,6 @@ public class Metrics {
     Counter publishDateTooFarInPast;
     Gauge cacheExpiryTime;
 
-
     public static void init() throws Exception {
         if (metrics != null) {
             throw new Exception("Init already called");
@@ -25,7 +24,7 @@ public class Metrics {
         metrics = new Metrics();
 
         metrics.httpServer = new HTTPServer.Builder()
-                .withPort(1234)
+                .withPort(appConfig().babbage().getMetricsPort())
                 .build();
 
         metrics.publishDatePresent = Counter.build()

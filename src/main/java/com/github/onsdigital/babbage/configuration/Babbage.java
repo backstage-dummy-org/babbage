@@ -58,6 +58,7 @@ public class Babbage implements AppConfig {
     private final int maxHighchartsServerConnections;
     private final String exportSeverUrl;
     private final String mathjaxExportServer;
+    private final int metricsPort;
 
     private Babbage() {
         maxVisiblePaginatorLink = 5;
@@ -79,6 +80,8 @@ public class Babbage implements AppConfig {
         exportSeverUrl = getValueOrDefault(HIGHCHARTS_EXPORT_SERVER_KEY, "http://localhost:9999/");
 
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
+
+        metricsPort = 1234;
     }
 
     public int getDefaultContentCacheTime() {
@@ -141,6 +144,10 @@ public class Babbage implements AppConfig {
         return mathjaxExportServer;
     }
 
+    public int getMetricsPort() {
+        return metricsPort;
+    }
+
     @Override
     public Map<String, Object> getConfig() {
         Map<String, Object> config = new HashMap<>();
@@ -156,6 +163,7 @@ public class Babbage implements AppConfig {
         config.put("maxHighchartsServerConnections", maxHighchartsServerConnections);
         config.put("exportSeverUrl", exportSeverUrl);
         config.put("mathjaxExportServer", mathjaxExportServer);
+        config.put("metricsPort", metricsPort);
         return config;
     }
 }
