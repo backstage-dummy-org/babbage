@@ -42,11 +42,6 @@ private ContentClientCache mockClient;
         mockHpptClient = new CacheHttpClient(appConfig().contentAPI().serverURL(), createConfiguration());
 
     }
-//    @Test
-//    public void testGetInstance() {
-//        ContentClientCache instance = mockClient.getInstance();
-//        verify(mockClient, times(1)).getInstance();
-//    }
 
     @Test
     public void testGetTaxonomy_EmptyParams() throws ContentReadException {
@@ -93,7 +88,6 @@ private ContentClientCache mockClient;
 
     @Test
     public void testGetNavigation_cy() throws ContentReadException {
-//        ContentResponse response = new ContentResponse();
         Map<String, String[]> queryParameters = new HashMap<String, String[]>();
         String[] param  = {"2"};
         queryParameters.put("depth",param);
@@ -102,9 +96,6 @@ private ContentClientCache mockClient;
         returnParams.add(new BasicNameValuePair("depth", "2"));
         returnParams.add(new BasicNameValuePair("lang", "cy"));
         when(mockClient.getParameters(queryParameters)).thenReturn(returnParams);
-//        when(mockClient.sendGet(anyString(),returnParams)).thenReturn(response);
-
-
 
         try {
             ContentResponse response = mockClient.getNavigation(queryParameters);
