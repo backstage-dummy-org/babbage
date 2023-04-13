@@ -11,7 +11,6 @@ public class TaxonomyRenderer {
     static List<String> topicsToIgnore = Arrays.asList("Census", "Survey");
 
     public static List<Map<String, Object>> navigationToTaxonomy(Object items) throws IOException, URISyntaxException {
-//        System.out.print("\n -----  items   -----" + items + "\n" );
 
         List<Map<String, Object>> context = new ArrayList<>();
         List<Map<String, Object>> itemsArray = new ArrayList();

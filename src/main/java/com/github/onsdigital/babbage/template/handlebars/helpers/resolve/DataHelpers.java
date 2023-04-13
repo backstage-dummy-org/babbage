@@ -180,8 +180,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
                 InputStream data = stream.getDataStream();
                 if (appConfig().babbage().isNavigationEnabled() && !appConfig().babbage().isPublishing()) {
                     Map<String, Object> mapData = toMap(data);
-                    System.out.print("\n -----  mapData   -----" + mapData + "\n" );
-                    System.out.print("\n -----  items   -----" + mapData.get("items") + "\n" );
                     List<Map<String, Object>>  navigationContext = TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
                     assign(options, navigationContext);
                     return options.fn(navigationContext);
