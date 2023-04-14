@@ -22,7 +22,7 @@ public abstract class BabbageResponse {
     private String mimeType = APPLICATION_JSON; //Default mimetype
     private String charEncoding = StandardCharsets.UTF_8.name();//Default encoding
     private int status = HttpServletResponse.SC_OK;//Default status
-    private Long maxAge = Long.valueOf(0); //Default cache expiry time
+    private Long maxAge;
     private Map<String, String> headers;
     protected List<String> errors;
 
