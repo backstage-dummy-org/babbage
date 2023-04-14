@@ -1,15 +1,18 @@
 package com.github.onsdigital.babbage.highcharts;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.onsdigital.babbage.Metrics;
 import com.github.onsdigital.babbage.configuration.ApplicationConfiguration;
 import com.github.onsdigital.babbage.content.client.ContentClient;
 import com.github.onsdigital.babbage.content.client.ContentResponse;
 import com.github.onsdigital.babbage.template.TemplateService;
 import com.github.onsdigital.babbage.util.TestsUtil;
 import org.apache.commons.lang3.CharEncoding;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import javax.servlet.ServletOutputStream;
@@ -57,6 +60,8 @@ public class ChartRendererTest {
     private HighChartsExportClient highChartsExportClientMock;
     @Mock
     private ServletOutputStream outputStreamMock;
+    @Mock
+    private Metrics metricsMock;
 
     // Test target.
     private ChartRenderer renderer;
@@ -71,7 +76,14 @@ public class ChartRendererTest {
         TestsUtil.setPrivateField(renderer, "contentClient", contentClientMock);
         TestsUtil.setPrivateField(renderer, "templateService", templateServiceMock);
         TestsUtil.setPrivateField(renderer, "highChartsExportClient", highChartsExportClientMock);
+        TestsUtil.setPrivateField(renderer, "highChartsExportClient", highChartsExportClientMock);
+    }
 
+    @After
+    public void reset_mocks() {
+        Mockito.reset(requestMock);
+        Mockito.reset(responseMock);
+//        Mockito.reset(contentClientMock);
     }
 
     @Test

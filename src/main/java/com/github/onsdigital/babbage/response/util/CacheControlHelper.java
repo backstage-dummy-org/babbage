@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
 /**
@@ -31,7 +32,21 @@ public class CacheControlHelper {
     private static void setMaxAge(HttpServletResponse response, long maxAge) {
         response.addHeader("cache-control", "public, max-age=" + maxAge);
         Long expiryTime = Long.valueOf(maxAge);
+        if (Metrics.get() == null) {
+            initMetrics();
+        }
         Metrics.get().setCacheExpiryTime(expiryTime.doubleValue());
+    }
+
+    private static void initMetrics() {
+        try {
+            if (appConfig().babbage().areMetricsEnabled()) {
+                Metrics.init();
+            }
+        } catch (Exception ex) {
+            System.err.println(ex);
+            System.exit(1);
+        }
     }
 
     public static String hashData(String data) {
