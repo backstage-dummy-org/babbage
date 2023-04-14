@@ -152,7 +152,7 @@ public class Babbage implements AppConfig {
         return metricsPort;
     }
 
-    public boolean areMetricsEnabled() {
+    public boolean getMetricsEnabled() {
         return metricsEnabled;
     }
 

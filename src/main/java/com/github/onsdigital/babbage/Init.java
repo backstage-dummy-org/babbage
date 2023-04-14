@@ -45,7 +45,7 @@ public class Init implements Startup {
         }
 
         try {
-            if (appConfig().babbage().areMetricsEnabled()) {
+            if (appConfig().babbage().getMetricsEnabled()) {
                 Metrics.init();
             }
         } catch (Exception ex) {

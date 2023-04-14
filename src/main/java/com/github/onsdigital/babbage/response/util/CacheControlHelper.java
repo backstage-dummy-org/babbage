@@ -14,6 +14,8 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
  */
 public class CacheControlHelper {
 
+    private static Metrics metrics;
+
     /**
      * Resolves and sets response status based on request cache control headers and data to be sent to the user
      *
@@ -35,13 +37,14 @@ public class CacheControlHelper {
         if (Metrics.get() == null) {
             initMetrics();
         }
-        Metrics.get().setCacheExpiryTime(expiryTime.doubleValue());
+        metrics.setCacheExpiryTime(expiryTime.doubleValue());
     }
 
     private static void initMetrics() {
         try {
-            if (appConfig().babbage().areMetricsEnabled()) {
+            if (appConfig().babbage().getMetricsEnabled()) {
                 Metrics.init();
+                metrics = Metrics.get();
             }
         } catch (Exception ex) {
             System.err.println(ex);
