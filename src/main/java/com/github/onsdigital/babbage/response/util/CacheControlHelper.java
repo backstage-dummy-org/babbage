@@ -1,7 +1,6 @@
 package com.github.onsdigital.babbage.response.util;
 
 import com.github.onsdigital.babbage.metrics.CacheMetrics;
-import com.github.onsdigital.babbage.metrics.Metrics;
 import com.github.onsdigital.babbage.metrics.MetricsFactory;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;

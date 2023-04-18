@@ -1,7 +1,6 @@
 package com.github.onsdigital.babbage.content.client;
 
 import com.github.onsdigital.babbage.error.ResourceNotFoundException;
-import com.github.onsdigital.babbage.metrics.CacheMetrics;
 import com.github.onsdigital.babbage.metrics.Metrics;
 import com.github.onsdigital.babbage.metrics.MetricsFactory;
 import com.github.onsdigital.babbage.publishing.PublishingManager;
