@@ -1,27 +1,21 @@
-package com.github.onsdigital.babbage;
+package com.github.onsdigital.babbage.metrics;
 
+import io.prometheus.client.Counter;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.exporter.HTTPServer;
-import io.prometheus.client.Counter;
 
 import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 
-public class Metrics {
-    private static Metrics metrics;
+public class MetricsFactory {
 
-    HTTPServer httpServer;
-    Counter publishDatePresent;
-    Counter publishDateNotPresent;
-    Counter publishDateInFuture;
-    Counter publishDateTooFarInPast;
-    Gauge cacheExpiryTime;
+    private static CacheMetrics metrics;
 
     public static void init() throws Exception {
         if (metrics != null) {
             throw new Exception("Init already called");
         }
 
-        metrics = new Metrics();
+        metrics = new CacheMetrics();
 
         metrics.httpServer = new HTTPServer.Builder()
                 .withPort(appConfig().babbage().getMetricsPort())
@@ -39,31 +33,15 @@ public class Metrics {
                 .name("cache_expiry_time").help("The time until the cache expires and will be refreshed by another call to the server.").labelNames("is_greater_than_default").register();
     }
 
-    public static Metrics get(){
-        return Metrics.metrics;
-    }
-
-    public void incPublishDatePresent() {
-        publishDatePresent.inc();
-    }
-
-    public void incPublishDateNotPresent() {
-        publishDateNotPresent.inc();
-    }
-
-    public void incPublishDateInFuture() {
-        publishDateInFuture.inc();
-    }
-
-    public void incPublishDateTooFarInPast() {
-        publishDateTooFarInPast.inc();
-    }
-
-    public void setCacheExpiryTime(Double expiryTime) {
-        boolean isGreaterThanDefault = false;
-        if (expiryTime.intValue() > appConfig().babbage().getDefaultContentCacheTime()) {
-            isGreaterThanDefault = true;
+    //Use getMetrics method to get object of type Metrics
+    //If metrics are enabled then it will return the static object of type CacheMetrics
+    //Or if metrics are not enabled then it will return an object of type NopMetricImpl
+    public static Metrics getMetrics(boolean metricsEnabled){
+        if(metricsEnabled){
+            return MetricsFactory.metrics;
+        } else{
+            return null;
         }
-        cacheExpiryTime.labels(String.valueOf(isGreaterThanDefault)).set(expiryTime);
     }
+
 }

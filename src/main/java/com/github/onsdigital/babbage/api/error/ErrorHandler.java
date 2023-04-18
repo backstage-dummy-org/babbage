@@ -2,10 +2,10 @@ package com.github.onsdigital.babbage.api.error;
 
 import com.github.davidcarboni.restolino.api.RequestHandler;
 import com.github.davidcarboni.restolino.framework.ServerError;
-import com.github.onsdigital.babbage.Metrics;
 import com.github.onsdigital.babbage.content.client.ContentReadException;
 import com.github.onsdigital.babbage.error.LegacyPDFException;
 import com.github.onsdigital.babbage.error.ResourceNotFoundException;
+import com.github.onsdigital.babbage.metrics.MetricsFactory;
 import com.github.onsdigital.babbage.template.TemplateService;
 import org.apache.commons.io.IOUtils;
 
@@ -17,7 +17,7 @@ import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.error;
 
 /**
@@ -60,7 +60,7 @@ public class ErrorHandler implements ServerError {
             //Prevent error pages being cached by cdn s
             response.addHeader("cache-control", "public, max-age=0");
             //Set gauge with new cache expiry time
-            Metrics.get().setCacheExpiryTime(0.0);
+            MetricsFactory.getMetrics(appConfig().babbage().getMetricsEnabled()).setCacheExpiryTime(0.0);
             Map<String, Object> context = new LinkedHashMap<>();
             context.put("type", "error");
             context.put("code", statusCode);

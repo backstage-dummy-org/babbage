@@ -1,6 +1,8 @@
 package com.github.onsdigital.babbage.response.util;
 
-import com.github.onsdigital.babbage.Metrics;
+import com.github.onsdigital.babbage.metrics.CacheMetrics;
+import com.github.onsdigital.babbage.metrics.Metrics;
+import com.github.onsdigital.babbage.metrics.MetricsFactory;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,7 +16,8 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
  */
 public class CacheControlHelper {
 
-    private static Metrics metrics;
+    private static CacheMetrics metrics;
+    private static boolean metricsEnabled = appConfig().babbage().getMetricsEnabled();
 
     /**
      * Resolves and sets response status based on request cache control headers and data to be sent to the user
@@ -34,7 +37,7 @@ public class CacheControlHelper {
     private static void setMaxAge(HttpServletResponse response, long maxAge) {
         response.addHeader("cache-control", "public, max-age=" + maxAge);
         Long expiryTime = Long.valueOf(maxAge);
-        if (Metrics.get() == null) {
+        if (MetricsFactory.getMetrics(metricsEnabled) == null) {
             initMetrics();
         }
         metrics.setCacheExpiryTime(expiryTime.doubleValue());
@@ -43,8 +46,8 @@ public class CacheControlHelper {
     private static void initMetrics() {
         try {
             if (appConfig().babbage().getMetricsEnabled()) {
-                Metrics.init();
-                metrics = Metrics.get();
+                MetricsFactory.init();
+                metrics = (CacheMetrics) MetricsFactory.getMetrics(metricsEnabled);
             }
         } catch (Exception ex) {
             System.err.println(ex);

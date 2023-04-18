@@ -1,7 +1,9 @@
 package com.github.onsdigital.babbage.content.client;
 
-import com.github.onsdigital.babbage.Metrics;
 import com.github.onsdigital.babbage.error.ResourceNotFoundException;
+import com.github.onsdigital.babbage.metrics.CacheMetrics;
+import com.github.onsdigital.babbage.metrics.Metrics;
+import com.github.onsdigital.babbage.metrics.MetricsFactory;
 import com.github.onsdigital.babbage.publishing.PublishingManager;
 import com.github.onsdigital.babbage.publishing.model.PublishInfo;
 import com.github.onsdigital.babbage.util.RequestUtil;
@@ -158,7 +160,7 @@ public class ContentClient {
             return response;
         }
 
-        Metrics metrics = Metrics.get();
+        Metrics metrics = MetricsFactory.getMetrics(appConfig().babbage().getMetricsEnabled());
 
         try {
             PublishInfo nextPublish = PublishingManager.getInstance().getNextPublishInfo(uri);
