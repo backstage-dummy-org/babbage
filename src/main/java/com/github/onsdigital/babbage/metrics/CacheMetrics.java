@@ -4,6 +4,8 @@ import io.prometheus.client.Gauge;
 import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.Counter;
 
+import java.io.IOException;
+
 import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 
 public class CacheMetrics implements Metrics {
@@ -14,6 +16,23 @@ public class CacheMetrics implements Metrics {
     Counter publishDateInFuture;
     Counter publishDateTooFarInPast;
     Gauge cacheExpiryTime;
+
+    public CacheMetrics() throws IOException {
+        this.httpServer = new HTTPServer.Builder()
+                .withPort(appConfig().babbage().getMetricsPort())
+                .build();
+
+        this.publishDatePresent = Counter.build()
+                .name("publish_date_present").help("Total requests for uris that have a past or future publishing date").register();
+        this.publishDateNotPresent = Counter.build()
+                .name("publish_date_not_present").help("Total requests for uris that have no publishing date found").register();
+        this.publishDateInFuture = Counter.build()
+                .name("publish_date_in_future").help("Total requests for uris that have a future publishing date").register();
+        this.publishDateTooFarInPast = Counter.build()
+                .name("publish_date_too_far_in_past").help("Total requests for uris that have a past publishing date too long ago (outside a given time span)").register();
+        this.cacheExpiryTime = Gauge.build()
+                .name("cache_expiry_time").help("The time until the cache expires and will be refreshed by another call to the server.").labelNames("is_greater_than_default").register();
+    }
 
     public void incPublishDatePresent() {
         publishDatePresent.inc();
