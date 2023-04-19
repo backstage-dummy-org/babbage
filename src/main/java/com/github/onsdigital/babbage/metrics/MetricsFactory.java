@@ -37,9 +37,9 @@ public class MetricsFactory {
     //If metrics are enabled then it will return the static object of type CacheMetrics
     //Or if metrics are not enabled then it will return an object of type NopMetricImpl
     public static Metrics getMetrics(boolean metricsEnabled){
-        if(metricsEnabled){
+        if (metricsEnabled) {
             return MetricsFactory.metrics;
-        } else{
+        } else {
             return null;
         }
     }

@@ -36,6 +36,7 @@ public class CacheControlHelper {
     private static void setMaxAge(HttpServletResponse response, long maxAge) {
         response.addHeader("cache-control", "public, max-age=" + maxAge);
         Long expiryTime = Long.valueOf(maxAge);
+        //getMetrics will return null if either the CacheMetrics or NopMetricImpl object is null
         if (MetricsFactory.getMetrics(metricsEnabled) == null) {
             initMetrics();
         }
