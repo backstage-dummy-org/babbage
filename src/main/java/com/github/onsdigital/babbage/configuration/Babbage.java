@@ -20,6 +20,7 @@ public class Babbage implements AppConfig {
     private static final String HIGHCHARTS_EXPORT_SERVER_KEY = "HIGHCHARTS_EXPORT_SERVER";
     private static final String MATHJAX_EXPORT_SERVER_KEY = "MATHJAX_EXPORT_SERVER";
     private static final String ENABLE_METRICS_KEY = "ENABLE_METRICS";
+    private static final String METRICS_PORT_KEY = "METRICS_PORT";
 
     private static Babbage INSTANCE;
 
@@ -83,7 +84,7 @@ public class Babbage implements AppConfig {
 
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
 
-        metricsPort = 1234;
+        metricsPort = Integer.parseInt(getValueOrDefault(METRICS_PORT_KEY, "1234"));
 
         metricsEnabled = getStringAsBool(ENABLE_METRICS_KEY, "Y");
     }
