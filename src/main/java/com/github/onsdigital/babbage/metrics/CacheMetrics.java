@@ -10,12 +10,12 @@ import static com.github.onsdigital.babbage.configuration.ApplicationConfigurati
 
 public class CacheMetrics implements Metrics {
 
-    HTTPServer httpServer;
-    Counter publishDatePresent;
-    Counter publishDateNotPresent;
-    Counter publishDateInFuture;
-    Counter publishDateTooFarInPast;
-    Gauge cacheExpiryTime;
+    private final HTTPServer httpServer;
+    private final Counter publishDatePresent;
+    private final Counter publishDateNotPresent;
+    private final Counter publishDateInFuture;
+    private final Counter publishDateTooFarInPast;
+    private final Gauge cacheExpiryTime;
 
     public CacheMetrics() throws IOException {
         this.httpServer = new HTTPServer.Builder()

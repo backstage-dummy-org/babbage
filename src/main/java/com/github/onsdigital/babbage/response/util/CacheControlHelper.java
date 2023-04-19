@@ -16,7 +16,6 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 public class CacheControlHelper {
 
     private static CacheMetrics metrics;
-    private static boolean metricsEnabled = appConfig().babbage().getMetricsEnabled();
 
     /**
      * Resolves and sets response status based on request cache control headers and data to be sent to the user
@@ -37,7 +36,7 @@ public class CacheControlHelper {
         response.addHeader("cache-control", "public, max-age=" + maxAge);
         Long expiryTime = Long.valueOf(maxAge);
         //getMetrics will return null if either the CacheMetrics or NopMetricImpl object is null
-        if (MetricsFactory.getMetrics(metricsEnabled) == null) {
+        if (MetricsFactory.getMetrics() == null) {
             initMetrics();
         }
         metrics.setCacheExpiryTime(expiryTime.doubleValue());
@@ -47,7 +46,7 @@ public class CacheControlHelper {
         try {
             if (appConfig().babbage().getMetricsEnabled()) {
                 MetricsFactory.init();
-                metrics = (CacheMetrics) MetricsFactory.getMetrics(metricsEnabled);
+                metrics = (CacheMetrics) MetricsFactory.getMetrics();
             }
         } catch (Exception ex) {
             System.err.println(ex);

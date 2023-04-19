@@ -17,7 +17,6 @@ import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.error;
 
 /**
@@ -60,7 +59,7 @@ public class ErrorHandler implements ServerError {
             //Prevent error pages being cached by cdn s
             response.addHeader("cache-control", "public, max-age=0");
             //Set gauge with new cache expiry time
-            MetricsFactory.getMetrics(appConfig().babbage().getMetricsEnabled()).setCacheExpiryTime(0.0);
+            MetricsFactory.getMetrics().setCacheExpiryTime(0.0);
             Map<String, Object> context = new LinkedHashMap<>();
             context.put("type", "error");
             context.put("code", statusCode);

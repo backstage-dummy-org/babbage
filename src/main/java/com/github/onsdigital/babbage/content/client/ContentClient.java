@@ -159,7 +159,7 @@ public class ContentClient {
             return response;
         }
 
-        Metrics metrics = MetricsFactory.getMetrics(appConfig().babbage().getMetricsEnabled());
+        Metrics metrics = MetricsFactory.getMetrics();
 
         try {
             PublishInfo nextPublish = PublishingManager.getInstance().getNextPublishInfo(uri);
