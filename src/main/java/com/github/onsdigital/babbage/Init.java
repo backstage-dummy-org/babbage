@@ -48,9 +48,7 @@ public class Init implements Startup {
         MetricsFactory metricsFactory = new MetricsFactory();
 
         try {
-            if (appConfig().babbage().getMetricsEnabled()) {
-                metricsFactory.init();
-            }
+            metricsFactory.init();
         } catch (Exception ex) {
             System.err.println(ex);
             System.exit(1);
