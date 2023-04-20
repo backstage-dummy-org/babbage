@@ -84,9 +84,13 @@ public class Babbage implements AppConfig {
 
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
 
-        metricsPort = Integer.parseInt(getValueOrDefault(METRICS_PORT_KEY, "1234"));
-
         metricsEnabled = getStringAsBool(ENABLE_METRICS_KEY, "Y");
+
+        if (metricsEnabled) {
+            metricsPort = Integer.parseInt(getValueOrDefault(METRICS_PORT_KEY, "1234"));
+        }   else {
+            metricsPort = 0;
+        }
     }
 
     public int getDefaultContentCacheTime() {
