@@ -8,9 +8,7 @@ public class NopMetricsImpl implements Metrics {
         info().log("NopMetricsImpl incPublishDatePresent");
     }
 
-    public void incPublishDateNotPresent() {
-        info().log("NopMetricsImpl incPublishDateNotPresent");
-    }
+    public void incPublishDateNotPresent() { }
 
     public void incPublishDateInFuture() {
         info().log("NopMetricsImpl incPublishDateInFuture");
@@ -20,7 +18,5 @@ public class NopMetricsImpl implements Metrics {
         info().log("NopMetricsImpl incPublishDateTooFarInPast");
     }
 
-    public void setCacheExpiryTime(Double expiryTime) {
-        info().log("NopMetricsImpl setCacheExpiryTime");
-    }
+    public void setCacheExpiryTime(Double expiryTime) { }
 }
