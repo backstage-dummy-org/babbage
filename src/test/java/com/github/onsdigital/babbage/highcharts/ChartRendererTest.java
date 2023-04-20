@@ -73,7 +73,6 @@ public class ChartRendererTest {
         TestsUtil.setPrivateField(renderer, "contentClient", contentClientMock);
         TestsUtil.setPrivateField(renderer, "templateService", templateServiceMock);
         TestsUtil.setPrivateField(renderer, "highChartsExportClient", highChartsExportClientMock);
-        TestsUtil.setPrivateField(renderer, "highChartsExportClient", highChartsExportClientMock);
         TestsUtil.setPrivateStaticField(metricsFactory, "metrics", new NopMetricsImpl());
     }
 

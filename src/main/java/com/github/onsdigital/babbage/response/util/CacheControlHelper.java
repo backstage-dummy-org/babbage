@@ -14,7 +14,7 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 /**
  */
 public class CacheControlHelper {
-    
+
     /**
      * Resolves and sets response status based on request cache control headers and data to be sent to the user
      *
