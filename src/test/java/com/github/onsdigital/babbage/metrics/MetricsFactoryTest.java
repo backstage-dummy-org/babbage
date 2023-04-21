@@ -12,16 +12,13 @@ public class MetricsFactoryTest {
     private MetricsFactory metricsFactory;
 
     @Before
-    public void setup() throws Exception {
-//        MockitoAnnotations.initMocks(this);
-//        metricsFactory = new MetricsFactory();
-//        TestsUtil.setPrivateStaticField(metricsFactory, "metrics", new NopMetricsImpl());
+    public void setup() {
+        metricsFactory = new MetricsFactory();
     }
 
     @Test
     public void testInitAlreadyCalled() throws Exception {
         //Given
-        metricsFactory = new MetricsFactory();
         TestsUtil.setPrivateStaticField(metricsFactory, "metrics", new NopMetricsImpl());
 
         // Then
@@ -31,23 +28,16 @@ public class MetricsFactoryTest {
     }
 
     @Test
-    public void testInitMetricsEnabled() throws Exception {
-//        appConfig().babbage().getMetricsEnabled()
-
-        metricsFactory = new MetricsFactory();
+    public void testInitNotAlreadyCalled() throws Exception {
+        //Given
         metricsFactory.init();
+
+        //When
         Metrics metrics = metricsFactory.getMetrics();
+
+        //Then
         assertNotNull(metrics);
         assertEquals(metrics.getClass().getName(),"com.github.onsdigital.babbage.metrics.CacheMetrics");
     }
-
-//    @Test
-//    public void testInitMetricsNotEnabled() throws Exception {
-//
-//        metricsFactory = new MetricsFactory();
-//        metricsFactory.init();
-//        Metrics metrics = metricsFactory.getMetrics();
-//        assertNotNull(metrics);
-//    }
 
 }
