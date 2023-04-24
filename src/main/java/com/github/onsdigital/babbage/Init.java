@@ -17,7 +17,6 @@ import com.github.onsdigital.logging.v2.storage.MDCLogStore;
 
 import java.io.IOException;
 
-import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.error;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
@@ -45,10 +44,8 @@ public class Init implements Startup {
             System.exit(1);
         }
 
-        MetricsFactory metricsFactory = new MetricsFactory();
-
         try {
-            metricsFactory.init();
+            MetricsFactory.init();
         } catch (Exception ex) {
             System.err.println(ex);
             System.exit(1);
