@@ -10,7 +10,6 @@ import static com.github.onsdigital.babbage.configuration.ApplicationConfigurati
 
 public class CacheMetrics implements Metrics {
 
-    private final HTTPServer httpServer;
     private final Counter publishDatePresent;
     private final Counter publishDateNotPresent;
     private final Counter publishDateInFuture;
@@ -18,9 +17,7 @@ public class CacheMetrics implements Metrics {
     private final Gauge cacheExpiryTime;
 
     public CacheMetrics() throws IOException {
-        this.httpServer = new HTTPServer.Builder()
-                .withPort(appConfig().babbage().getMetricsPort())
-                .build();
+        new HTTPServer.Builder().withPort(appConfig().babbage().getMetricsPort()).build();
 
         this.publishDatePresent = Counter.build()
                 .name("publish_date_present").help("Total requests for uris that have a past or future publishing date").register();

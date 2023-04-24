@@ -8,7 +8,6 @@ import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getNumberV
 import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getStringAsBool;
 import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getValue;
 import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getValueOrDefault;
-import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
 public class Babbage implements AppConfig {
 
