@@ -23,17 +23,17 @@ public class MetricsFactoryTest {
 
         // Then
         Exception exception = assertThrows(Exception.class,
-                () -> metricsFactory.init());
+                () -> MetricsFactory.init());
         assertTrue(exception.getMessage().contains("Init already called"));
     }
 
     @Test
     public void testInitNotAlreadyCalled() throws Exception {
         //Given
-        metricsFactory.init();
+        MetricsFactory.init();
 
         //When
-        Metrics metrics = metricsFactory.getMetrics();
+        Metrics metrics = MetricsFactory.getMetrics();
 
         //Then
         assertNotNull(metrics);

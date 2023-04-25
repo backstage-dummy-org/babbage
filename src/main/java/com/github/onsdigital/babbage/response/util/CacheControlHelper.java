@@ -1,6 +1,5 @@
 package com.github.onsdigital.babbage.response.util;
 
-import com.github.onsdigital.babbage.metrics.CacheMetrics;
 import com.github.onsdigital.babbage.metrics.MetricsFactory;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -8,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
 /**
