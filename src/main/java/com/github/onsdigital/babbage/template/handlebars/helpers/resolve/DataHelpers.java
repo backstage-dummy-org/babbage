@@ -135,7 +135,7 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
     resolveLatest {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
-            ContentResponse contentResponse = null;
+            ContentResponse contentResponse;
             try {
                 validateUri(uri);
                 String uriString = (String) uri;
@@ -172,19 +172,23 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
     resolveTaxonomy {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
-
             ContentResponse stream = null;
-            Integer depth = options.<Integer>hash("depth");
+            Integer depth;
+            try {
+                depth = options.<Integer>hash("depth");
+            } catch (NullPointerException e) {
+                depth = 2;
+            }
             try {
                 stream = ContentClientCache.getInstance().getNavigation(depth(depth));
                 InputStream data = stream.getDataStream();
+                System.out.print("\n----- data ----- " + data + "\n");
                 if (appConfig().babbage().isNavigationEnabled() && !appConfig().babbage().isPublishing()) {
                     Map<String, Object> mapData = toMap(data);
-                    List<Map<String, Object>>  navigationContext = TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
+                    List<Map<String, Object>> navigationContext = TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
                     assign(options, navigationContext);
                     return options.fn(navigationContext);
-                }
-                else{
+                } else {
                     List<Map<String, Object>> taxonomyContext = toList(data);
                     assign(options, taxonomyContext);
                     return options.fn(taxonomyContext);
@@ -311,7 +315,7 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
      * Assigns data to current context if assign parameter given
      *
      * @param options
-     * @param data
+     * @param data - Object
      */
     private static void assign(Options options, Object data) {
         String variableName = options.hash("assign");
