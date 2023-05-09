@@ -17,18 +17,8 @@ public class MetricsFactoryTest {
     // Test target.
     private MetricsFactory metricsFactory;
 
-//    @Mock
-//    private ApplicationConfiguration appConfigurationMock;
-
-    @Mock
-    private Babbage babbageMock;
-
     @Before
     public void setup() {
-//        when(appConfigurationMock.babbage().getMetricsEnabled()).thenReturn(true);
-        MockitoAnnotations.initMocks(this);
-//        when(appConfig().babbage()).thenReturn(babbageMock);
-        when(babbageMock.getMetricsEnabled()).thenReturn(true);
         metricsFactory = new MetricsFactory();
     }
 
@@ -46,9 +36,6 @@ public class MetricsFactoryTest {
     @Test
     public void testInitNotAlreadyCalled() throws Exception {
         //Given
-//        when(appConfigurationMock.babbage()).thenReturn(babbageMock);
-//        when(babbageMock.getMetricsEnabled()).thenReturn(true);
-//        when(appConfigurationMock.babbage().getMetricsEnabled()).thenReturn(true);
         MetricsFactory.isMetricsEnabled = true;
         MetricsFactory.init();
 
