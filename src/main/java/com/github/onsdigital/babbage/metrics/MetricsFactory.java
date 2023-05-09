@@ -6,12 +6,14 @@ public class MetricsFactory {
 
     private static Metrics metrics;
 
+    public static boolean isMetricsEnabled = appConfig().babbage().getMetricsEnabled();
+
     public static void init() throws Exception {
         if (metrics != null) {
             throw new Exception("Init already called");
         }
 
-        if (appConfig().babbage().getMetricsEnabled()) {
+        if (isMetricsEnabled) {
             metrics = new CacheMetrics();
         } else {
             metrics = new NopMetricsImpl();

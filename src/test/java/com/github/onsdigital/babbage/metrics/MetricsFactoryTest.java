@@ -1,6 +1,5 @@
 package com.github.onsdigital.babbage.metrics;
 
-import com.github.onsdigital.babbage.configuration.ApplicationConfiguration;
 import com.github.onsdigital.babbage.configuration.Babbage;
 import com.github.onsdigital.babbage.util.TestsUtil;
 import org.junit.Before;
@@ -10,14 +9,16 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
+
 
 public class MetricsFactoryTest {
 
     // Test target.
     private MetricsFactory metricsFactory;
 
-    @Mock
-    private ApplicationConfiguration appConfigurationMock;
+//    @Mock
+//    private ApplicationConfiguration appConfigurationMock;
 
     @Mock
     private Babbage babbageMock;
@@ -26,7 +27,7 @@ public class MetricsFactoryTest {
     public void setup() {
 //        when(appConfigurationMock.babbage().getMetricsEnabled()).thenReturn(true);
         MockitoAnnotations.initMocks(this);
-        when(appConfigurationMock.babbage()).thenReturn(babbageMock);
+//        when(appConfig().babbage()).thenReturn(babbageMock);
         when(babbageMock.getMetricsEnabled()).thenReturn(true);
         metricsFactory = new MetricsFactory();
     }
@@ -48,12 +49,14 @@ public class MetricsFactoryTest {
 //        when(appConfigurationMock.babbage()).thenReturn(babbageMock);
 //        when(babbageMock.getMetricsEnabled()).thenReturn(true);
 //        when(appConfigurationMock.babbage().getMetricsEnabled()).thenReturn(true);
+        MetricsFactory.isMetricsEnabled = true;
         MetricsFactory.init();
 
         //When
         Metrics metrics = MetricsFactory.getMetrics();
 
         //Then
+        assertTrue(MetricsFactory.isMetricsEnabled);
         assertNotNull(metrics);
         assertEquals(metrics.getClass().getName(),"com.github.onsdigital.babbage.metrics.CacheMetrics");
     }
