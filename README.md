@@ -42,7 +42,7 @@ Babbage runs independently. However, in order to run it locally in its publishin
 | ELASTIC_SEARCH_CLUSTER        |                        | The elastic search cluster
 | ENABLE_CACHE                  | N                      | Switch to use (or not) the cache
 | ENABLE_COVID19_FEATURE        |                        | Switch to use (or not) the covid feature
-| ENABLE_METRICS                | Y                      | Switch to collect (or not) metrics about cache expiry times
+| ENABLE_METRICS                | N                      | Switch to collect (or not) metrics about cache expiry times
 | HIGHCHARTS_EXPORT_SERVER      | http://localhost:9999/ | The URL to the highcharts export server
 | IS_PUBLISHING                 | N                      | Switch to use (or not) the publishing functionality
 | MAP_RENDERER_HOST             | http://localhost:23500 | The URL to the map renderer
@@ -52,7 +52,7 @@ Babbage runs independently. However, in order to run it locally in its publishin
 
 ### Metrics
 
-To see the metrics call the following command while babbage is running:
+To see the metrics note that the ENABLE_METRICS value must be set to Y when babbage starts up. Then call the following command while babbage is running:
 
 ```bash
 curl -s http://localhost:1234/metrics
