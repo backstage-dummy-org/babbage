@@ -55,7 +55,7 @@ Babbage runs independently. However, in order to run it locally in its publishin
 To see the metrics note that the ENABLE_METRICS value must be set to Y when babbage starts up. Then call the following command while babbage is running:
 
 ```bash
-curl -s http://localhost:1234/metrics
+curl -s http://localhost:8090/metrics
 ```
 
 The metrics should look something like this:
