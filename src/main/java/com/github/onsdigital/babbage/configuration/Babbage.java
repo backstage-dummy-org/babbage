@@ -10,6 +10,7 @@ import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getStringA
 import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getValue;
 import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getValueOrDefault;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
+import static com.github.onsdigital.logging.v2.event.SimpleEvent.warn;
 
 public class Babbage implements AppConfig {
 

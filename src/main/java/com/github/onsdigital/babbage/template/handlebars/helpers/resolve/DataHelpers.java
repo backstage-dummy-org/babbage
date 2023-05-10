@@ -182,8 +182,7 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
             try {
                 stream = ContentClientCache.getInstance().getNavigation(depth(depth));
                 InputStream data = stream.getDataStream();
-                System.out.print("\n----- data ----- " + data + "\n");
-                if (appConfig().babbage().isNavigationEnabled() && !appConfig().babbage().isPublishing()) {
+                if (isNavigation && !isPublication) {
                     Map<String, Object> mapData = toMap(data);
                     List<Map<String, Object>> navigationContext = TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
                     assign(options, navigationContext);
@@ -327,4 +326,7 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
     private static void logResolveError(Object uri, Exception e) {
         error().exception(e).data("uri", uri).log("DataHelpers resolve data for uri");
     }
+
+    public static boolean isNavigation = appConfig().babbage().isNavigationEnabled();
+    public static boolean isPublication = appConfig().babbage().isPublishing();
 }
