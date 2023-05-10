@@ -34,18 +34,35 @@ public class MetricsFactoryTest {
     }
 
     @Test
-    public void testInitNotAlreadyCalled() throws Exception {
+    public void testInitMetricsEnabled() throws Exception {
         //Given
-        MetricsFactory.isMetricsEnabled = true;
+        TestsUtil.setPrivateStaticField(metricsFactory, "metrics", null);
+        TestsUtil.setPrivateStaticField(metricsFactory, "metricsEnabled", true);
         MetricsFactory.init();
 
         //When
         Metrics metrics = MetricsFactory.getMetrics();
 
         //Then
-        assertTrue(MetricsFactory.isMetricsEnabled);
+        assertTrue(MetricsFactory.isMetricsEnabled());
         assertNotNull(metrics);
         assertEquals(metrics.getClass().getName(),"com.github.onsdigital.babbage.metrics.CacheMetrics");
+    }
+
+    @Test
+    public void testInitMetricsNotEnabled() throws Exception {
+        //Given
+        TestsUtil.setPrivateStaticField(metricsFactory, "metrics", null);
+        TestsUtil.setPrivateStaticField(metricsFactory, "metricsEnabled", false);
+        MetricsFactory.init();
+
+        //When
+        Metrics metrics = MetricsFactory.getMetrics();
+
+        //Then
+        assertFalse(MetricsFactory.isMetricsEnabled());
+        assertNotNull(metrics);
+        assertEquals(metrics.getClass().getName(),"com.github.onsdigital.babbage.metrics.NopMetricsImpl");
     }
 
 }
