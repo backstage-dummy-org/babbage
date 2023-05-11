@@ -84,6 +84,9 @@ public class JsonUtil {
     }
 
     private static <T> T fromJson(InputStream jsonStream, TypeReference type) throws IOException {
+
+        System.out.println("\n ---- jsonStream ----" + org.apache.commons.io.IOUtils.toString(jsonStream, java.nio.charset.StandardCharsets.UTF_8));
+        System.out.println("\n ---- type ----" + type.getType());
         if (jsonStream == null) {
             return null;
         }

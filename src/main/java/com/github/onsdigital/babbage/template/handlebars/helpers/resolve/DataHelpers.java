@@ -182,6 +182,7 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
             try {
                 stream = ContentClientCache.getInstance().getNavigation(depth(depth));
                 InputStream data = stream.getDataStream();
+
                 if (isNavigation && !isPublication) {
                     Map<String, Object> mapData = toMap(data);
                     List<Map<String, Object>> navigationContext = TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
