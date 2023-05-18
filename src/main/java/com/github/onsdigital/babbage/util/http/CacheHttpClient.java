@@ -112,7 +112,7 @@ public class CacheHttpClient extends PooledHttpClient {
         URI cacheHost = host;
         if (appConfig().babbage().isNavigationEnabled() && Paths.get(path).getNameCount() == 1){
             path = NAVIGATION_ENDPOINT;
-            cacheHost = URI.create(appConfig().contentAPI().topicsURL());
+            cacheHost = URI.create(appConfig().babbage().getApiRouterURL());
         }
         URIBuilder uriBuilder = new URIBuilder(cacheHost);
         String fullPath = "/" + path;

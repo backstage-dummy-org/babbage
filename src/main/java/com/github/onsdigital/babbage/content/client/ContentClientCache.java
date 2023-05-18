@@ -1,16 +1,12 @@
 package com.github.onsdigital.babbage.content.client;
 
-
 import com.github.onsdigital.babbage.error.ResourceNotFoundException;
-import com.github.onsdigital.babbage.publishing.PublishingManager;
-import com.github.onsdigital.babbage.publishing.model.PublishInfo;
 import com.github.onsdigital.babbage.util.RequestUtil;
 import com.github.onsdigital.babbage.util.ThreadContext;
 import com.github.onsdigital.babbage.util.http.CacheHttpClient;
 import com.github.onsdigital.babbage.util.http.ClientConfiguration;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpResponseException;
@@ -33,13 +29,11 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
  * Using Apache http client with connection pooling.
  */
 public class ContentClientCache {
-
+    private static final String BearerPrefix         = "Bearer ";
     private static final String TOKEN_HEADER = "X-Florence-Token";
 
     private static CacheHttpClient client;
     private static ContentClientCache instance;
-    private static String path;
-    private static final String DATA_ENDPOINT = "/data";
     private static final String TAXONOMY_ENDPOINT = "/taxonomy";
     private static final String NAVIGATION_ENDPOINT = "/navigation";
 
@@ -73,10 +67,10 @@ public class ContentClientCache {
     }
 
     /**
-     * @param path
-     * @param getParameters
-     * @return
-     * @throws ContentReadException
+     * @param path string path
+     * @param getParameters query parameters
+     * @return ContentResponse  response
+     * @throws ContentReadException exceptions
      */
     ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
         CloseableHttpResponse response = null;
@@ -95,6 +89,7 @@ public class ContentClientCache {
         } catch (IOException e) {
             //noinspection deprecation
             IOUtils.closeQuietly(response);
+            info().data("uri", path).log("ContentClientCache "  + e.getMessage());
             throw wrapException( e);
         }
     }
@@ -127,14 +122,15 @@ public class ContentClientCache {
     }
 
     //Reads collection cookie saved in thread context
-
     private Map<String, String> getHeaders() {
         Map<String, String> cookies = (Map<String, String>) ThreadContext.getData("cookies");
         HashMap<String, String> headers = new HashMap<>();
+        headers.put("Authorization", BearerPrefix+appConfig().babbage().getServiceAuthToken());
         if (cookies != null) {
             headers.put(TOKEN_HEADER, cookies.get("access_token"));
         }
         return headers;
+
     }
 }
 
