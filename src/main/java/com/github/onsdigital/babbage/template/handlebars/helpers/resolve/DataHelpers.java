@@ -72,7 +72,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         }
     },
 
-
     resolveDatasets {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
@@ -97,7 +96,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
             handlebars.registerHelper(this.name(), this);
         }
     },
-
 
     /**
      * usage: {{#resolve "uri" [filter=] [assign=variableName]}}
@@ -180,16 +178,13 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
                 depth = 2;
             }
             try {
-                stream = ContentClientCache.getInstance().getNavigation(depth(depth));
-                InputStream data = stream.getDataStream();
-
                 if (isNavigation && !isPublication) {
-                    Map<String, Object> mapData = toMap(data);
-                    List<Map<String, Object>> navigationContext = TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
+
+                    List<Map<String, Object>> navigationContext = doNavigation(depth);
                     assign(options, navigationContext);
                     return options.fn(navigationContext);
                 } else {
-                    List<Map<String, Object>> taxonomyContext = toList(data);
+                    List<Map<String, Object>> taxonomyContext = doTaxonomy(depth);
                     assign(options, taxonomyContext);
                     return options.fn(taxonomyContext);
                 }
@@ -304,6 +299,11 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
 
     };
 
+    public boolean isNavigation = appConfig().babbage().isNavigationEnabled();
+
+    public boolean isPublication = appConfig().babbage().isPublishing();
+
+
     //gets first parameter as uri, throws exception if not valid
     private static void validateUri(Object uri) throws IOException {
         if (uri == null) {
@@ -328,6 +328,22 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         error().exception(e).data("uri", uri).log("DataHelpers resolve data for uri");
     }
 
-    public static boolean isNavigation = appConfig().babbage().isNavigationEnabled();
-    public static boolean isPublication = appConfig().babbage().isPublishing();
+    public static List<Map<String, Object>> doNavigation(Integer depth)
+            throws com.github.onsdigital.babbage.content.client.ContentReadException,
+            java.io.IOException, java.net.URISyntaxException {
+        ContentResponse stream = ContentClientCache.getInstance().getNavigation(depth(depth));
+        InputStream data = stream.getDataStream();
+        Map<String, Object> mapData = toMap(data);
+        return TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
+    }
+
+    public static List<Map<String, Object>> doTaxonomy( Integer depth)
+            throws com.github.onsdigital.babbage.content.client.ContentReadException,
+            java.io.IOException{
+        ContentResponse stream = ContentClientCache.getInstance().getTaxonomy(depth(depth));
+        InputStream data = stream.getDataStream();
+        List<Map<String, Object>> taxonomyContext = toList(data);
+        return taxonomyContext;
+    }
+
 }

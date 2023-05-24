@@ -47,6 +47,7 @@ public class CacheHttpClient extends PooledHttpClient {
 
     public CacheHttpClient(String host, ClientConfiguration configuration) {
         super(host, configuration);
+
         CachingHttpClientBuilder cacheClientBuilder = CachingHttpClients.custom();
         CacheConfig cacheConfig = CacheConfig.custom()
                 .setMaxCacheEntries(appConfig().babbage().getMaxCacheEntries())
@@ -108,7 +109,7 @@ public class CacheHttpClient extends PooledHttpClient {
         }
     }
 
-    private URIBuilder newUriBuilder(String path) throws URISyntaxException {
+    public URIBuilder newUriBuilder(String path) throws URISyntaxException {
         URI cacheHost = host;
         if (appConfig().babbage().isNavigationEnabled() && Paths.get(path).getNameCount() == 1){
             path = NAVIGATION_ENDPOINT;
