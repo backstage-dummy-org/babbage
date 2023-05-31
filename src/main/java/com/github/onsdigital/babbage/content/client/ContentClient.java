@@ -181,7 +181,14 @@ public class ContentClient {
                 // requested uri cache expiry is set as either:-
                 // 1. the time remaining until the publishing time or
                 // 2. the maximum cache expiry time permitted
-                response.setMaxAge(timeToExpire < maxAge ? timeToExpire : maxAge);
+//                response.setMaxAge(timeToExpire < maxAge ? timeToExpire : maxAge);
+                if (timeToExpire < maxAge) {
+                    response.setMaxAge(timeToExpire);
+                } else {
+                    //increment count of requests where the timeToExpire is greater than or equal to the default value (maxAge)
+                    metrics.incPublishDateTooFarInFuture();
+                    response.setMaxAge(maxAge);
+                }
                 //increment count of requests where publish date is in the future
                 metrics.incPublishDateInFuture();
             } else if (timeToExpire < 0 && Math.abs(timeToExpire) > appConfig().babbage().getPublishCacheTimeout()) {

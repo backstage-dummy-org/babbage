@@ -14,6 +14,7 @@ public class CacheMetrics implements Metrics {
     private final Counter publishDateNotPresent;
     private final Counter publishDateInFuture;
     private final Counter publishDateTooFarInPast;
+    private final Counter publishDateTooFarInFuture;
     private final Gauge cacheExpiryTime;
 
     public CacheMetrics() throws IOException {
@@ -27,6 +28,7 @@ public class CacheMetrics implements Metrics {
                 .name("publish_date_in_future").help("Total requests for uris that have a future publishing date").register();
         this.publishDateTooFarInPast = Counter.build()
                 .name("publish_date_too_far_in_past").help("Total requests for uris that have a past publishing date too long ago (outside a given time span)").register();
+        this.publishDateTooFarInFuture = Counter.build().name("publish_date_too_far_in_future").help("Total requests for uris that have a future publishing date later than that calculated by the default expiry time").register();
         this.cacheExpiryTime = Gauge.build()
                 .name("cache_expiry_time").help("The time until the cache expires and will be refreshed by another call to the server.").labelNames("is_greater_than_default").register();
     }
@@ -46,6 +48,8 @@ public class CacheMetrics implements Metrics {
     public void incPublishDateTooFarInPast() {
         publishDateTooFarInPast.inc();
     }
+
+    public void incPublishDateTooFarInFuture() { publishDateTooFarInFuture.inc(); }
 
     public void setCacheExpiryTime(Double expiryTime) {
         boolean isGreaterThanDefault = false;
