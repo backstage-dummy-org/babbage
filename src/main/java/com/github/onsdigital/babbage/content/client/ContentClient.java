@@ -169,8 +169,6 @@ public class ContentClient {
             if (nextPublishDate != null) {
                 Long time = (nextPublishDate.getTime() - new Date().getTime()) / 1000;
                 timeToExpire = time.intValue();
-                //increment count of requests where publish date is present
-                metrics.incPublishDatePresent();
             }
 
             if (timeToExpire == null) {
@@ -182,6 +180,9 @@ public class ContentClient {
                 // 1. the time remaining until the publishing time or
                 // 2. the maximum cache expiry time permitted
                 if (timeToExpire < maxAge) {
+                    //increment count of requests where a publish date is present
+                    //and is not too far in the past or the future
+                    metrics.incPublishDatePresent();
                     response.setMaxAge(timeToExpire);
                 } else {
                     //increment count of requests where the timeToExpire is greater than or equal to the maximum/default value
