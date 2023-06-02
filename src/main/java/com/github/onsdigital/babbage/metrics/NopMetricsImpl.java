@@ -19,6 +19,4 @@ public class NopMetricsImpl implements Metrics {
     }
 
     public void incPublishDateTooFarInFuture() { info().log("NopMetricsImpl incPublishDateTooFarInFuture();");}
-
-    public void setCacheExpiryTime(Double expiryTime) { }
 }

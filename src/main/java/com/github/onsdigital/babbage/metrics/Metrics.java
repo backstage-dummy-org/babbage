@@ -7,6 +7,5 @@ public interface Metrics {
     void incPublishDateInFuture();
     void incPublishDateTooFarInPast();
     void incPublishDateTooFarInFuture();
-    void setCacheExpiryTime(Double expiryTime);
 
 }

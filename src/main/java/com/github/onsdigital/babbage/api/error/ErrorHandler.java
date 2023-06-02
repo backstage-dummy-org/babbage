@@ -58,7 +58,6 @@ public class ErrorHandler implements ServerError {
             response.setStatus(statusCode);
             //Prevent error pages being cached by cdn s
             response.addHeader("cache-control", "public, max-age=0");
-            MetricsFactory.getMetrics().setCacheExpiryTime(0.0);
             Map<String, Object> context = new LinkedHashMap<>();
             context.put("type", "error");
             context.put("code", statusCode);

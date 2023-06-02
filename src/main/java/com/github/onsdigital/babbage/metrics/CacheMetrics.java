@@ -1,6 +1,5 @@
 package com.github.onsdigital.babbage.metrics;
 
-import io.prometheus.client.Gauge;
 import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.Counter;
 
@@ -15,7 +14,6 @@ public class CacheMetrics implements Metrics {
     private final Counter publishDateInFuture;
     private final Counter publishDateTooFarInPast;
     private final Counter publishDateTooFarInFuture;
-    private final Gauge cacheExpiryTime = Gauge.build().name("cache_expiry_time").help("The time until the cache expires and will be refreshed by another call to the server.").register();
 
     public CacheMetrics() throws IOException {
         new HTTPServer.Builder().withPort(appConfig().babbage().getMetricsPort()).build();
@@ -48,8 +46,4 @@ public class CacheMetrics implements Metrics {
     }
 
     public void incPublishDateTooFarInFuture() { publishDateTooFarInFuture.inc(); }
-
-    public void setCacheExpiryTime(Double expiryTime) {
-        cacheExpiryTime.set(expiryTime);
-    }
 }
