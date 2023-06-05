@@ -1,32 +1,50 @@
-<nav aria-label="Breadcrumbs">
-    <div class="breadcrumb print--hide">
-        <ol class="breadcrumb__list">
-            {{#each breadcrumb}}
+<div class="page-neutral-intro background--gallery">
+  <div class="wrapper">
+    <div class="col-wrap">
+      <div class="col">
+        <nav aria-label="Breadcrumbs">
+          <div class="breadcrumb print--hide">
+            <ol class="breadcrumb__list">
+              {{#each breadcrumb}}
                 <li class="breadcrumb__item">
-                    <a class="breadcrumb__link" href="{{uri}}">{{description.title}}</a>
+                  <a
+                    class="breadcrumb__link"
+                    href="{{uri}}"
+                  >{{description.title}}</a>
                 </li>
-            {{/each}}
+              {{/each}}
 
-            {{#if_eq type "release"}}
-            {{!-- Add 'release calendar' into breadcrumb because releases are actually located in root --}}
+              {{#if_eq type "release"}}
+                {{! Add 'release calendar' into breadcrumb because releases are actually located in root }}
                 <li class="breadcrumb__item">
-                    <a class="breadcrumb__link" href="/releasecalendar">Release calendar</a>
+                  <a class="breadcrumb__link" href="/releasecalendar">Release
+                    calendar</a>
                 </li>
 
-                {{!-- Add 'published' or 'upcoming' into breadcrumb --}}
+                {{! Add 'published' or 'upcoming' into breadcrumb }}
                 {{#if description.published}}
-                    <li class="breadcrumb__item">
-                        <a href="/releasecalendar" class="breadcrumb__link">Published</a>
-                    </li>
+                  <li class="breadcrumb__item">
+                    <a
+                      href="/releasecalendar"
+                      class="breadcrumb__link"
+                    >Published</a>
+                  </li>
                 {{else}}
-                    <li class="breadcrumb__item">
-                        <a href="/releasecalendar?view=upcoming" class="breadcrumb__link">Upcoming</a>
-                    </li>
+                  <li class="breadcrumb__item">
+                    <a
+                      href="/releasecalendar?view=upcoming"
+                      class="breadcrumb__link"
+                    >Upcoming</a>
+                  </li>
                 {{/if}}
-            {{/if_eq}}
-            <li class="breadcrumb__item">
+              {{/if_eq}}
+              <li class="breadcrumb__item">
                 {{description.title}}
-            </li>
-        </ol>
+              </li>
+            </ol>
+          </div>
+        </nav>
+      </div>
     </div>
-</nav>
+  </div>
+</div>
