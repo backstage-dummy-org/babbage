@@ -16,6 +16,7 @@ import javax.ws.rs.POST;
 import java.io.IOException;
 import java.util.List;
 
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.error;
 
 /**
@@ -27,7 +28,8 @@ public class Upcoming {
     private boolean verifyUriList = true;
 
     //Using same key as reindex
-    private static final String REINDEX_KEY_HASH = "5NpB6/uAgk14nYwHzMbIQRnuI2W63MrBOS2279YlcUUY2kNOhrL+R5UFR3O066bQ";
+//    private static final String REINDEX_KEY_HASH = "5NpB6/uAgk14nYwHzMbIQRnuI2W63MrBOS2279YlcUUY2kNOhrL+R5UFR3O066bQ";
+    private static final String REINDEX_KEY_HASH = appConfig().babbage().getReindexServer();
 
     public Upcoming() {
 

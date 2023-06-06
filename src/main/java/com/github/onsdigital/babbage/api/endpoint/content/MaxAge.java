@@ -16,13 +16,14 @@ import com.github.onsdigital.babbage.error.BabbageException;
 import com.github.onsdigital.babbage.error.BadRequestException;
 import com.github.onsdigital.logging.v2.event.SimpleEvent;
 
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
+
 /**
  * End point for getting the maxAge for the given uri
  */
 @Api
 public class MaxAge {
-    private static final String MAXAGE_KEY_HASH = "mPHbKjCol7ObQ87qKVQgHz6kR3nsYJ3WJHgP7+JYyi5rSJbmbDAcQU8EQilFQ6QQ";
-
+    private static final String MAXAGE_KEY_HASH = appConfig().babbage().getMaxAgeServer();
     @GET
     public Object get(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException {
         try {
