@@ -30,7 +30,7 @@ public class BabbageTest extends junit.framework.TestCase {
         assertEquals(testInstance.getResultsPerPage(), 10);
         assertEquals(testInstance.getSearchResponseCacheTime(), 5);
         assertNotNull(testInstance.getReindexServer());
-        assertNotNull(testInstance.getMaxAgeServer());
+        assertNotNull(testInstance.getMaxAgeSecret());
         assertEquals(testInstance.isCacheEnabled(), false);
         assertEquals(testInstance.isDevEnv(), false);
         assertEquals(testInstance.isDevEnvironment(), false);

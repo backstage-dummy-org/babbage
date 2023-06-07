@@ -23,7 +23,7 @@ import static com.github.onsdigital.babbage.configuration.ApplicationConfigurati
  */
 @Api
 public class MaxAge {
-    private static final String MAXAGE_KEY_HASH = appConfig().babbage().getMaxAgeServer();
+    private static final String MAXAGE_KEY_HASH = appConfig().babbage().getMaxAgeSecret();
     @GET
     public Object get(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException {
         try {

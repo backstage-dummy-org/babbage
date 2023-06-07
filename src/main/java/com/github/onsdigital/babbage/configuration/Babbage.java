@@ -88,7 +88,7 @@ public class Babbage implements AppConfig {
         return mathjaxExportServer;
     }
 
-    public String getMaxAgeServer() {
+    public String getMaxAgeSecret() {
         return maxAgeSecret;
     }
 
