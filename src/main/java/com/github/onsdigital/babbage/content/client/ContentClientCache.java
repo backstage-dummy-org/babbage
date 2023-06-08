@@ -29,7 +29,7 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
  * Using Apache http client with connection pooling.
  */
 public class ContentClientCache {
-    private static final String BearerPrefix         = "Bearer ";
+    private static final String BearerPrefix = "Bearer ";
     private static final String TOKEN_HEADER = "X-Florence-Token";
 
     private static CacheHttpClient client;

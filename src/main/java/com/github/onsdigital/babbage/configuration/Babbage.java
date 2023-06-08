@@ -86,7 +86,7 @@ public class Babbage implements AppConfig {
         redirectSecret = getValueOrDefault(REDIRECT_SECRET_KEY, "secret");
         resultsPerPage = 10;
         searchResponseCacheTime = 5;
-        serviceAuthToken = getValueOrDefault(SERVICE_AUTH_TOKEN, " ahyofaem2ieVie6eipaX6ietigh1oeM0Aa1aiyaebiemiodaiJah0eenuchei1ai");
+        serviceAuthToken = getValueOrDefault(SERVICE_AUTH_TOKEN, "ahyofaem2ieVie6eipaX6ietigh1oeM0Aa1aiyaebiemiodaiJah0eenuchei1ai");
     }
 
     public String getApiRouterURL() {
