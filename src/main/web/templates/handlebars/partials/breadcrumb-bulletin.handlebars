@@ -1,0 +1,31 @@
+<div class="page-bulletins background--astral text--white">
+  <div class="wrapper">
+    <div class="col-wrap">
+      <div class="col">
+        <nav aria-label="Bulletin breadcrumbs">
+          <div class="breadcrumb-bulletins print--hide">
+            <ol class="breadcrumb-bulletins__list">
+              {{#each breadcrumb}}
+                <li class="breadcrumb-bulletins__item">
+                  <span
+                    class="icon icon-arrow-back--light-small hide--md"
+                  ></span>
+                  <a
+                    class="breadcrumb-bulletins__link"
+                    href="{{uri}}"
+                  >{{description.title}}</a>
+                  <span
+                    class="icon icon-arrow-forward--light-small hide--sm"
+                  ></span>
+                </li>
+              {{/each}}
+              <li class="breadcrumb-bulletins__item">
+                {{description.title}}
+              </li>
+            </ol>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

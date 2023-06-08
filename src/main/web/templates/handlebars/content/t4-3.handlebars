@@ -3,21 +3,6 @@
         <div class="wrapper">
             <div class="col-wrap">
                 <div class="col">
-                    <nav aria-label="Article breadcrumbs">
-                        <div class="breadcrumb-neutral print--hide">
-                            <ol class="breadcrumb-neutral__list">
-                                {{#each breadcrumb}}
-                                    <li class="breadcrumb-neutral__item">
-                                        <a class="breadcrumb-neutral__link" href="{{uri}}">{{description.title}}</a>
-                                    </li>
-                                {{/each}}
-                                <li class="breadcrumb-neutral__item">
-                                    {{description.title}}
-                                </li>
-                            </ol>
-                        </div>
-                    </nav>
-
                     {{#block "block-intro"}}
                         <div class="col col--md-47 col--lg-46">
                             <h1 class="page-neutral-intro__title {{#if_eq type "home_page_census"}}h1--census{{/if_eq}}">
