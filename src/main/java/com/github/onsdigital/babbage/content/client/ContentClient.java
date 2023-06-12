@@ -42,7 +42,7 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 public class ContentClient {
 
     private static final String TOKEN_HEADER = "X-Florence-Token";
-
+    private static boolean cacheEnabled = appConfig().babbage().isCacheEnabled();
 
     private static PooledHttpClient client;
     private static ContentClient instance;
@@ -60,8 +60,6 @@ public class ContentClient {
 
     private Metrics metrics = MetricsFactory.getMetrics();
     private PublishingManager publishingManager = PublishingManager.getInstance();
-//    private CloseableHttpResponse response = null;
-    private ContentResponse contentResponse = null;
 
     //singleton
     private ContentClient() {
@@ -160,7 +158,7 @@ public class ContentClient {
 
 
     private ContentResponse resolveMaxAge(String uri, ContentResponse response) {
-        if (!appConfig().babbage().isCacheEnabled()) {
+        if (!cacheEnabled) {
             return response;
         }
 
@@ -255,8 +253,7 @@ public class ContentClient {
     public ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
         CloseableHttpResponse response = null;
         try {
-            contentResponse = new ContentResponse(client.sendGet(path, getHeaders(), getParameters));
-            return contentResponse;
+            return new ContentResponse(client.sendGet(path, getHeaders(), getParameters));
         } catch (HttpResponseException e) {
             IOUtils.closeQuietly(response);
 

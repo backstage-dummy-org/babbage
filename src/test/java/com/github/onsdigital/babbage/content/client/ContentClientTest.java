@@ -1,5 +1,6 @@
 package com.github.onsdigital.babbage.content.client;
 
+import com.github.onsdigital.babbage.metrics.Metrics;
 import com.github.onsdigital.babbage.publishing.PublishingManager;
 import com.github.onsdigital.babbage.publishing.model.PublishInfo;
 import com.github.onsdigital.babbage.util.TestsUtil;
@@ -18,10 +19,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ContentClientTest {
 
@@ -42,6 +44,9 @@ public class ContentClientTest {
     @Mock
     private CloseableHttpResponse closeableHttpResponseMock;
 
+    @Mock
+    private Metrics metricsMock;
+
 //    @Mock
 //    private ContentType contentTypeMock;
 
@@ -59,7 +64,9 @@ public class ContentClientTest {
         contentClient = ContentClient.getInstance();
 
         TestsUtil.setPrivateField(contentClient, "publishingManager", publishingManagerMock);
+        TestsUtil.setPrivateField(contentClient, "metrics", metricsMock);
         TestsUtil.setPrivateStaticField(contentClient, "client", clientMock);
+        TestsUtil.setPrivateStaticField(contentClient, "cacheEnabled", true);
     }
 
     @Test
@@ -68,7 +75,6 @@ public class ContentClientTest {
         PublishInfo nextPublish = new PublishInfo(uriStr, null, null, null);
         when(publishingManagerMock.getNextPublishInfo(uriStr)).thenReturn(nextPublish);
 
-        String path = "/parents";
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("uri", "/economy/environmentalaccounts/articles/environmentaltaxes/2015-06-01"));
         Header[] headers = {
@@ -76,19 +82,16 @@ public class ContentClientTest {
         };
         when(httpEntityMock.getContentType()).thenReturn(headers[0]);
         when(closeableHttpResponseMock.getEntity()).thenReturn(httpEntityMock);
-//        ContentResponse contentResponse = new ContentResponse(closeableHttpResponseMock);
-//        TestsUtil.setPrivateField(contentClient, "contentResponse", contentResponse);
-//        TestsUtil.setPrivateStaticField(contentClient, "client", clientMock);
+
         List<NameValuePair> parameters2 = new ArrayList<>();
         parameters2.add(new BasicNameValuePair("lang", null));
         parameters2.add(new BasicNameValuePair("uri", "economy/environmentalaccounts/articles/environmentaltaxes/2015-06-01"));
         when(clientMock.sendGet("/data", null, parameters2)).thenReturn(closeableHttpResponseMock);
-//        when(contentClient.sendGet(path, parameters)).thenReturn(contentResponse);
 
         //When
         contentClient.getContent(uriStr);
 
         //Then
-
+        verify(metricsMock, times(1)).incPublishDateNotPresent();
     }
 }
