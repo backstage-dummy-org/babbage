@@ -58,6 +58,9 @@ public class ContentClient {
     private static final String RESOLVE_DATASETS_ENDPOINT = "/resolveDatasets";
     private static final String URI_PARAM = "uri";
 
+    private Metrics metrics = MetricsFactory.getMetrics();
+    private PublishingManager publishingManager = PublishingManager.getInstance();
+
     //singleton
     private ContentClient() {
 
@@ -159,10 +162,8 @@ public class ContentClient {
             return response;
         }
 
-        Metrics metrics = MetricsFactory.getMetrics();
-
         try {
-            PublishInfo nextPublish = PublishingManager.getInstance().getNextPublishInfo(uri);
+            PublishInfo nextPublish = publishingManager.getNextPublishInfo(uri);
             Date nextPublishDate = nextPublish == null ? null : nextPublish.getPublishDate();
             int maxAge = appConfig().babbage().getDefaultContentCacheTime();
             Integer timeToExpire = null;
@@ -249,7 +250,7 @@ public class ContentClient {
         return sendPost(REINDEX_ENDPOINT, parameters);
     }
 
-    private ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
+    public ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
         CloseableHttpResponse response = null;
         try {
             return new ContentResponse(client.sendGet(path, getHeaders(), getParameters));

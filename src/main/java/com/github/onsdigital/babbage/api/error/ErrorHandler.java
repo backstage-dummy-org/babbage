@@ -5,7 +5,6 @@ import com.github.davidcarboni.restolino.framework.ServerError;
 import com.github.onsdigital.babbage.content.client.ContentReadException;
 import com.github.onsdigital.babbage.error.LegacyPDFException;
 import com.github.onsdigital.babbage.error.ResourceNotFoundException;
-import com.github.onsdigital.babbage.metrics.MetricsFactory;
 import com.github.onsdigital.babbage.template.TemplateService;
 import org.apache.commons.io.IOUtils;
 

@@ -1,15 +1,10 @@
 package com.github.onsdigital.babbage.metrics;
 
-import com.github.onsdigital.babbage.configuration.Babbage;
 import com.github.onsdigital.babbage.util.TestsUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
-import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 
 
 public class MetricsFactoryTest {
