@@ -8,7 +8,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.entity.ContentType;
+//import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.Before;
@@ -37,8 +37,8 @@ public class ContentClientTest {
     @Mock
     private static PooledHttpClient clientMock;
 
-    @Mock ContentResponse contentResponseMock;
-
+//    @Mock ContentResponse contentResponseMock;
+//
     @Mock
     private CloseableHttpResponse closeableHttpResponseMock;
 
@@ -60,7 +60,6 @@ public class ContentClientTest {
 
         TestsUtil.setPrivateField(contentClient, "publishingManager", publishingManagerMock);
         TestsUtil.setPrivateStaticField(contentClient, "client", clientMock);
-
     }
 
     @Test
@@ -71,17 +70,22 @@ public class ContentClientTest {
 
         String path = "/parents";
         List<NameValuePair> parameters = new ArrayList<>();
-//        parameters.add(new BasicNameValuePair("lang", null));
         parameters.add(new BasicNameValuePair("uri", "/economy/environmentalaccounts/articles/environmentaltaxes/2015-06-01"));
-//        ContentType contentType = ContentType.create("application/json");
         Header[] headers = {
                 new BasicHeader("Content-type", "application/json")
         };
         when(httpEntityMock.getContentType()).thenReturn(headers[0]);
         when(closeableHttpResponseMock.getEntity()).thenReturn(httpEntityMock);
-        ContentResponse contentResponse = new ContentResponse(closeableHttpResponseMock);
-//        when(contentResponseMock.getC)
-        when(contentClient.sendGet(path, parameters)).thenReturn(contentResponse);
+//        ContentResponse contentResponse = new ContentResponse(closeableHttpResponseMock);
+//        TestsUtil.setPrivateField(contentClient, "contentResponse", contentResponse);
+//        TestsUtil.setPrivateStaticField(contentClient, "client", clientMock);
+        List<NameValuePair> parameters2 = new ArrayList<>();
+        parameters2.add(new BasicNameValuePair("lang", null));
+        parameters2.add(new BasicNameValuePair("uri", "economy/environmentalaccounts/articles/environmentaltaxes/2015-06-01"));
+        when(clientMock.sendGet("/data", null, parameters2)).thenReturn(closeableHttpResponseMock);
+//        when(contentClient.sendGet(path, parameters)).thenReturn(contentResponse);
+
+        //When
         contentClient.getContent(uriStr);
 
         //Then

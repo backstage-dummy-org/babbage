@@ -60,6 +60,8 @@ public class ContentClient {
 
     private Metrics metrics = MetricsFactory.getMetrics();
     private PublishingManager publishingManager = PublishingManager.getInstance();
+//    private CloseableHttpResponse response = null;
+    private ContentResponse contentResponse = null;
 
     //singleton
     private ContentClient() {
@@ -253,7 +255,8 @@ public class ContentClient {
     public ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
         CloseableHttpResponse response = null;
         try {
-            return new ContentResponse(client.sendGet(path, getHeaders(), getParameters));
+            contentResponse = new ContentResponse(client.sendGet(path, getHeaders(), getParameters));
+            return contentResponse;
         } catch (HttpResponseException e) {
             IOUtils.closeQuietly(response);
 
