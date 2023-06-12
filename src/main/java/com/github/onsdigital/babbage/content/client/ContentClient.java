@@ -181,18 +181,16 @@ public class ContentClient {
                 // 1. the time remaining until the publishing time or
                 // 2. the maximum cache expiry time permitted
                 if (timeToExpire < maxAge) {
-                    //increment count of requests where a publish date is present
-                    //and is not too far in the past or the future
-                    metrics.incPublishDatePresent();
+                    //increment count of requests where the cache expiry is set as
+                    //the time remaining until the publishing time
+                    metrics.incPublishDateInRange();
                     response.setMaxAge(timeToExpire);
                 } else {
-                    //increment count of requests where the timeToExpire is greater than or equal to the maximum/default value
-                    //permitted for the cache expiry time (maxAge) i.e. the publish date is too far in the future
+                    //increment count of requests where the cache expiry is set as
+                    //the maximum cache expiry time permitted
                     metrics.incPublishDateTooFarInFuture();
                     response.setMaxAge(maxAge);
                 }
-                //increment count of requests where publish date is in the future
-                metrics.incPublishDateInFuture();
             } else if (timeToExpire < 0 && Math.abs(timeToExpire) > appConfig().babbage().getPublishCacheTimeout()) {
                 //if publish is due but there is still a publish date record after an hour drop it
                 info().data("uri", uri).log("dropping publish date record due to publish wait timeout for uri");

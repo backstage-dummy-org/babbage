@@ -4,15 +4,11 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
 public class NopMetricsImpl implements Metrics {
 
-    public void incPublishDatePresent() {
-        info().log("NopMetricsImpl incPublishDatePresent");
+    public void incPublishDateInRange() {
+        info().log("NopMetricsImpl incPublishDateInRange");
     }
 
-    public void incPublishDateNotPresent() { }
-
-    public void incPublishDateInFuture() {
-        info().log("NopMetricsImpl incPublishDateInFuture");
-    }
+    public void incPublishDateNotPresent() { info().log("NopMetricsImpl incPublishDateNotPresent"); }
 
     public void incPublishDateTooFarInPast() {
         info().log("NopMetricsImpl incPublishDateTooFarInPast");
