@@ -22,6 +22,8 @@ export DEV_ENVIRONMENT="Y"
 export RELOAD_TEMPLATES="Y"
 export TEMPLATES_DIR=src/main/web/templates/handlebars
 export ENABLE_COVID19_FEATURE=false
+export ENABLE_NAVIGATION="Y"
+export TOPICS_SERVICE_URL="http://localhost:25300"
 
 # Development: reloadable
 java $JAVA_OPTS \

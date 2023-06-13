@@ -5,11 +5,13 @@ import com.github.jknack.handlebars.Options;
 import com.github.onsdigital.babbage.api.util.SearchRendering;
 import com.github.onsdigital.babbage.api.util.SearchUtils;
 import com.github.onsdigital.babbage.content.client.ContentClient;
+import com.github.onsdigital.babbage.content.client.ContentClientCache;
 import com.github.onsdigital.babbage.content.client.ContentFilter;
 import com.github.onsdigital.babbage.content.client.ContentResponse;
 import com.github.onsdigital.babbage.request.handler.TimeseriesLandingRequestHandler;
 import com.github.onsdigital.babbage.search.model.SearchResult;
 import com.github.onsdigital.babbage.template.handlebars.helpers.base.BabbageHandlebarsHelper;
+import com.github.onsdigital.babbage.util.TaxonomyRenderer;
 import com.github.onsdigital.babbage.util.URIUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static com.github.onsdigital.babbage.content.client.ContentClient.depth;
 import static com.github.onsdigital.babbage.content.client.ContentClient.filter;
 import static com.github.onsdigital.babbage.util.json.JsonUtil.toList;
@@ -69,7 +72,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         }
     },
 
-
     resolveDatasets {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
@@ -95,7 +97,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         }
     },
 
-
     /**
      * usage: {{#resolve "uri" [filter=] [assign=variableName]}}
      * <p>
@@ -103,6 +104,7 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
      */
     resolveTimeSeriesList {
         @Override
+
         public CharSequence apply(Object uri, Options options) throws IOException {
             try {
 
@@ -131,7 +133,7 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
     resolveLatest {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
-            ContentResponse contentResponse = null;
+            ContentResponse contentResponse;
             try {
                 validateUri(uri);
                 String uriString = (String) uri;
@@ -169,13 +171,23 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
             ContentResponse stream = null;
+            Integer depth;
             try {
-                Integer depth = options.<Integer>hash("depth");
-                stream = ContentClient.getInstance().getTaxonomy(depth(depth));
-                InputStream data = stream.getDataStream();
-                List<Map<String, Object>> context = toList(data);
-                assign(options, context);
-                return options.fn(context);
+                depth = options.<Integer>hash("depth");
+            } catch (NullPointerException e) {
+                depth = 2;
+            }
+            try {
+                if (isNavigation && !isPublication) {
+
+                    List<Map<String, Object>> navigationContext = doNavigation(depth);
+                    assign(options, navigationContext);
+                    return options.fn(navigationContext);
+                } else {
+                    List<Map<String, Object>> taxonomyContext = doTaxonomy(depth);
+                    assign(options, taxonomyContext);
+                    return options.fn(taxonomyContext);
+                }
             } catch (Exception e) {
                 logResolveError(uri, e);
                 return options.inverse();
@@ -186,7 +198,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         public void register(Handlebars handlebars) {
             handlebars.registerHelper(this.name(), this);
         }
-
     },
 
     /**
@@ -202,7 +213,6 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
             try {
                 validateUri(uri);
                 String uriString = (String) uri;
-
                 contentResponse = ContentClient.getInstance().getResource(uriString);
                 String data = contentResponse.getAsString();
                 Map<String, Object> context = new LinkedHashMap<>();
@@ -231,6 +241,7 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         @Override
         public CharSequence apply(Object uri, Options options) throws IOException {
             ContentResponse stream = null;
+
             try {
                 validateUri(uri);
                 String uriString = (String) uri;
@@ -288,6 +299,11 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
 
     };
 
+    public boolean isNavigation = appConfig().babbage().isNavigationEnabled();
+
+    public boolean isPublication = appConfig().babbage().isPublishing();
+
+
     //gets first parameter as uri, throws exception if not valid
     private static void validateUri(Object uri) throws IOException {
         if (uri == null) {
@@ -295,12 +311,11 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
         }
     }
 
-
     /**
      * Assigns data to current context if assign parameter given
      *
      * @param options
-     * @param data
+     * @param data - Object
      */
     private static void assign(Options options, Object data) {
         String variableName = options.hash("assign");
@@ -311,6 +326,24 @@ public enum DataHelpers implements BabbageHandlebarsHelper<Object> {
 
     private static void logResolveError(Object uri, Exception e) {
         error().exception(e).data("uri", uri).log("DataHelpers resolve data for uri");
+    }
+
+    public static List<Map<String, Object>> doNavigation(Integer depth)
+            throws com.github.onsdigital.babbage.content.client.ContentReadException,
+            java.io.IOException, java.net.URISyntaxException {
+        ContentResponse stream = ContentClientCache.getInstance().getNavigation(depth(depth));
+        InputStream data = stream.getDataStream();
+        Map<String, Object> mapData = toMap(data);
+        return TaxonomyRenderer.navigationToTaxonomy(mapData.get("items"));
+    }
+
+    public static List<Map<String, Object>> doTaxonomy( Integer depth)
+            throws com.github.onsdigital.babbage.content.client.ContentReadException,
+            java.io.IOException{
+        ContentResponse stream = ContentClientCache.getInstance().getTaxonomy(depth(depth));
+        InputStream data = stream.getDataStream();
+        List<Map<String, Object>> taxonomyContext = toList(data);
+        return taxonomyContext;
     }
 
 }

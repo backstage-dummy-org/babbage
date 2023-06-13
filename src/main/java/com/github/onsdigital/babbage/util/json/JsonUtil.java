@@ -84,6 +84,7 @@ public class JsonUtil {
     }
 
     private static <T> T fromJson(InputStream jsonStream, TypeReference type) throws IOException {
+
         if (jsonStream == null) {
             return null;
         }
