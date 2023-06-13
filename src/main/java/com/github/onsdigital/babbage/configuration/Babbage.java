@@ -209,7 +209,6 @@ public class Babbage implements AppConfig {
         config.put("publishCacheTimeout", publishCacheTimeout);
         config.put("resultsPerPage", resultsPerPage);
         config.put("searchResponseCacheTime", searchResponseCacheTime);
-
         return config;
     }
 }

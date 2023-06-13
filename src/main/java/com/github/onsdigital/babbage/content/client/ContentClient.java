@@ -238,7 +238,7 @@ public class ContentClient {
         return sendPost(REINDEX_ENDPOINT, parameters);
     }
 
-    public ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
+    private ContentResponse sendGet(String path, List<NameValuePair> getParameters) throws ContentReadException {
         CloseableHttpResponse response = null;
         try {
             return new ContentResponse(client.sendGet(path, getHeaders(), getParameters));

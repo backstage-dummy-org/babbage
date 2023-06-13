@@ -61,32 +61,30 @@ curl -s http://localhost:8090/metrics
 The metrics should look something like this:
 
 ```shell
-# HELP publish_date_not_present_total Total requests for uris that currently have no publishing date
+# HELP publish_date_too_far_in_past_total Total requests for uris that have a past publishing date too long ago (outside a given time span)
+# TYPE publish_date_too_far_in_past_total counter
+publish_date_too_far_in_past_total 0.0
+# HELP publish_date_too_far_in_future_total Total requests for uris that have a future publishing date later than that calculated by the default expiry time
+# TYPE publish_date_too_far_in_future_total counter
+publish_date_too_far_in_future_total 0.0
+# HELP publish_date_not_present_total Total requests for uris that have no publishing date found
 # TYPE publish_date_not_present_total counter
 publish_date_not_present_total 0.0
-# HELP publish_date_in_future_total Total requests for uris that have a future publishing date
-# TYPE publish_date_in_future_total counter
-publish_date_in_future_total 1.0
-# HELP publish_date_present_total Total requests for uris that have a past or future publishing date
-# TYPE publish_date_present_total counter
-publish_date_present_total 0.0
-# HELP publish_date_too_far_in_past_total Total requests for uris that have a past publishing date too long ago to concern
-# TYPE publish_date_too_far_in_past_total counter
-publish_date_too_far_in_past_total 1.0
-# HELP cache_expiry_time The time until the cache expires and will be refreshed by another call to the server.
-# TYPE cache_expiry_time gauge
-# HELP publish_date_in_future_created Total requests for uris that have a future publishing date
-# TYPE publish_date_in_future_created gauge
-publish_date_in_future_created 1.679675778633E9
-# HELP publish_date_not_present_created Total requests for uris that currently have no publishing date
+# HELP publish_date_in_range_total Total requests for uris that have a publishing date within the range required for setting the cache expiry time
+# TYPE publish_date_in_range_total counter
+publish_date_in_range_total 0.0
+# HELP publish_date_in_range_created Total requests for uris that have a publishing date within the range required for setting the cache expiry time
+# TYPE publish_date_in_range_created gauge
+publish_date_in_range_created 1.686667997375E9
+# HELP publish_date_not_present_created Total requests for uris that have no publishing date found
 # TYPE publish_date_not_present_created gauge
-publish_date_not_present_created 1.679675778633E9
-# HELP publish_date_present_created Total requests for uris that have a past or future publishing date
-# TYPE publish_date_present_created gauge
-publish_date_present_created 1.679675778632E9
-# HELP publish_date_too_far_in_past_created Total requests for uris that have a past publishing date too long ago to concern
+publish_date_not_present_created 1.686667997376E9
+# HELP publish_date_too_far_in_future_created Total requests for uris that have a future publishing date later than that calculated by the default expiry time
+# TYPE publish_date_too_far_in_future_created gauge
+publish_date_too_far_in_future_created 1.686667997376E9
+# HELP publish_date_too_far_in_past_created Total requests for uris that have a past publishing date too long ago (outside a given time span)
 # TYPE publish_date_too_far_in_past_created gauge
-publish_date_too_far_in_past_created 1.679675778633E9
+publish_date_too_far_in_past_created 1.686667997376E9
 ```
 
 ### Debugging
