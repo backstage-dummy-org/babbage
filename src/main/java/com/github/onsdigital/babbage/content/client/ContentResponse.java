@@ -49,10 +49,6 @@ public class ContentResponse implements Serializable {
         return mimeType;
     }
 
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
-    }
-
     public Charset getCharset() {
         return charset;
     }
