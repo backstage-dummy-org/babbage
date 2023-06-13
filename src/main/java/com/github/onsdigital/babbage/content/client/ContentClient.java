@@ -43,6 +43,7 @@ public class ContentClient {
 
     private static final String TOKEN_HEADER = "X-Florence-Token";
     private static boolean cacheEnabled = appConfig().babbage().isCacheEnabled();
+    private static int maxAge = appConfig().babbage().getDefaultContentCacheTime();
 
     private static PooledHttpClient client;
     private static ContentClient instance;
@@ -165,7 +166,6 @@ public class ContentClient {
         try {
             PublishInfo nextPublish = publishingManager.getNextPublishInfo(uri);
             Date nextPublishDate = nextPublish == null ? null : nextPublish.getPublishDate();
-            int maxAge = appConfig().babbage().getDefaultContentCacheTime();
             Integer timeToExpire = null;
             if (nextPublishDate != null) {
                 Long time = (nextPublishDate.getTime() - new Date().getTime()) / 1000;
@@ -194,7 +194,7 @@ public class ContentClient {
             } else if (timeToExpire < 0 && Math.abs(timeToExpire) > appConfig().babbage().getPublishCacheTimeout()) {
                 //if publish is due but there is still a publish date record after an hour drop it
                 info().data("uri", uri).log("dropping publish date record due to publish wait timeout for uri");
-                PublishingManager.getInstance().dropPublishDate(nextPublish);
+                publishingManager.dropPublishDate(nextPublish);
                 //increment count of requests where publish date is more than an hour ago
                 metrics.incPublishDateTooFarInPast();
                 return resolveMaxAge(uri, response);//resolve for next publish date if any
