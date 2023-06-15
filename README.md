@@ -46,13 +46,13 @@ Babbage runs independently. However, in order to run it locally in its publishin
 | HIGHCHARTS_EXPORT_SERVER      | http://localhost:9999/ | The URL to the highcharts export server
 | IS_PUBLISHING                 | N                      | Switch to use (or not) the publishing functionality
 | MAP_RENDERER_HOST             | http://localhost:23500 | The URL to the map renderer
-| METRICS_PORT                  | 1234                   | The port for the metrics URL
+| METRICS_PORT                  | 8090                   | The port for the metrics URL
 | REDIRECT_SECRET               | secret                 | The code for the redirect
 | TABLE_RENDERER_HOST           | http://localhost:23300 | The URL to the table renderer
 
 ### Metrics
 
-To see the metrics note that the ENABLE_METRICS and ENABLE_CACHE values must be set to Y when babbage starts up. Then call the following command while babbage is running:
+To see the metrics, note that the ENABLE_METRICS and ENABLE_CACHE values must be set to Y when babbage starts up. Then call the following command while babbage is running:
 
 ```bash
 curl -s http://localhost:8090/metrics
