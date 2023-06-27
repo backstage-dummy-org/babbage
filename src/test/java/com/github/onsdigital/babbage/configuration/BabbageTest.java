@@ -3,19 +3,25 @@ package com.github.onsdigital.babbage.configuration;
 import junit.framework.TestCase;
 
 import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+import org.junit.Before;
+import java.util.Map;
+
+
 import static org.mockito.Mockito.when;
+import org.mockito.Mock;
 
 public class BabbageTest extends junit.framework.TestCase {
-    @org.mockito.Mock
+    @Mock
     private Babbage mockBabbage;
 
-    @org.junit.Before
+    @Before
     public void setUp() throws Exception {
         org.mockito.MockitoAnnotations.initMocks(this);
         when(mockBabbage.isPublishing()).thenReturn(true);
     }
 
-    @org.junit.Test
+    @Test
     public void testGetInstance_testdefaults() {
         Babbage testInstance = Babbage.getInstance();
         assertEquals(testInstance.getDefaultCacheTime(), 900);
@@ -29,14 +35,14 @@ public class BabbageTest extends junit.framework.TestCase {
         assertEquals(testInstance.getRedirectSecret(), "secret");
         assertEquals(testInstance.getResultsPerPage(), 10);
         assertEquals(testInstance.getSearchResponseCacheTime(), 5);
-        assertNotNull(testInstance.getReindexServer());
+        assertNotNull(testInstance.getReindexServiceKey());
         assertNotNull(testInstance.getMaxAgeSecret());
         assertEquals(testInstance.isCacheEnabled(), false);
         assertEquals(testInstance.isDevEnv(), false);
         assertEquals(testInstance.isDevEnvironment(), false);
         assertEquals(testInstance.isPublishing(), false);
 
-        java.util.Map<String, Object> mockConfig = new java.util.HashMap<>();
+        Map<String, Object> mockConfig;
         mockConfig = Babbage.getInstance().getConfig();
         assertEquals(mockConfig.get("cacheEnabled"), testInstance.isCacheEnabled());
         assertEquals(mockConfig.get("defaultCacheTime"), testInstance.getDefaultContentCacheTime());
@@ -50,8 +56,42 @@ public class BabbageTest extends junit.framework.TestCase {
         assertEquals(mockConfig.get("publishCacheTimeout"), testInstance.getPublishCacheTimeout());
         assertEquals(mockConfig.get("resultsPerPage"), testInstance.getResultsPerPage());
         assertEquals(mockConfig.get("searchResponseCacheTime"), testInstance.getSearchResponseCacheTime());
-        assertNotNull(mockConfig.get("maxAgeServer"));
-        assertNotNull(mockConfig.get("reindexServer"));
+        assertNotNull(mockConfig.get("maxAgeSecret"));
+        assertNotNull(mockConfig.get("reindexSecret"));
     }
+    @Test
+    public void testGetApiRouterURL() {
+        Babbage testInstance = Babbage.getInstance();
+        assertNotNull(testInstance.getApiRouterURL());
+        assertEquals(testInstance.getApiRouterURL(),"http://localhost:23200/v1");
+    }
+
+    @Test
+    public void testGetServiceAuthToken() {
+        Babbage testInstance = Babbage.getInstance();
+        assertNotNull(testInstance.getServiceAuthToken());
+        assertEquals(testInstance.getServiceAuthToken(),"ahyofaem2ieVie6eipaX6ietigh1oeM0Aa1aiyaebiemiodaiJah0eenuchei1ai");
+    }
+
+@Test
+public void testIsNavigationEnabled() {
+    Babbage testInstance = Babbage.getInstance();
+    assertNotNull(testInstance.isNavigationEnabled());
+    assertFalse(testInstance.isNavigationEnabled());
+}
+    @Test
+    public void testGetMaxCacheEntries() {
+        Babbage testInstance = Babbage.getInstance();
+        assertNotNull(testInstance.getMaxCacheEntries());
+        assertEquals(testInstance.getMaxCacheEntries(),3000);
+    }
+
+//    getMaxCacheObjectSize
+@Test
+public void testGetMaxCacheObjectSize() {
+    Babbage testInstance = Babbage.getInstance();
+    assertNotNull(testInstance.getMaxCacheObjectSize());
+    assertEquals(testInstance.getMaxCacheObjectSize(),50000);
+}
 
 }

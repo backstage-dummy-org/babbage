@@ -29,7 +29,7 @@ public class Upcoming {
 
     //Using same key as reindex
 //    private static final String REINDEX_KEY_HASH = "5NpB6/uAgk14nYwHzMbIQRnuI2W63MrBOS2279YlcUUY2kNOhrL+R5UFR3O066bQ";
-    private static final String REINDEX_KEY_HASH = appConfig().babbage().getReindexServer();
+    private static final String REINDEX_KEY_HASH = appConfig().babbage().getRedirectSecret();
 
     public Upcoming() {
 
@@ -38,7 +38,6 @@ public class Upcoming {
     public Upcoming(boolean verifyUriList) {
         this.verifyUriList = verifyUriList;
     }
-
 
     @POST
     public Object post(HttpServletRequest request, HttpServletResponse response) {
@@ -65,7 +64,7 @@ public class Upcoming {
         return new ResponseMessage("Successfully processed");
     }
 
-    private void verifyUriList(PublishNotification publishNotification) {
+    protected void verifyUriList(PublishNotification publishNotification) {
         List<String> urisToUpdate = publishNotification.getUrisToUpdate();
         List<ContentDetail> urisToDelete = publishNotification.getUrisToDelete();
 
@@ -75,7 +74,7 @@ public class Upcoming {
         }
     }
 
-    private void verifyKey(PublishNotification notification) {
+    protected void verifyKey(PublishNotification notification) {
         if (!Password.verify(notification.getKey(), REINDEX_KEY_HASH)) {
             throw new BadRequestException("Wrong key, make sure you pass in the right key");
         }
