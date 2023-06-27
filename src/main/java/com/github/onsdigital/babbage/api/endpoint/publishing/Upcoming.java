@@ -27,8 +27,6 @@ public class Upcoming {
 
     private boolean verifyUriList = true;
 
-    //Using same key as reindex
-//    private static final String REINDEX_KEY_HASH = "5NpB6/uAgk14nYwHzMbIQRnuI2W63MrBOS2279YlcUUY2kNOhrL+R5UFR3O066bQ";
     private static final String REINDEX_KEY_HASH = appConfig().babbage().getRedirectSecret();
 
     public Upcoming() {
