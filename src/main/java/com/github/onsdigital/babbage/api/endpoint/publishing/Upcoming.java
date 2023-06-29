@@ -25,9 +25,9 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.error;
 @Api
 public class Upcoming {
 
-    private boolean verifyUriList = true;
+    protected boolean verifyUriList = true;
 
-    private static final String REINDEX_KEY_HASH = appConfig().babbage().getRedirectSecret();
+    private static final String REINDEX_KEY_HASH = appConfig().babbage().getReindexServiceKey();
 
     public Upcoming() {
 
@@ -40,8 +40,7 @@ public class Upcoming {
     @POST
     public Object post(HttpServletRequest request, HttpServletResponse response) {
         try {
-            PublishNotification publishNotification = JsonUtil.fromJson(request.getInputStream(), PublishNotification.class);
-            return process(response, publishNotification);
+            return process(response, getPublishNotification(request));
         } catch (BabbageException e) {
             response.setStatus(e.getStatusCode());
             return new ResponseMessage(e.getMessage());
@@ -51,7 +50,6 @@ public class Upcoming {
             return new ResponseMessage("Failed processing uri list publish dates");
         }
     }
-
     protected Object process(HttpServletResponse response, PublishNotification publishNotification) throws IOException {
         verifyKey(publishNotification);
         if (verifyUriList) {
@@ -61,25 +59,23 @@ public class Upcoming {
         response.setStatus(HttpServletResponse.SC_OK);
         return new ResponseMessage("Successfully processed");
     }
-
     protected void verifyUriList(PublishNotification publishNotification) {
         List<String> urisToUpdate = publishNotification.getUrisToUpdate();
         List<ContentDetail> urisToDelete = publishNotification.getUrisToDelete();
-
         if ((urisToUpdate == null || urisToUpdate.isEmpty())
                 && (urisToDelete == null || urisToDelete.isEmpty())) {
             throw new BadRequestException("Please speficy uri list");
         }
     }
-
     protected void verifyKey(PublishNotification notification) {
         if (!Password.verify(notification.getKey(), REINDEX_KEY_HASH)) {
             throw new BadRequestException("Wrong key, make sure you pass in the right key");
         }
     }
-
     protected void notifyPublishEvent(PublishNotification publishNotification) throws IOException {
         PublishingManager.getInstance().notifyUpcoming(publishNotification);
     }
-
+    protected PublishNotification getPublishNotification(HttpServletRequest request) throws java.io.IOException {
+        return JsonUtil.fromJson(request.getInputStream(), PublishNotification.class);
+    }
 }

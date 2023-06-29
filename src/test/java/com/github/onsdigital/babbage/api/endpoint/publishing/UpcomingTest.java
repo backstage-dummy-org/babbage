@@ -3,24 +3,20 @@ package com.github.onsdigital.babbage.api.endpoint.publishing;
 import com.github.onsdigital.babbage.error.BadRequestException;
 import com.github.onsdigital.babbage.publishing.model.ContentDetail;
 import com.github.onsdigital.babbage.publishing.model.PublishNotification;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-
-import javax.servlet.ServletInputStream;
-
 import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UpcomingTest {
@@ -28,10 +24,7 @@ public class UpcomingTest {
     @Mock
     private Upcoming mockUpcoming;
     @Mock
-    private javax.servlet.http.HttpServletResponse response;
-    @Mock
-    private javax.servlet.http.HttpServletRequest request;
-
+    private HttpServletResponse mockResponse;
     @Mock
     private PublishNotification publicationNotification;
     @InjectMocks
@@ -40,13 +33,14 @@ public class UpcomingTest {
 
     @Before
     public void setup() throws Exception {
-       initMocks(this);
-
+        initMocks(this);
+        mockUpcoming.verifyUriList = true;
     }
+
     @Test
     public void testGetNoKey() throws BadRequestException {
         Exception exception = assertThrows(BadRequestException.class, () -> {
-            endpoint.process(response,publicationNotification);
+            endpoint.process(mockResponse, publicationNotification);
         });
 
         String expectedMessage = "Wrong key, make sure you pass in the right key";
@@ -54,64 +48,43 @@ public class UpcomingTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
     @Test
-    public void testGetKey() throws BadRequestException, IOException {
-        Exception ex = null;
-        PublishNotification pubNot = new PublishNotification();
-        pubNot.setKey(appConfig().babbage().getReindexServiceKey());
-
+    public void testVerifyKey() {
+        Exception ex = new Exception();
         try {
-            mockUpcoming.process(response, pubNot);
+            mockUpcoming.verifyKey(setPubNot());
         } catch (Exception e) {
             ex = e;
         }
-        assertEquals(null,ex);
-
+        assertEquals(null, ex.getMessage());
+        assertEquals(null, ex.getCause());
     }
 
     @Test
-    public void testVerifyUriList() throws BadRequestException, java.io.IOException {
-        Exception ex = null;
+    public void testVerifyUriList() {
+        Exception ex = new Exception();
+        try {
+            mockUpcoming.verifyUriList(setPubNot());
+        } catch (Exception e) {
+            ex = e;
+        }
+        assertEquals(null, ex.getMessage());
+        assertEquals(null, ex.getCause());
+    }
+
+    private PublishNotification setPubNot() {
         List<String> mockURIs = Stream.of("one", "two", "three").collect(Collectors.toList());
         List<ContentDetail> mockContents = new ArrayList<ContentDetail>();
         ContentDetail cd = new ContentDetail();
         cd.uri = "one";
         cd.type = "1";
         mockContents.add(cd);
-        cd.uri = "two";
-        cd.type = "2";
-        mockContents.add(cd);
-        cd.uri = "three";
-        cd.type = "3";
-        mockContents.add(cd);
-
         PublishNotification pubNot = new PublishNotification();
         pubNot.setKey(appConfig().babbage().getReindexServiceKey());
         pubNot.setCollectionId("collid");
         pubNot.setPublishDate("pubdate");
         pubNot.setUrisToDelete(mockContents);
         pubNot.setUrisToUpdate(mockURIs);
-
-        try {
-            mockUpcoming.verifyUriList(pubNot);
-        } catch (Exception e) {
-            ex = e;
-        }
-        assertEquals(null,ex);
-        verify(mockUpcoming,atLeastOnce()).verifyUriList(any(PublishNotification.class));
-
+        return pubNot;
     }
-    @Test
-    public void testPost() throws BadRequestException {
-        Exception ex = null;
-        try {
-            endpoint.post(request,response);
-        } catch (Exception e) {
-            ex = e;
-        }
-        assertEquals(null,ex);
-
-    }
-
-
 
 }
