@@ -1,5 +1,6 @@
 package com.github.onsdigital.babbage.response.util;
 
+import com.github.onsdigital.babbage.metrics.MetricsFactory;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,14 +21,14 @@ public class CacheControlHelper {
      */
     public static void setCacheHeaders(HttpServletRequest request, HttpServletResponse response, String hash, long maxAge) {
         resolveHash(request, response, hash);
-        setMaxAage(response, maxAge);
+        setMaxAge(response, maxAge);
     }
 
     public static void setCacheHeaders(HttpServletResponse response, long maxAge) {
-        setMaxAage(response, maxAge);
+        setMaxAge(response, maxAge);
     }
 
-    private static void setMaxAage(HttpServletResponse response, long maxAge) {
+    private static void setMaxAge(HttpServletResponse response, long maxAge) {
         response.addHeader("cache-control", "public, max-age=" + maxAge);
     }
 

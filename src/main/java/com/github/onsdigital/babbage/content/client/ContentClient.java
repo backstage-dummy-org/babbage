@@ -1,6 +1,8 @@
 package com.github.onsdigital.babbage.content.client;
 
 import com.github.onsdigital.babbage.error.ResourceNotFoundException;
+import com.github.onsdigital.babbage.metrics.Metrics;
+import com.github.onsdigital.babbage.metrics.MetricsFactory;
 import com.github.onsdigital.babbage.publishing.PublishingManager;
 import com.github.onsdigital.babbage.publishing.model.PublishInfo;
 import com.github.onsdigital.babbage.util.RequestUtil;
@@ -40,7 +42,8 @@ import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 public class ContentClient {
 
     private static final String TOKEN_HEADER = "X-Florence-Token";
-
+    private static boolean cacheEnabled = appConfig().babbage().isCacheEnabled();
+    private static int maxAge = appConfig().babbage().getDefaultContentCacheTime();
 
     private static PooledHttpClient client;
     private static ContentClient instance;
@@ -54,6 +57,9 @@ public class ContentClient {
     private static final String EXPORT_ENDPOINT = "/export";
     private static final String RESOLVE_DATASETS_ENDPOINT = "/resolveDatasets";
     private static final String URI_PARAM = "uri";
+
+    private Metrics metrics = MetricsFactory.getMetrics();
+    private PublishingManager publishingManager = PublishingManager.getInstance();
 
     //singleton
     private ContentClient() {
@@ -143,14 +149,13 @@ public class ContentClient {
 
 
     private ContentResponse resolveMaxAge(String uri, ContentResponse response) {
-        if (!appConfig().babbage().isCacheEnabled()) {
+        if (!cacheEnabled) {
             return response;
         }
 
         try {
-            PublishInfo nextPublish = PublishingManager.getInstance().getNextPublishInfo(uri);
+            PublishInfo nextPublish = publishingManager.getNextPublishInfo(uri);
             Date nextPublishDate = nextPublish == null ? null : nextPublish.getPublishDate();
-            int maxAge = appConfig().babbage().getDefaultContentCacheTime();
             Integer timeToExpire = null;
             if (nextPublishDate != null) {
                 Long time = (nextPublishDate.getTime() - new Date().getTime()) / 1000;
@@ -159,12 +164,29 @@ public class ContentClient {
 
             if (timeToExpire == null) {
                 response.setMaxAge(maxAge);
+                //increment count of requests where publish date is not present
+                metrics.incPublishDateNotPresent();
             } else if (timeToExpire > 0) {
-                response.setMaxAge(timeToExpire < maxAge ? timeToExpire : maxAge);
+                // requested uri cache expiry is set as either:-
+                // 1. the time remaining until the publishing time or
+                // 2. the maximum cache expiry time permitted
+                if (timeToExpire < maxAge) {
+                    //increment count of requests where the cache expiry is set as
+                    //the time remaining until the publishing time
+                    metrics.incPublishDateInRange();
+                    response.setMaxAge(timeToExpire);
+                } else {
+                    //increment count of requests where the cache expiry is set as
+                    //the maximum cache expiry time permitted
+                    metrics.incPublishDateTooFarInFuture();
+                    response.setMaxAge(maxAge);
+                }
             } else if (timeToExpire < 0 && Math.abs(timeToExpire) > appConfig().babbage().getPublishCacheTimeout()) {
                 //if publish is due but there is still a publish date record after an hour drop it
                 info().data("uri", uri).log("dropping publish date record due to publish wait timeout for uri");
-                PublishingManager.getInstance().dropPublishDate(nextPublish);
+                publishingManager.dropPublishDate(nextPublish);
+                //increment count of requests where publish date is more than an hour ago
+                metrics.incPublishDateTooFarInPast();
                 return resolveMaxAge(uri, response);//resolve for next publish date if any
             }
         } catch (Exception e) {

@@ -2,6 +2,7 @@ package com.github.onsdigital.babbage;
 
 import com.github.davidcarboni.restolino.framework.Startup;
 import com.github.onsdigital.babbage.configuration.ApplicationConfiguration;
+import com.github.onsdigital.babbage.metrics.MetricsFactory;
 import com.github.onsdigital.babbage.publishing.PublishingManager;
 import com.github.onsdigital.babbage.search.ElasticSearchClient;
 import com.github.onsdigital.logging.v2.DPLogger;
@@ -39,6 +40,13 @@ public class Init implements Startup {
                     .logger(logger)
                     .create());
         } catch (LoggingException ex) {
+            System.err.println(ex);
+            System.exit(1);
+        }
+
+        try {
+            MetricsFactory.init();
+        } catch (Exception ex) {
             System.err.println(ex);
             System.exit(1);
         }

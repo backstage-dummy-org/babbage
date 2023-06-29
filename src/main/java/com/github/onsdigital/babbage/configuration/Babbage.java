@@ -25,6 +25,8 @@ public class Babbage implements AppConfig {
     private static final String HIGHCHARTS_EXPORT_SERVER_KEY = "HIGHCHARTS_EXPORT_SERVER";
     private static final String IS_PUBLISHING_KEY = "IS_PUBLISHING";
     private static final String MATHJAX_EXPORT_SERVER_KEY = "MATHJAX_EXPORT_SERVER";
+    private static final String ENABLE_METRICS_KEY = "ENABLE_METRICS";
+    private static final String METRICS_PORT_KEY = "METRICS_PORT";
     private static final String REDIRECT_SECRET_KEY = "REDIRECT_SECRET";
     private static final String SERVICE_AUTH_TOKEN = "SERVICE_AUTH";
 
@@ -64,6 +66,8 @@ public class Babbage implements AppConfig {
     private final int maxCacheEntries;
     private final int maxCacheObjectSize;
     private final int maxHighchartsServerConnections;
+    private final int metricsPort;
+    private final boolean metricsEnabled;
     private final int maxResultsPerPage;
     private final int maxVisiblePaginatorLink;
     private final int publishCacheTimeout;
@@ -79,7 +83,18 @@ public class Babbage implements AppConfig {
         isNavigationEnabled = getStringAsBool(ENABLE_NAVIGATION_KEY, "N");
         isPublishing = getStringAsBool(IS_PUBLISHING_KEY, "N");
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
+<<<<<<< HEAD
         maxAgeSecret = getValueOrDefault(MAXAGE_SERVICE_KEY, "mPHbKjCol7ObQ87qKVQgHz6kR3nsYJ3WJHgP7+JYyi5rSJbmbDAcQU8EQilFQ6QQ");
+=======
+        metricsEnabled = getStringAsBool(ENABLE_METRICS_KEY, "N");
+
+        if (metricsEnabled) {
+            metricsPort = Integer.parseInt(getValueOrDefault(METRICS_PORT_KEY, "8090"));
+        }   else {
+            metricsPort = 0;
+        }
+
+>>>>>>> develop
         maxCacheEntries = defaultIfBlank(getNumberValue(MAX_OBJECT_SIZE), 3000);
         maxCacheObjectSize = defaultIfBlank(getNumberValue(MAX_CACHE_ENTRIES), 50000);
         maxHighchartsServerConnections = defaultIfBlank(getNumberValue("HIGHCHARTS_EXPORT_MAX_CONNECTION"), 50);
@@ -178,6 +193,14 @@ public class Babbage implements AppConfig {
         return searchResponseCacheTime;
     }
 
+    public int getMetricsPort() {
+        return metricsPort;
+    }
+
+    public boolean getMetricsEnabled() {
+        return metricsEnabled;
+    }
+
     @Override
     public Map<String, Object> getConfig() {
         Map<String, Object> config = new HashMap<>();
@@ -188,7 +211,12 @@ public class Babbage implements AppConfig {
         config.put("isNavigationEnable", isNavigationEnabled);
         config.put("isPublishing", isPublishing);
         config.put("mathjaxExportServer", mathjaxExportServer);
+<<<<<<< HEAD
         config.put("maxAgeSecret", maxAgeSecret);
+=======
+        config.put("metricsPort", metricsPort);
+        config.put("metricsEnabled", metricsEnabled);
+>>>>>>> develop
         config.put("maxCacheEntries", maxCacheEntries);
         config.put("maxCacheObjectSize", maxCacheObjectSize);
         config.put("maxHighchartsServerConnections", maxHighchartsServerConnections);
