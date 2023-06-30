@@ -390,6 +390,7 @@
                         </exlude>
 
                         <exlude>
+                            <!-- https://trello.com/c/hOBKeppS/1728-upgrade-guava-dependency -->
                             <groupId>com.google.guava</groupId>
                             <artifactId>guava</artifactId>
                             <version>18.0</version>
