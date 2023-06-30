@@ -83,9 +83,7 @@ public class Babbage implements AppConfig {
         isNavigationEnabled = getStringAsBool(ENABLE_NAVIGATION_KEY, "N");
         isPublishing = getStringAsBool(IS_PUBLISHING_KEY, "N");
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
-<<<<<<< HEAD
         maxAgeSecret = getValueOrDefault(MAXAGE_SERVICE_KEY, "mPHbKjCol7ObQ87qKVQgHz6kR3nsYJ3WJHgP7+JYyi5rSJbmbDAcQU8EQilFQ6QQ");
-=======
         metricsEnabled = getStringAsBool(ENABLE_METRICS_KEY, "N");
 
         if (metricsEnabled) {
@@ -94,7 +92,6 @@ public class Babbage implements AppConfig {
             metricsPort = 0;
         }
 
->>>>>>> develop
         maxCacheEntries = defaultIfBlank(getNumberValue(MAX_OBJECT_SIZE), 3000);
         maxCacheObjectSize = defaultIfBlank(getNumberValue(MAX_CACHE_ENTRIES), 50000);
         maxHighchartsServerConnections = defaultIfBlank(getNumberValue("HIGHCHARTS_EXPORT_MAX_CONNECTION"), 50);
@@ -211,12 +208,9 @@ public class Babbage implements AppConfig {
         config.put("isNavigationEnable", isNavigationEnabled);
         config.put("isPublishing", isPublishing);
         config.put("mathjaxExportServer", mathjaxExportServer);
-<<<<<<< HEAD
         config.put("maxAgeSecret", maxAgeSecret);
-=======
         config.put("metricsPort", metricsPort);
         config.put("metricsEnabled", metricsEnabled);
->>>>>>> develop
         config.put("maxCacheEntries", maxCacheEntries);
         config.put("maxCacheObjectSize", maxCacheObjectSize);
         config.put("maxHighchartsServerConnections", maxHighchartsServerConnections);

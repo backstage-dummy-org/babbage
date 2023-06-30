@@ -110,7 +110,13 @@
             <artifactId>elasticsearch</artifactId>
             <version>2.1.1</version>
         </dependency>
+        <!-- override the Guava version used by reflections and elasticsearch -->
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>32.0.1-jre</version>
+        </dependency>
         <!-- Elastic search multicast, used for discovering elastic search  instances-->
         <dependency>
             <groupId>org.elasticsearch.plugin</groupId>
@@ -389,7 +395,7 @@
                             <version>1.0</version>
                         </exclude>
 
-                         <exclude>
+                        <exclude>
                             <!-- Trello card for this exclude: https://trello.com/c/fyFpvpZw/1007-upgrade-dom4j-dom4j-dependency -->
                             <groupId>dom4j</groupId>
                             <artifactId>dom4j</artifactId>
