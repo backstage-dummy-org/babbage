@@ -110,7 +110,6 @@
             <artifactId>elasticsearch</artifactId>
             <version>2.1.1</version>
         </dependency>
-        <!-- override the Guava version used by reflections and elasticsearch -->
 
         <!-- Elastic search multicast, used for discovering elastic search  instances-->
         <dependency>

@@ -13,7 +13,6 @@ import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getValueOr
 public class Babbage implements AppConfig {
 
     // env var keys
-
     private static final String DEV_ENVIRONMENT_KEY = "DEV_ENVIRONMENT";
     private static final String ENABLE_CACHE_KEY = "ENABLE_CACHE";
     private static final String ENABLE_NAVIGATION_KEY = "ENABLE_NAVIGATION";
@@ -49,9 +48,12 @@ public class Babbage implements AppConfig {
     private final int defaultCacheTime;
     /**
      * If content that should be published is more than an hour due delete publish date to get it caching again
+     **/
+    private final int publishCacheTimeout;
+
+    /**
      * search results max age header in seconds
      **/
-
     private final String apiRouterURL;
     private final String exportSeverUrl;
     private final String mathjaxExportServer;
@@ -70,7 +72,6 @@ public class Babbage implements AppConfig {
     private final boolean metricsEnabled;
     private final int maxResultsPerPage;
     private final int maxVisiblePaginatorLink;
-    private final int publishCacheTimeout;
     private final int resultsPerPage;
     private final long searchResponseCacheTime;
 
@@ -85,6 +86,8 @@ public class Babbage implements AppConfig {
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
         maxAgeSecret = getValueOrDefault(MAXAGE_SERVICE_KEY, "mPHbKjCol7ObQ87qKVQgHz6kR3nsYJ3WJHgP7+JYyi5rSJbmbDAcQU8EQilFQ6QQ");
         metricsEnabled = getStringAsBool(ENABLE_METRICS_KEY, "N");
+        reindexSecret = getValueOrDefault(REDIRECT_SECRET_KEY, "5NpB6/uAgk14nYwHzMbIQRnuI2W63MrBOS2279YlcUUY2kNOhrL+R5UFR3O066bQ");
+
 
         if (metricsEnabled) {
             metricsPort = Integer.parseInt(getValueOrDefault(METRICS_PORT_KEY, "8090"));
@@ -99,7 +102,6 @@ public class Babbage implements AppConfig {
         maxVisiblePaginatorLink = 5;
         publishCacheTimeout = 60 * 60;
         redirectSecret = getValueOrDefault(REDIRECT_SECRET_KEY, "secret");
-        reindexSecret = getValueOrDefault(REINDEX_SERVICE_KEY, "5NpB6/uAgk14nYwHzMbIQRnuI2W63MrBOS2279YlcUUY2kNOhrL+R5UFR3O066bQ");
         resultsPerPage = 10;
         searchResponseCacheTime = 5;
         serviceAuthToken = getValueOrDefault(SERVICE_AUTH_TOKEN, "ahyofaem2ieVie6eipaX6ietigh1oeM0Aa1aiyaebiemiodaiJah0eenuchei1ai");
