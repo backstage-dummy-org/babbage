@@ -56,6 +56,7 @@ job "babbage" {
 
         port_map {
           http = 8080
+          metrics = 8090
         }
       }
 
@@ -67,6 +68,19 @@ job "babbage" {
         check {
           type     = "http"
           path     = "/health"
+          interval = "10s"
+          timeout  = "2s"
+        }
+      }
+
+      service {
+        name = "babbage-metrics"
+        port = "metrics"
+        tags = ["web"]
+
+        check {
+          type     = "http"
+          path     = "/metrics"
           interval = "10s"
           timeout  = "2s"
         }
