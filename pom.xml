@@ -389,7 +389,7 @@
                             <version>1.0</version>
                         </exclude>
 
-                        <exclude>
+                         <exclude>
                             <!-- Trello card for this exclude: https://trello.com/c/fyFpvpZw/1007-upgrade-dom4j-dom4j-dependency -->
                             <groupId>dom4j</groupId>
                             <artifactId>dom4j</artifactId>
