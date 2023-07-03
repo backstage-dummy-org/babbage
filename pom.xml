@@ -112,11 +112,6 @@
         </dependency>
         <!-- override the Guava version used by reflections and elasticsearch -->
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>32.0.1-jre</version>
-        </dependency>
         <!-- Elastic search multicast, used for discovering elastic search  instances-->
         <dependency>
             <groupId>org.elasticsearch.plugin</groupId>
