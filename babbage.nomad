@@ -169,6 +169,7 @@ job "babbage" {
 
         network {
           port "http" {}
+          port "metrics" {}
         }
       }
 
