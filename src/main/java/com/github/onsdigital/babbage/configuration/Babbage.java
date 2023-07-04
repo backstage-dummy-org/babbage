@@ -13,20 +13,20 @@ import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getValueOr
 public class Babbage implements AppConfig {
 
     // env var keys
+    private static final String API_ROUTER_URL = "API_ROUTER_URL";
     private static final String DEV_ENVIRONMENT_KEY = "DEV_ENVIRONMENT";
     private static final String ENABLE_CACHE_KEY = "ENABLE_CACHE";
+    private static final String ENABLE_METRICS_KEY = "ENABLE_METRICS";
     private static final String ENABLE_NAVIGATION_KEY = "ENABLE_NAVIGATION";
-    private static final String API_ROUTER_URL = "API_ROUTER_URL";
-    private static final String MAXAGE_SERVICE_KEY = "MAXAGE_SERVER";
-    private static final String REINDEX_SERVICE_KEY = "REINDEX_SERVER";
-    private static final String MAX_CACHE_ENTRIES = "CACHE_ENTRIES";
-    private static final String MAX_OBJECT_SIZE = "CACHE_OBJECT_SIZE";
     private static final String HIGHCHARTS_EXPORT_SERVER_KEY = "HIGHCHARTS_EXPORT_SERVER";
     private static final String IS_PUBLISHING_KEY = "IS_PUBLISHING";
     private static final String MATHJAX_EXPORT_SERVER_KEY = "MATHJAX_EXPORT_SERVER";
-    private static final String ENABLE_METRICS_KEY = "ENABLE_METRICS";
+    private static final String MAXAGE_SERVICE_KEY = "MAXAGE_SERVER";
+    private static final String MAX_CACHE_ENTRIES = "CACHE_ENTRIES";
+    private static final String MAX_OBJECT_SIZE = "CACHE_OBJECT_SIZE";
     private static final String METRICS_PORT_KEY = "METRICS_PORT";
     private static final String REDIRECT_SECRET_KEY = "REDIRECT_SECRET";
+    private static final String REINDEX_SERVICE_KEY = "REINDEX_SERVER";
     private static final String SERVICE_AUTH_TOKEN = "SERVICE_AUTH";
 
     private static Babbage INSTANCE;
@@ -86,7 +86,7 @@ public class Babbage implements AppConfig {
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
         maxAgeSecret = getValueOrDefault(MAXAGE_SERVICE_KEY, "mPHbKjCol7ObQ87qKVQgHz6kR3nsYJ3WJHgP7+JYyi5rSJbmbDAcQU8EQilFQ6QQ");
         metricsEnabled = getStringAsBool(ENABLE_METRICS_KEY, "N");
-        reindexSecret = getValueOrDefault(REDIRECT_SECRET_KEY, "5NpB6/uAgk14nYwHzMbIQRnuI2W63MrBOS2279YlcUUY2kNOhrL+R5UFR3O066bQ");
+        reindexSecret = getValueOrDefault(REINDEX_SERVICE_KEY, "5NpB6/uAgk14nYwHzMbIQRnuI2W63MrBOS2279YlcUUY2kNOhrL+R5UFR3O066bQ");
 
 
         if (metricsEnabled) {
