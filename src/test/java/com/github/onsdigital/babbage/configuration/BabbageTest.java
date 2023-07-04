@@ -1,8 +1,4 @@
 package com.github.onsdigital.babbage.configuration;
-
-import junit.framework.TestCase;
-
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.Before;
 import java.util.Map;
