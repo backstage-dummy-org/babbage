@@ -13,18 +13,20 @@ import static com.github.onsdigital.babbage.configuration.EnvVarUtils.getValueOr
 public class Babbage implements AppConfig {
 
     // env var keys
+    private static final String API_ROUTER_URL = "API_ROUTER_URL";
     private static final String DEV_ENVIRONMENT_KEY = "DEV_ENVIRONMENT";
     private static final String ENABLE_CACHE_KEY = "ENABLE_CACHE";
+    private static final String ENABLE_METRICS_KEY = "ENABLE_METRICS";
     private static final String ENABLE_NAVIGATION_KEY = "ENABLE_NAVIGATION";
-    private static final String API_ROUTER_URL = "API_ROUTER_URL";
-    private static final String MAX_CACHE_ENTRIES = "CACHE_ENTRIES";
-    private static final String MAX_OBJECT_SIZE = "CACHE_OBJECT_SIZE";
     private static final String HIGHCHARTS_EXPORT_SERVER_KEY = "HIGHCHARTS_EXPORT_SERVER";
     private static final String IS_PUBLISHING_KEY = "IS_PUBLISHING";
     private static final String MATHJAX_EXPORT_SERVER_KEY = "MATHJAX_EXPORT_SERVER";
-    private static final String ENABLE_METRICS_KEY = "ENABLE_METRICS";
+    private static final String MAXAGE_SERVICE_KEY = "MAXAGE_SERVER";
+    private static final String MAX_CACHE_ENTRIES = "CACHE_ENTRIES";
+    private static final String MAX_OBJECT_SIZE = "CACHE_OBJECT_SIZE";
     private static final String METRICS_PORT_KEY = "METRICS_PORT";
     private static final String REDIRECT_SECRET_KEY = "REDIRECT_SECRET";
+    private static final String REINDEX_SERVICE_KEY = "REINDEX_SERVER";
     private static final String SERVICE_AUTH_TOKEN = "SERVICE_AUTH";
 
     private static Babbage INSTANCE;
@@ -44,7 +46,6 @@ public class Babbage implements AppConfig {
      * cache timeout in seconds, to be set as HTTP max age header
      */
     private final int defaultCacheTime;
-
     /**
      * If content that should be published is more than an hour due delete publish date to get it caching again
      **/
@@ -56,6 +57,8 @@ public class Babbage implements AppConfig {
     private final String apiRouterURL;
     private final String exportSeverUrl;
     private final String mathjaxExportServer;
+    private final String maxAgeSecret;
+    private final String reindexSecret;
     private final String redirectSecret;
     private final String serviceAuthToken;
     private final boolean cacheEnabled;
@@ -81,7 +84,10 @@ public class Babbage implements AppConfig {
         isNavigationEnabled = getStringAsBool(ENABLE_NAVIGATION_KEY, "N");
         isPublishing = getStringAsBool(IS_PUBLISHING_KEY, "N");
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
+        maxAgeSecret = getValueOrDefault(MAXAGE_SERVICE_KEY, "mPHbKjCol7ObQ87qKVQgHz6kR3nsYJ3WJHgP7+JYyi5rSJbmbDAcQU8EQilFQ6QQ");
         metricsEnabled = getStringAsBool(ENABLE_METRICS_KEY, "N");
+        reindexSecret = getValueOrDefault(REINDEX_SERVICE_KEY, "5NpB6/uAgk14nYwHzMbIQRnuI2W63MrBOS2279YlcUUY2kNOhrL+R5UFR3O066bQ");
+
 
         if (metricsEnabled) {
             metricsPort = Integer.parseInt(getValueOrDefault(METRICS_PORT_KEY, "8090"));
@@ -112,13 +118,18 @@ public class Babbage implements AppConfig {
     public String getMathjaxExportServer() {
         return mathjaxExportServer;
     }
-
+    public String getMaxAgeSecret() {
+        return maxAgeSecret;
+    }
     public String getRedirectSecret() {
         return redirectSecret;
     }
 
     public String getServiceAuthToken() {
         return serviceAuthToken;
+    }
+    public String getReindexServiceKey() {
+        return reindexSecret;
     }
 
     public boolean isCacheEnabled() {
@@ -199,6 +210,7 @@ public class Babbage implements AppConfig {
         config.put("isNavigationEnable", isNavigationEnabled);
         config.put("isPublishing", isPublishing);
         config.put("mathjaxExportServer", mathjaxExportServer);
+        config.put("maxAgeSecret", maxAgeSecret);
         config.put("metricsPort", metricsPort);
         config.put("metricsEnabled", metricsEnabled);
         config.put("maxCacheEntries", maxCacheEntries);
@@ -207,6 +219,7 @@ public class Babbage implements AppConfig {
         config.put("maxResultsPerPage", maxResultsPerPage);
         config.put("maxVisiblePaginatorLink", maxVisiblePaginatorLink);
         config.put("publishCacheTimeout", publishCacheTimeout);
+        config.put("reindexSecret", reindexSecret);
         config.put("resultsPerPage", resultsPerPage);
         config.put("searchResponseCacheTime", searchResponseCacheTime);
         return config;

@@ -34,7 +34,6 @@ public class MaxAgeTest {
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
-
         when(endpoint.verifyKey(KEY_HASH)).thenReturn(true);
     }
 
@@ -48,7 +47,6 @@ public class MaxAgeTest {
     @Test
     public void testGetWrongKey() throws Exception {
         when(request.getParameter("key")).thenReturn("wrong");
-
         Object result = endpoint.get(request, response);
         assertEquals("Wrong key, make sure you pass in the right key", result);
         verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -64,13 +62,11 @@ public class MaxAgeTest {
         assertEquals("Failed calculating max age", endpoint.get(request, response));
         verify(response).setStatus(ex.getStatusCode());
     }
-
     @Test
     public void testGetEndpoint() throws Exception {
         int maxAge = 55;
         when(request.getParameter("key")).thenReturn(KEY_HASH);
         doReturn(maxAge).when(endpoint).getMaxAge(request);
-
         assertEquals(maxAge, endpoint.get(request, response));
     }
 
