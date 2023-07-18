@@ -74,6 +74,7 @@ public class GetPDFRequestHandlerTest {
         when(contentResponse.getName()).thenReturn(null);
         when(contentResponse.getMimeType()).thenReturn(MIME_TYPE);
         when(contentResponse.getDataStream()).thenReturn(new ByteArrayInputStream(DATA));
+        doReturn(contentResponse).when(handler).getContent(URI);
         doReturn(contentResponse).when(handler).getResource(URI + "/page.pdf");
 
         BabbageBinaryResponse response = handler.get(URI, request);
@@ -95,6 +96,7 @@ public class GetPDFRequestHandlerTest {
         when(contentResponse.getName()).thenReturn("name");
         when(contentResponse.getMimeType()).thenReturn(MIME_TYPE);
         when(contentResponse.getDataStream()).thenReturn(new ByteArrayInputStream(DATA));
+        doReturn(contentResponse).when(handler).getContent(URI);
         doReturn(contentResponse).when(handler).getResource(URI + "/page.pdf");
 
         String title = "title";
@@ -120,6 +122,7 @@ public class GetPDFRequestHandlerTest {
         when(contentResponse.getName()).thenReturn("name");
         when(contentResponse.getMimeType()).thenReturn(MIME_TYPE);
         when(contentResponse.getDataStream()).thenReturn(new ByteArrayInputStream(DATA));
+        doReturn(contentResponse).when(handler).getContent(URI);
         doReturn(contentResponse).when(handler).getResource(URI + "/page.pdf");
 
         String title = "title";
@@ -146,6 +149,7 @@ public class GetPDFRequestHandlerTest {
         when(contentResponse.getName()).thenReturn(null);
         when(contentResponse.getMimeType()).thenReturn(MIME_TYPE);
         when(contentResponse.getDataStream()).thenReturn(new ByteArrayInputStream(DATA));
+        doReturn(contentResponse).when(handler).getContent(URI);
         doReturn(contentResponse).when(handler).getResource(URI + "/page_cy.pdf");
 
         BabbageBinaryResponse response = handler.get(URI, request);
@@ -168,6 +172,7 @@ public class GetPDFRequestHandlerTest {
         when(contentResponse.getName()).thenReturn("name");
         when(contentResponse.getMimeType()).thenReturn(MIME_TYPE);
         when(contentResponse.getDataStream()).thenReturn(new ByteArrayInputStream(DATA));
+        doReturn(contentResponse).when(handler).getContent(URI);
         doReturn(contentResponse).when(handler).getResource(URI + "/page_cy.pdf");
 
         String title = "title";
@@ -194,6 +199,7 @@ public class GetPDFRequestHandlerTest {
         when(contentResponse.getName()).thenReturn("name");
         when(contentResponse.getMimeType()).thenReturn(MIME_TYPE);
         when(contentResponse.getDataStream()).thenReturn(new ByteArrayInputStream(DATA));
+        doReturn(contentResponse).when(handler).getContent(URI);
         doReturn(contentResponse).when(handler).getResource(URI + "/page_cy.pdf");
 
         String title = "title";
@@ -220,6 +226,7 @@ public class GetPDFRequestHandlerTest {
         when(contentResponse.getName()).thenReturn("name");
         when(contentResponse.getMimeType()).thenReturn(MIME_TYPE);
         when(contentResponse.getDataStream()).thenReturn(new ByteArrayInputStream(DATA));
+        doReturn(contentResponse).when(handler).getContent(URI);
         doThrow(new ResourceNotFoundException()).when(handler).getResource(URI + "/page_cy.pdf");
         doReturn(contentResponse).when(handler).getResource(URI + "/page.pdf");
 
@@ -241,6 +248,7 @@ public class GetPDFRequestHandlerTest {
 
     @Test(expected = LegacyPDFException.class)
     public void getShouldReturnAnExceptionIfContentNotFound() throws Exception {
+        doReturn(contentResponse).when(handler).getContent(URI);
         doThrow(new ResourceNotFoundException()).when(handler).getResource(URI + "/page.pdf");
 
         handler.get(URI, request);
@@ -253,5 +261,12 @@ public class GetPDFRequestHandlerTest {
         when(content.getDataStream()).thenReturn(new ByteArrayInputStream(descriptionJson.getBytes()));
 
         doReturn(content).when(handler).getContent(eq(URI), any());
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void getShouldReturnANotFoundExceptionIfParentPageNotFound() throws Exception {
+        doThrow(new ResourceNotFoundException()).when(handler).getContent(URI);
+
+        handler.get(URI, request);
     }
 }
