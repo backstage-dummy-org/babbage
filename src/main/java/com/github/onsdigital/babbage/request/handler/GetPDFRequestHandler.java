@@ -26,6 +26,16 @@ public class GetPDFRequestHandler extends PDFRequestHeandler {
 
     @Override
     public BabbageBinaryResponse get(String requestedUri, HttpServletRequest request) throws Exception {
+
+        // LegacyPDFException below only valid if parent page does not exist
+        try {
+            // Check for parent page
+            getContent(requestedUri);
+        } catch(ResourceNotFoundException e) {
+            warn().exception(e).data("uri", requestedUri).log("couldn't find parent page for pdf");
+            throw new ResourceNotFoundException();
+        }
+
         try {
             return getPreGeneratedPDF(requestedUri, (String) ThreadContext.getData(RequestUtil.LANG_KEY));
         } catch (ContentReadException | ResourceNotFoundException e) {
@@ -64,5 +74,9 @@ public class GetPDFRequestHandler extends PDFRequestHeandler {
 
     protected ContentResponse getResource(String uri) throws ContentReadException {
         return ContentClient.getInstance().getResource(uri);
+    }
+
+    protected ContentResponse getContent(String uri) throws IOException, ContentReadException {
+        return ContentClient.getInstance().getContent(uri);
     }
 }
