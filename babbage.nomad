@@ -78,12 +78,7 @@ job "babbage" {
         port = "metrics"
         tags = ["web"]
 
-        check {
-          type     = "http"
-          path     = "/metrics"
-          interval = "10s"
-          timeout  = "2s"
-        }
+        # There is no healthcheck for the babbage metrics service as it creates problems with the deployment when metrics are not enabled
       }
 
       resources {
