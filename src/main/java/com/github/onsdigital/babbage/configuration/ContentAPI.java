@@ -19,12 +19,16 @@ public class ContentAPI implements AppConfig {
     private final String contentAPIHost;
     private final String topicsAPIHost;
     private final int maxConnections;
+    private final int pooledConnectionsTimeout;
+    private final int idleConnectionsTimeout;
     private static ContentAPI INSTANCE;
     private static final String DEFAULT_CONTENT_API_HOST = "http://localhost:8082";
     private static final String CONTENT_API_HOST_KEY = "CONTENT_SERVICE_URL";
     private static final String DEFAULT_TOPICS_API_HOST = "http://localhost:25300";
     private static final String TOPICS_API_HOST_KEY = "TOPICS_SERVICE_URL";
     private static final String MAX_CONNECTIONS_KEY = "CONTENT_SERVICE_MAX_CONNECTION";
+    private static final String POOLED_CONNECTION_TIMEOUT_KEY = "POOLED_CONNECTION_TIMEOUT_KEY";
+    private static final String IDLE_CONNECTION_TIMEOUT_KEY = "IDLE_CONNECTION_TIMEOUT_KEY";
     private static final String DEFAULT_CONTENT_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
 
@@ -44,6 +48,8 @@ public class ContentAPI implements AppConfig {
         contentAPIHost = StringUtils.removeEnd(getValueOrDefault(CONTENT_API_HOST_KEY, DEFAULT_CONTENT_API_HOST), "/");
         topicsAPIHost = StringUtils.removeEnd(getValueOrDefault(TOPICS_API_HOST_KEY, DEFAULT_TOPICS_API_HOST), "/");
         maxConnections = defaultIfBlank(getNumberValue(MAX_CONNECTIONS_KEY), 50);
+        pooledConnectionsTimeout = defaultIfBlank(getNumberValue(POOLED_CONNECTION_TIMEOUT_KEY), 5000);
+        idleConnectionsTimeout = defaultIfBlank(getNumberValue(IDLE_CONNECTION_TIMEOUT_KEY), 60);
         defaultSimpleDataFormat = new SimpleDateFormat(DEFAULT_CONTENT_DATE_PATTERN);
     }
 
@@ -56,6 +62,14 @@ public class ContentAPI implements AppConfig {
     public int maxConnections() {
 
         return maxConnections;
+    }
+    public int pooledConnectionsTimeout() {
+
+        return pooledConnectionsTimeout;
+    }
+    public int idleConnectionsTimeout() {
+
+        return idleConnectionsTimeout;
     }
     public String defaultContentDatePattern() {
         return DEFAULT_CONTENT_DATE_PATTERN;
@@ -70,6 +84,8 @@ public class ContentAPI implements AppConfig {
         config.put(CONTENT_API_HOST_KEY, contentAPIHost);
         config.put(TOPICS_API_HOST_KEY, topicsAPIHost);
         config.put(MAX_CONNECTIONS_KEY, maxConnections);
+        config.put(POOLED_CONNECTION_TIMEOUT_KEY, pooledConnectionsTimeout);
+        config.put(IDLE_CONNECTION_TIMEOUT_KEY, idleConnectionsTimeout);
         config.put("defaultContentDatePattern", DEFAULT_CONTENT_DATE_PATTERN);
         return config;
     }

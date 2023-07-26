@@ -14,6 +14,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
 
+import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
+
 /**
  * Class for building Closable Http clients to be used by Babbage
  */
@@ -94,12 +96,12 @@ public class BabbageHttpClient implements AutoCloseable {
             try {
                 while (!shutdown) {
                     synchronized (this) {
-                        wait(5000);
-                        // Close expired connections every 5 seconds
+                        wait(appConfig().contentAPI().pooledConnectionsTimeout());
+                        // Close expired connections every x seconds (now configurable)
                         connMgr.closeExpiredConnections();
                         // Close connections
                         // that have been idle longer than 30 sec
-                        connMgr.closeIdleConnections(60, TimeUnit.SECONDS);
+                        connMgr.closeIdleConnections(appConfig().contentAPI().idleConnectionsTimeout(), TimeUnit.SECONDS);
                     }
                 }
             } catch (InterruptedException ex) {
