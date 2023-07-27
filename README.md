@@ -49,6 +49,8 @@ Babbage runs independently. However, in order to run it locally in its publishin
 | METRICS_PORT                  | 8090                   | The port for the metrics URL
 | REDIRECT_SECRET               | secret                 | The code for the redirect
 | TABLE_RENDERER_HOST           | http://localhost:23300 | The URL to the table renderer
+| POOLED_CONNECTION_TIMEOUT     | 5000                   | The number of milliseconds to wait before closing expired connections
+| IDLE_CONNECTION_TIMEOUT       | 60                     | The number of seconds to wait before closing idle connections
 
 ### Metrics
 
