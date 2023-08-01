@@ -33,8 +33,9 @@
         <dependency>
             <groupId>com.github.onsdigital</groupId>
             <artifactId>restolino</artifactId>
-            <version>v0.5.0</version>
+            <version>v0.7.0</version>
         </dependency>
+
 
         <dependency>
             <groupId>com.github.davidcarboni</groupId>
@@ -253,6 +254,7 @@
             <artifactId>pdfbox</artifactId>
             <version>2.0.26</version>
         </dependency>
+     
 
     </dependencies>
 
