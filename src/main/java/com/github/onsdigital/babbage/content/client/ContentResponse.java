@@ -40,7 +40,7 @@ public class ContentResponse implements Serializable {
             // will affect the behaviour of the system, therefore this if statement has been
             // added to return a null and not transform any content.
             if (response.getEntity().getContent() == null) {
-                data = null;
+                data = new byte[0];
             }
             else {
                 data = IOUtils.toByteArray(response.getEntity().getContent());
