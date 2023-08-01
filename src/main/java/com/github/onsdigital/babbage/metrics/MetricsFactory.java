@@ -1,6 +1,8 @@
 package com.github.onsdigital.babbage.metrics;
 
 import static com.github.onsdigital.babbage.configuration.ApplicationConfiguration.appConfig;
+import static com.github.onsdigital.logging.v2.event.SimpleEvent.info;
+
 
 public class MetricsFactory {
 
@@ -8,15 +10,16 @@ public class MetricsFactory {
 
     private static boolean metricsEnabled = appConfig().babbage().getMetricsEnabled();
 
-    public static void init() throws Exception {
-        if (metrics != null) {
-            throw new Exception("Init already called");
-        }
-
-        if (metricsEnabled) {
-            metrics = new CacheMetrics();
+    public static void init() {
+        if (metrics == null) {
+            if (metricsEnabled) {
+                info().log("initialising CacheMetrics");
+                metrics = new CacheMetrics();
+            } else {
+                metrics = new NopMetricsImpl();
+            }
         } else {
-            metrics = new NopMetricsImpl();
+            info().log("CacheMetrics already initialised");
         }
     }
 
@@ -24,11 +27,11 @@ public class MetricsFactory {
         return metricsEnabled;
     }
 
-    //Use getMetrics method to get the static metrics object
-    //If metrics are enabled then it be of type CacheMetrics
-    //Or if metrics are not enabled then it will be of type NopMetricsImpl
-    public static Metrics getMetrics(){
-         return metrics;
+    // Use getMetrics method to get the static metrics object
+    // If metrics are enabled then it be of type CacheMetrics
+    // Or if metrics are not enabled then it will be of type NopMetricsImpl
+    public static Metrics getMetrics() {
+        return metrics;
     }
 
 }

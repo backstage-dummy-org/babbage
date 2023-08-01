@@ -17,6 +17,7 @@ public class Babbage implements AppConfig {
     private static final String DEV_ENVIRONMENT_KEY = "DEV_ENVIRONMENT";
     private static final String ENABLE_CACHE_KEY = "ENABLE_CACHE";
     private static final String ENABLE_METRICS_KEY = "ENABLE_METRICS";
+    private static final String METRICS_FORMAT_KEY = "METRICS_FORMAT";
     private static final String ENABLE_NAVIGATION_KEY = "ENABLE_NAVIGATION";
     private static final String HIGHCHARTS_EXPORT_SERVER_KEY = "HIGHCHARTS_EXPORT_SERVER";
     private static final String IS_PUBLISHING_KEY = "IS_PUBLISHING";
@@ -24,7 +25,6 @@ public class Babbage implements AppConfig {
     private static final String MAXAGE_SERVICE_KEY = "MAXAGE_SERVER";
     private static final String MAX_CACHE_ENTRIES = "CACHE_ENTRIES";
     private static final String MAX_OBJECT_SIZE = "CACHE_OBJECT_SIZE";
-    private static final String METRICS_PORT_KEY = "METRICS_PORT";
     private static final String REDIRECT_SECRET_KEY = "REDIRECT_SECRET";
     private static final String REINDEX_SERVICE_KEY = "REINDEX_SERVER";
     private static final String SERVICE_AUTH_TOKEN = "SERVICE_AUTH";
@@ -68,8 +68,8 @@ public class Babbage implements AppConfig {
     private final int maxCacheEntries;
     private final int maxCacheObjectSize;
     private final int maxHighchartsServerConnections;
-    private final int metricsPort;
     private final boolean metricsEnabled;
+    private final String metricsFormat;
     private final int maxResultsPerPage;
     private final int maxVisiblePaginatorLink;
     private final int resultsPerPage;
@@ -86,15 +86,8 @@ public class Babbage implements AppConfig {
         mathjaxExportServer = getValue(MATHJAX_EXPORT_SERVER_KEY);
         maxAgeSecret = getValueOrDefault(MAXAGE_SERVICE_KEY, "mPHbKjCol7ObQ87qKVQgHz6kR3nsYJ3WJHgP7+JYyi5rSJbmbDAcQU8EQilFQ6QQ");
         metricsEnabled = getStringAsBool(ENABLE_METRICS_KEY, "N");
+        metricsFormat = getValueOrDefault(METRICS_FORMAT_KEY, "TEXT");
         reindexSecret = getValueOrDefault(REINDEX_SERVICE_KEY, "5NpB6/uAgk14nYwHzMbIQRnuI2W63MrBOS2279YlcUUY2kNOhrL+R5UFR3O066bQ");
-
-
-        if (metricsEnabled) {
-            metricsPort = Integer.parseInt(getValueOrDefault(METRICS_PORT_KEY, "8090"));
-        }   else {
-            metricsPort = 0;
-        }
-
         maxCacheEntries = defaultIfBlank(getNumberValue(MAX_OBJECT_SIZE), 3000);
         maxCacheObjectSize = defaultIfBlank(getNumberValue(MAX_CACHE_ENTRIES), 50000);
         maxHighchartsServerConnections = defaultIfBlank(getNumberValue("HIGHCHARTS_EXPORT_MAX_CONNECTION"), 50);
@@ -192,12 +185,12 @@ public class Babbage implements AppConfig {
         return searchResponseCacheTime;
     }
 
-    public int getMetricsPort() {
-        return metricsPort;
-    }
-
     public boolean getMetricsEnabled() {
         return metricsEnabled;
+    }
+
+    public String getMetricsFormat() {
+        return metricsFormat;
     }
 
     @Override
@@ -211,8 +204,8 @@ public class Babbage implements AppConfig {
         config.put("isPublishing", isPublishing);
         config.put("mathjaxExportServer", mathjaxExportServer);
         config.put("maxAgeSecret", maxAgeSecret);
-        config.put("metricsPort", metricsPort);
         config.put("metricsEnabled", metricsEnabled);
+        config.put("metricsFormat", metricsFormat);
         config.put("maxCacheEntries", maxCacheEntries);
         config.put("maxCacheObjectSize", maxCacheObjectSize);
         config.put("maxHighchartsServerConnections", maxHighchartsServerConnections);

@@ -18,17 +18,6 @@ public class MetricsFactoryTest {
     }
 
     @Test
-    public void testInitAlreadyCalled() throws Exception {
-        //Given
-        TestsUtil.setPrivateStaticField(metricsFactory, "metrics", new NopMetricsImpl());
-
-        // Then
-        Exception exception = assertThrows(Exception.class,
-                () -> MetricsFactory.init());
-        assertTrue(exception.getMessage().contains("Init already called"));
-    }
-
-    @Test
     public void testInitMetricsEnabled() throws Exception {
         //Given
         TestsUtil.setPrivateStaticField(metricsFactory, "metrics", null);

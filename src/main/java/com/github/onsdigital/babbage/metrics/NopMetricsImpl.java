@@ -8,11 +8,15 @@ public class NopMetricsImpl implements Metrics {
         info().log("NopMetricsImpl incPublishDateInRange");
     }
 
-    public void incPublishDateNotPresent() { info().log("NopMetricsImpl incPublishDateNotPresent"); }
+    public void incPublishDateNotPresent() {
+        info().log("NopMetricsImpl incPublishDateNotPresent");
+    }
 
     public void incPublishDateTooFarInPast() {
         info().log("NopMetricsImpl incPublishDateTooFarInPast");
     }
 
-    public void incPublishDateTooFarInFuture() { info().log("NopMetricsImpl incPublishDateTooFarInFuture();");}
+    public void incPublishDateTooFarInFuture() {
+        info().log("NopMetricsImpl incPublishDateTooFarInFuture();");
+    }
 }
