@@ -38,7 +38,8 @@ public class ContentResponse implements Serializable {
             // IOUtils.toByteArray has been updated to return a null pointer exception
             // in commons-io 2.9.0.  This resulted in some failed tests so unsure how it
             // will affect the behaviour of the system, therefore this if statement has been
-            // added to return a null and not transform any content.
+            // added to return an empty byte array as previously returned by IOUtils.toByteArray
+            // and not transform any content.
             if (response.getEntity().getContent() == null) {
                 data = new byte[0];
             }
