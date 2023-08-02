@@ -56,7 +56,6 @@ job "babbage" {
 
         port_map {
           http = 8080
-          metrics = 8090
         }
       }
 
@@ -73,21 +72,12 @@ job "babbage" {
         }
       }
 
-      service {
-        name = "babbage-metrics"
-        port = "metrics"
-        tags = ["web"]
-
-        # There is no healthcheck for the babbage metrics service as it creates problems with the deployment when metrics are not enabled
-      }
-
       resources {
         cpu    = "{{WEB_RESOURCE_CPU}}"
         memory = "{{WEB_RESOURCE_MEM}}"
 
         network {
           port "http" {}
-          port "metrics" {}
         }
       }
 

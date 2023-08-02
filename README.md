@@ -46,7 +46,6 @@ Babbage runs independently. However, in order to run it locally in its publishin
 | HIGHCHARTS_EXPORT_SERVER       | http://localhost:9999/ | The URL to the highcharts export server                                                                           |
 | IS_PUBLISHING                  | N                      | Switch to use (or not) the publishing functionality                                                               |
 | MAP_RENDERER_HOST              | http://localhost:23500 | The URL to the map renderer                                                                                       |
-| METRICS_PORT                   | 8090                   | The port for the metrics URL                                                                                      |
 | REDIRECT_SECRET                | secret                 | The code for the redirect                                                                                         |
 | TABLE_RENDERER_HOST            | http://localhost:23300 | The URL to the table renderer                                                                                     |
 | POOLED_CONNECTION_TIMEOUT      | 5000                   | The number of milliseconds to wait before closing expired connections                                             |
