@@ -1,5 +1,4 @@
-Babbage
-========
+# Babbage
 
 Repository for ONS Website Babbage
 
@@ -10,7 +9,7 @@ Babbage contains two main areas of functionality, as follows:
 1. It creates the HTML files for the pages on the website.
 2. It creates the HTML files for the website publications in the publishing system [Florence](https://github.com/ONSdigital/florence)
 
-### Getting started
+## Getting started
 
 In the babbage repo do one of the following:
 
@@ -34,30 +33,30 @@ Babbage runs independently. However, in order to run it locally in its publishin
 
 ### Configuration
 
-| Environment variable          | Default                | Description
-| ------------------------------| -----------------------|-------------------------------------------------------------
-| CONTENT_SERVICE_MAX_CONNECTION| 50                     | The maximum number of connections Babbage can make to the content service
-| CONTENT_SERVICE_URL           | http://localhost:8082  | The URL to the content service (zebedee)
-| ELASTIC_SEARCH_SERVER         | localhost              | The elastic search host and port (The http:// scheme prefix is added programmatically)
-| ELASTIC_SEARCH_CLUSTER        |                        | The elastic search cluster
-| ENABLE_CACHE                  | N                      | Switch to use (or not) the cache
-| ENABLE_COVID19_FEATURE        |                        | Switch to use (or not) the covid feature
-| ENABLE_METRICS                | N                      | Switch to collect (or not) metrics about cache expiry times
-| HIGHCHARTS_EXPORT_SERVER      | http://localhost:9999/ | The URL to the highcharts export server
-| IS_PUBLISHING                 | N                      | Switch to use (or not) the publishing functionality
-| MAP_RENDERER_HOST             | http://localhost:23500 | The URL to the map renderer
-| METRICS_PORT                  | 8090                   | The port for the metrics URL
-| REDIRECT_SECRET               | secret                 | The code for the redirect
-| TABLE_RENDERER_HOST           | http://localhost:23300 | The URL to the table renderer
-| POOLED_CONNECTION_TIMEOUT     | 5000                   | The number of milliseconds to wait before closing expired connections
-| IDLE_CONNECTION_TIMEOUT       | 60                     | The number of seconds to wait before closing idle connections
+| Environment variable           | Default                | Description                                                                                                       |
+|--------------------------------|------------------------|-------------------------------------------------------------------------------------------------------------------|
+| CONTENT_SERVICE_MAX_CONNECTION | 50                     | The maximum number of connections Babbage can make to the content service                                         |
+| CONTENT_SERVICE_URL            | http://localhost:8082  | The URL to the content service (zebedee)                                                                          |
+| ELASTIC_SEARCH_SERVER          | localhost              | The elastic search host and port (The http:// scheme prefix is added programmatically)                            |
+| ELASTIC_SEARCH_CLUSTER         |                        | The elastic search cluster                                                                                        |
+| ENABLE_CACHE                   | N                      | Switch to use (or not) the cache                                                                                  |
+| ENABLE_COVID19_FEATURE         |                        | Switch to use (or not) the covid feature                                                                          |
+| ENABLE_METRICS                 | N                      | Switch to collect (or not) metrics about cache expiry times                                                       |
+| METRICS_FORMAT                 | Text                   | Available options are Text or Open documented here <https://prometheus.io/docs/instrumenting/exposition_formats/> |
+| HIGHCHARTS_EXPORT_SERVER       | http://localhost:9999/ | The URL to the highcharts export server                                                                           |
+| IS_PUBLISHING                  | N                      | Switch to use (or not) the publishing functionality                                                               |
+| MAP_RENDERER_HOST              | http://localhost:23500 | The URL to the map renderer                                                                                       |
+| REDIRECT_SECRET                | secret                 | The code for the redirect                                                                                         |
+| TABLE_RENDERER_HOST            | http://localhost:23300 | The URL to the table renderer                                                                                     |
+| POOLED_CONNECTION_TIMEOUT      | 5000                   | The number of milliseconds to wait before closing expired connections                                             |
+| IDLE_CONNECTION_TIMEOUT        | 60                     | The number of seconds to wait before closing idle connections                                                     |
 
 ### Metrics
 
-To see the metrics, note that the ENABLE_METRICS and ENABLE_CACHE values must be set to Y when babbage starts up. Then call the following command while babbage is running:
+To see the metrics, you need to set the ENABLE_METRICS and ENABLE_CACHE environment variables (default is N) when babbage starts up. Then call the following command while babbage is running:
 
 ```bash
-curl -s http://localhost:8090/metrics
+curl -s http://localhost:8080/metrics
 ```
 
 The metrics should look something like this:
