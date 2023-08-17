@@ -101,15 +101,12 @@ public class UrlRedirectFilterTest {
 	}
 
 	@Test
-	public void shouldInvokeErrorHandler() throws Exception {
+	public void shouldNotRedirectOnFailedCategorisation() throws Exception {
 		when(mockRequest.getRequestURI())
-				.thenReturn("/ons/taxonomy/index.html")
-				.thenReturn("/somethingRandom");
+				.thenReturn("/onslogin.php");
 
-		filter.filter(mockRequest, mockResponse);
-
-		verify(mockResponse, times(1)).setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		verifyZeroInteractions(taxonomyHandlerMock, generalHandlerMock, dataExHandlerMock);
+		assertThat("Incorrect filter result test failed.", filter.filter(mockRequest, mockResponse), equalTo(true));
+		verifyZeroInteractions(taxonomyHandlerMock, dataExHandlerMock, generalHandlerMock);
 	}
 
 }

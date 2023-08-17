@@ -57,9 +57,6 @@ public class UrlRedirectFilter implements Filter {
             if (category.isPresent()) {
                 handlers.get(category.get()).handle(request, response);
                 return false;
-            } else {
-                handleError(request, response, new RedirectException(REDIRECT_URL_EXCEPTION, new Object[]{request.getRequestURI()}));
-                return false;
             }
         }
         return true;
